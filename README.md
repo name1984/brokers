@@ -26,4 +26,12 @@ Ahora ejecutar odoo agregando al path de módulos::
 
 El comando anterior asume que odoo y odoo-ecuador estan al mismo nivel.
 
+Ambiente de Desarrollo
+----------------------
+
+Revisa la [wiki](https://github.com/odoo-ecuador/odoo-ecuador/wiki/Ambiente-de-Desarrollo)
+
+Pruebas Unitarias
+-----------------
+
 Para escribir pruebas unitarias revisar la [wiki](https://github.com/odoo-ecuador/odoo-ecuador/wiki/Pruebas-Unitarias)
