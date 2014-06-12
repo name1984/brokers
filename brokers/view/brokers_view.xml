@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+  <data>
+
+    <menuitem id="menu_main_brokers" name="Pólizas y Seguros"/>
+    <menuitem id="menu_main_seguros" name="Seguros" parent="menu_main_brokers"/>
+
+    <record id="view_insurance_insurance_form" model="ir.ui.view">
+      <field name="name">view.insurance.insurance.form</field>
+      <field name="model">insurance.insurance</field>
+      <field name="arch" type="xml">
+	<form string="Gestión de Seguros" version="7.0">
+	  <header>
+	    <field name="state" widget="statusbar" statusbar_visible="draft,request,ok"/>
+	  </header>
+	  <sheet string="Seguro de Desgravamen">
+            <div class="oe_title">
+              <h1>
+		<field name="contractor_id" readonly="1" options="{'no_open': True}"/>
+                <label string="Solicitud de Seguro" attrs="{'invisible': ['|',('state','&lt;&gt;','draft')]}"/>
+                <field name="name" class="oe_inline"  attrs="{'invisible': [('state', '=', 'draft')]}"/>
+	      </h1>
+	    </div>
+	    <group string="Deudor">
+	      <field name="partner_id"/>
+	    </group>
+	    <group>
+	      <group string="Datos Créditos Vigentes">
+		<field name="has_active_credit"/>
+		<field name="total_active_credits"/>
+	      </group>
+	      <group string="Datos Solicitud de Crédito">
+		<field name="city_id"/>
+		<field name="date" required="1"/>
+		<field name="account_number"/>
+		<field name="nro_operacion_credito"/>
+		<field name="monto_credito_solicitado"/>
+		<field name="total_credits"/>
+		<field name="plazo"/>
+	      </group>
+	    </group>
+	  </sheet>
+          <div class="oe_chatter">
+            <field name="message_follower_ids" widget="mail_followers" 
+		   help="Seguir este trámite para recibir notificaciones de eventos asociados." groups="base.group_user"/>
+            <field name="message_ids" widget="mail_thread"/>
+          </div>
+	</form>
+      </field>
+    </record>
+
+    <record id="view_insurance_insurance_tree" model="ir.ui.view">
+      <field name="name">view.insurance.insurance.tree</field>
+      <field name="model">insurance.insurance</field>
+      <field name="arch" type="xml">
+	<tree string="Seguros de Desgravamen" colors="blue:state == 'draft';black:state in ('done');gray:state == 'cancel'">
+	  <field name="name"/>
+	  <field name="partner_id"/>
+	  <field name="total_credits"/>
+	</tree>
+      </field>
+    </record>
+
+    <record id="view_insurance_insurance_search" model="ir.ui.view">
+      <field name="name">view.insurance.insurance.search</field>
+      <field name="model">insurance.insurance</field>
+      <field name="arch" type="xml">
+	<search string="Gestión de Seguros de Desgravamen">
+	  <field name="name"/>
+	  <field name="partner_id"/>
+	  <field name="total_credits"/>
+	</search>
+      </field>
+    </record>
+
+    <record id="action_insurance_insurance" model="ir.actions.act_window">
+      <field name="name">Seguros Desgravamen</field>
+      <field name="res_model">insurance.insurance</field>
+      <field name="view_type">form</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem action="action_insurance_insurance" id="menu_seguros_desgravamen" name="Seguros Desgravamen" parent="menu_main_seguros"/>
+
+    <record id="view_res_users_contractor" model="ir.ui.view">
+      <field name="">view.res.users.contractor</field>
+      <field name="model">res.users</field>
+      <field name="inherit_id" ref="base.view_users_form"/>
+      <field name="arch" type="xml">
+	<field name="company_id" position="after">
+	  <field name="contractor_id"/>
+	</field>
+      </field>
+    </record>
+
+  </data>
+</openerp>
