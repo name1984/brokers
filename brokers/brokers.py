@@ -64,6 +64,44 @@ class InsurancePartner(osv.osv):
         'tipo_identificador': 'cedula'
     }
 
+
+class InsurancePolicy(osv.osv):
+    _name = 'insurance.policy'
+    _columns = {
+        'name': fields.char('Código', size=32 ,required=True),
+        'partner_id': fields.many2one(
+            'res.partner',
+            string='Cliente Asegurado',
+            required=True
+        ),
+        'aseguradora_id': fields.many2one(
+            'res.partner',
+            string='Aseguradora',
+        )
+    }
+
+
+class InsuranceParameter(osv.osv):
+
+    _name = 'insurance.parameter'
+    _columns = {
+        'partner_id': fields.many2one(
+            'res.partner',
+            string='Aseguradora',
+            required=True,
+            select=True
+        ),
+        'policy_id': fields.many2one(
+            'insurance.policy',
+            string='Póliza',
+            required=True,
+            select=True
+        ),
+        'amount_min': fields.float('Monto Mínimo', digits=(16,2)),
+        'amount_max1': fields.float('Monto Maximo 1', digits=(16,2)),
+        'amount_max2': fields.float('Monto Maximo 2', digits=(16,2))
+    }
+
         
 class InsurancePartnerCivil(osv.osv):
 

@@ -4,6 +4,8 @@
 
     <menuitem id="menu_main_brokers" name="Pólizas y Seguros"/>
     <menuitem id="menu_main_seguros" name="Seguros" parent="menu_main_brokers"/>
+    <menuitem id="menu_main_policies" name="Pólizas" parent="menu_main_brokers"/>
+    <menuitem id="menu_main_configuration" name="Configuración" parent="menu_main_brokers"/>
 
     <record id="view_insurance_insurance_form" model="ir.ui.view">
       <field name="name">view.insurance.insurance.form</field>
@@ -28,18 +30,20 @@
 	      <field name="deudor_id"/>
 	    </group>
 	    <group>
-	      <group string="Datos Créditos Vigentes">
-		<field name="has_active_credit"/>
-		<field name="total_active_credits"/>
-	      </group>
 	      <group string="Datos Solicitud de Crédito">
 		<field name="city_id"/>
 		<field name="date" required="1"/>
 		<field name="account_number"/>
 		<field name="nro_operacion_credito"/>
-		<field name="monto_credito_solicitado"/>
-		<field name="total_credits"/>
 		<field name="plazo"/>
+	      </group>
+	      <group string="Datos Créditos Vigentes">
+		<field name="has_active_credit"/>
+		<group class="oe_subtotal_footer oe_right">
+		  <field name="total_active_credits" widget="monetary"/>
+		  <field name="monto_credito_solicitado" widget="monetary"/>
+		  <field name="total_credits" class="oe_subtotal_footer_separator" widget="monetary"/>
+		</group>
 	      </group>
 	    </group>
 	  </sheet>
@@ -134,6 +138,93 @@
 	</form>
       </field>
     </record>
+
+    <record id="view_insurance_policy_form" model="ir.ui.view">
+      <field name="name">view.insurance.policy.form</field>
+      <field name="model">insurance.policy</field>
+      <field name="arch" type="xml">
+	<form string="Póliza de Seguro" version="7.0">
+	  <sheet string="Póliza de Seguro">
+	    <h2>
+	      <field name="name"/>	      
+	    </h2>
+	    <group string="Información">
+	      <field name="partner_id" domain="[('customer','=',True)]"/>
+	      <field name="aseguradora_id" domain="[('supplier','=',True)]"/>
+	    </group>
+	  </sheet>
+	</form>
+      </field>
+    </record>
+
+    <record id="view_insurance_policy_tree" model="ir.ui.view">
+      <field name="name">view.insurance.policy.tree</field>
+      <field name="model">insurance.policy</field>
+      <field name="arch" type="xml">
+	<tree string="Pólizas de Seguro">
+	  <field name="name"/>
+	  <field name="partner_id"/>
+	  <field name="aseguradora_id"/>
+	</tree>
+      </field>
+    </record>
+    
+    <record id="view_insurance_policy_search" model="ir.ui.view">
+      <field name="name">view.insurance.policy.search</field>
+      <field name="model">insurance.policy</field>
+      <field name="arch" type="xml">
+	<search>
+	  <field name="name"/>
+	  <field name="partner_id"/>
+	  <field name="aseguradora_id"/>
+	</search>
+      </field>
+    </record>
+
+    <record id="action_insurance_policy" model="ir.actions.act_window">
+      <field name="name">Pólizas</field>
+      <field name="res_model">insurance.policy</field>
+      <field name="view_type">form</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem action="action_insurance_policy" id="menu_seguros_polizas" name="Pólizas" parent="menu_main_policies"/>
+
+    <!-- Configuracion -->
+
+    <record id="view_insurance_parameter_tree" model="ir.ui.view">
+      <field name="name">view.insurance.parameter.tree</field>
+      <field name="model">insurance.parameter</field>
+      <field name="arch" type="xml">
+	<tree string="Configuración de Valores por Póliza" editable="top">
+	  <field name="policy_id"/>
+	  <field name="partner_id"/>
+	  <field name="amount_min"/>
+	  <field name="amount_max1"/>
+	  <field name="amount_max2"/>
+	</tree>
+      </field>
+    </record>
+
+    <record id="view_insurance_parameter_search" model="ir.ui.view">
+      <field name="name">view.insurance.parameter.search</field>
+      <field name="model">insurance.parameter</field>
+      <field name="arch" type="xml">
+	<search>
+	  <field name="policy_id"/>
+	  <field name="partner_id"/>
+	</search>
+      </field>
+    </record>
+
+    <record id="action_insurance_parameter" model="ir.actions.act_window">
+      <field name="name">Montos por Póliza</field>
+      <field name="res_model">insurance.parameter</field>
+      <field name="view_type">form</field>
+      <field name="view_mode">tree</field>
+    </record>
+
+    <menuitem action="action_insurance_parameter" id="menu_amount_conf" name="Montos por Póliza" parent="menu_main_configuration"/>
 
   </data>
 </openerp>
