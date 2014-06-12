@@ -15,14 +15,17 @@
 	  </header>
 	  <sheet string="Seguro de Desgravamen">
             <div class="oe_title">
-              <h1>
-		<field name="contractor_id" readonly="1" options="{'no_open': True}"/>
+              <h2>
+		<label string="Canal: " for="contractor_id"/>
+		<field name="contractor_id" readonly="1" class="oe_inline" options="{'no_open': True}"/>
+	      </h2>
+	      <h2>
                 <label string="Solicitud de Seguro" attrs="{'invisible': ['|',('state','&lt;&gt;','draft')]}"/>
                 <field name="name" class="oe_inline"  attrs="{'invisible': [('state', '=', 'draft')]}"/>
-	      </h1>
+	      </h2>
 	    </div>
-	    <group string="Deudor">
-	      <field name="partner_id"/>
+	    <group string="Registro Deudor">
+	      <field name="deudor_id"/>
 	    </group>
 	    <group>
 	      <group string="Datos Créditos Vigentes">
@@ -55,7 +58,8 @@
       <field name="arch" type="xml">
 	<tree string="Seguros de Desgravamen" colors="blue:state == 'draft';black:state in ('done');gray:state == 'cancel'">
 	  <field name="name"/>
-	  <field name="partner_id"/>
+	  <field name="contractor_id"/>
+	  <field name="deudor_id"/>
 	  <field name="total_credits"/>
 	</tree>
       </field>
@@ -67,7 +71,7 @@
       <field name="arch" type="xml">
 	<search string="Gestión de Seguros de Desgravamen">
 	  <field name="name"/>
-	  <field name="partner_id"/>
+	  <field name="deudor_id"/>
 	  <field name="total_credits"/>
 	</search>
       </field>
@@ -82,6 +86,10 @@
 
     <menuitem action="action_insurance_insurance" id="menu_seguros_desgravamen" name="Seguros Desgravamen" parent="menu_main_seguros"/>
 
+
+    <!--
+	Canal de distribucion en el usuario
+    -->
     <record id="view_res_users_contractor" model="ir.ui.view">
       <field name="">view.res.users.contractor</field>
       <field name="model">res.users</field>
@@ -90,6 +98,40 @@
 	<field name="company_id" position="after">
 	  <field name="contractor_id"/>
 	</field>
+      </field>
+    </record>
+
+    <record id="view_res_partner_insurance_form" model="ir.ui.view">
+      <field name="name">view.res.partner.insurance.form</field>
+      <field name="model">insurance.partner</field>
+      <field name="arch" type="xml">
+	<form string="Información Deudor" version="7.0">
+	  <sheet string="Información Deudor">
+	    <label for="name" class="oe_edit_only" string="Nombres Completos"/>
+	    <h1>
+	      <field name="name" class="oe_inline" placeholder="Nombres"/>
+	      <field name="last_name" class="oe_inline" placeholder="Apellidos"/>
+	    </h1>
+	    <label for="tipo_identificador" string="Identificador"/>
+	    <h3>
+	      <field name="tipo_identificador" class="oe_inline"/>
+	      <field name="identificador" class="oe_inline" placeholder="Cédula / RUC"/>
+	    </h3>
+	    <group string="Información">
+	      <group>
+		<field name="birth_date"/>
+		<field name="sexo"/>
+		<field name="civil_id"/>
+	      </group>
+	      <group>
+		<field name="mobile"/>
+		<field name="phone"/>
+		<field name="email"/>
+		<field name="street" placeholder="Calle principal"/>
+	      </group>
+	    </group>
+	  </sheet>
+	</form>
       </field>
     </record>
 

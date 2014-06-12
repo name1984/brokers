@@ -17,6 +17,64 @@ class ResUser(osv.osv):
     }
 
 
+class InsurancePartner(osv.osv):
+    _name = 'insurance.partner'
+    _columns = {
+        'name': fields.char(
+            'Nombres',
+            size=128,
+            required=True,
+            select=True
+        ),
+        'last_name': fields.char(
+            'Apellidos', size=128,
+            required=True, select=True
+        ),
+        'tipo_identificador': fields.selection(
+            [('cedula', 'CEDULA'),
+             ('passport', 'PASAPORTE'),
+            ('ruc', 'RUC')],
+            string='Identificador',
+            required=True
+        ),
+        'identificador': fields.char(
+            'Identificador',
+            required=True,
+            select=True
+        ),
+        'birth_date': fields.date('Fecha de Nacimiento', required=True),
+        'sexo': fields.selection(
+            [('m', 'MASCULINO'),
+             ('f', 'FEMENINO')],
+             string='Sexo',
+             required=True
+        ),
+        'civil_id': fields.many2one(
+            'insurance.partner.civil',
+            string='Estado Civil'
+        ),
+        'mobile': fields.char('Celular', size=16, required=True),
+        'phone': fields.char('Teléfono', size=16, required=True),
+        'email': fields.char('E-mail', size=32, required=True),
+        'street': fields.char('Dirección', size=64)
+    }
+
+    _defaults = {
+        'sexo': 'm',
+        'tipo_identificador': 'cedula'
+    }
+
+        
+class InsurancePartnerCivil(osv.osv):
+
+    _name = 'insurance.partner.civil'
+
+    _columns = {
+        'code': fields.char('Código', size=8, required=True),
+        'name': fields.char('Nombre', size=16, required=True)
+        }
+
+
 class InsuranceInsurance(osv.osv):
     _name = 'insurance.insurance'
     _inherit = ['mail.thread']    
@@ -34,9 +92,9 @@ class InsuranceInsurance(osv.osv):
             string='Contratante',
             required=True
         ),
-        'partner_id': fields.many2one(
-            'res.partner',
-            string='Cliente',
+        'deudor_id': fields.many2one(
+            'insurance.partner',
+            string='Deudor',
             required=True
         ),
         'has_active_credit': fields.boolean('El deudor tiene créditos vigentes ?'),
@@ -60,7 +118,13 @@ class InsuranceInsurance(osv.osv):
                                    required=True)
     }
 
+    def get_contractor(self, cr, uid, context=None):
+        data = self.pool.get('res.users').read(cr, uid, uid, ['contractor_id'])
+        return data['contractor_id']
+
     _defaults = {
         'state': 'draft',
-        'name': '/'
+        'name': '/',
+        'contractor_id': get_contractor,
+        'date': time.strftime('%Y-%m-%d')
     }
