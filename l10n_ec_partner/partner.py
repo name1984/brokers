@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-__author__ = 'Cristian Salamea (cristian.salamea@gnuthink.com)'
+__author__ = 'Cristian Salamea (cristian@ayni.io)'
 
 import time
 from datetime import datetime

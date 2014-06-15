@@ -19,6 +19,14 @@ class ResUser(osv.osv):
 
 class InsurancePartner(osv.osv):
     _name = 'insurance.partner'
+
+    def name_get(sel, cr, uid, ids, context=None):
+        res = []
+        for r in self.read(cr, uid, ids, ['name','last_name', 'identificador'], context):
+            name = '%s - %s %s' % (r['identificador'], r['name'], r['last_name'])
+            res.append(r['id'], name)
+        return res
+        
     _columns = {
         'name': fields.char(
             'Nombres',
