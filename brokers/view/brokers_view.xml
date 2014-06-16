@@ -14,6 +14,8 @@
       <field name="arch" type="xml">
 	<form string="Gestión de Seguros" version="7.0">
 	  <header>
+	    <button name="action_validate" string="Validar Datos" states="draft" class="oe_highlight" type="object"/>
+	    <button name="action_print" string="Declaración de Asegurabilidad" states="request" class="oe_highlight" type="object"/>
 	    <field name="state" widget="statusbar" statusbar_visible="draft,request,ok"/>
 	  </header>
 	  <sheet string="Seguro de Desgravamen">
@@ -28,7 +30,7 @@
 	      </h2>
 	    </div>
 	    <group string="Registro Deudor">
-	      <field name="deudor_id"/>
+	      <field name="deudor_id" options="{'no_open': True}"/>
 	    </group>
 	    <group>
 	      <group string="Datos Solicitud de Crédito">
@@ -46,6 +48,25 @@
 		  <field name="total_credits" class="oe_subtotal_footer_separator" widget="monetary"/>
 		</group>
 	      </group>
+	    </group>
+	    <group attrs="{'invisible': [('state','=','draft')]}">
+	      <div>
+                ¿ Sufre o ha sufrido trastornos cardiovasculares, trastornos renales, 
+		tensión arterial alta, derrame cerebral, cáncer, tumor, diabetes, 
+		epilepsia, asma, trastornos inmunológicos o padecimientos relacionados con el SIDA ?
+		<field name="question1" nolabel="1"/>
+	      </div>
+	      <field name="answer1" nolabel="1" placeholder="Transtornos..." attrs="{'required': [('question1','=',True)]}"/>
+	    </group>
+	    <newline/>
+	    <group attrs="{'invisible': [('state','=','draft')]}">
+	      <div>
+		¿ Tiene en la actualidad alguna enfermedad o pérdida funcional o anatómica, 
+		o ha sufrido un accidente que le impide desempeñar labores propias de su ocupación, 
+		o sabe si será hospitalizado o intervenido quirúrgicamente ?
+		<field name="question2" nolabel="1"/>
+	      </div>
+	      <field name="answer2" attrs="{'required': [('question2','=',True)]}" nolabel="1"/>
 	    </group>
 	  </sheet>
           <div class="oe_chatter">
@@ -66,6 +87,7 @@
 	  <field name="contractor_id"/>
 	  <field name="deudor_id"/>
 	  <field name="total_credits"/>
+	  <field name="state"/>
 	</tree>
       </field>
     </record>

@@ -20,11 +20,11 @@ class ResUser(osv.osv):
 class InsurancePartner(osv.osv):
     _name = 'insurance.partner'
 
-    def name_get(sel, cr, uid, ids, context=None):
+    def name_get(self, cr, uid, ids, context=None):
         res = []
         for r in self.read(cr, uid, ids, ['name','last_name', 'identificador'], context):
             name = '%s - %s %s' % (r['identificador'], r['name'], r['last_name'])
-            res.append(r['id'], name)
+            res.append((r['id'], name))
         return res
         
     _columns = {
@@ -161,12 +161,27 @@ class InsuranceInsurance(osv.osv):
                                    ('request', 'Solicitado'),
                                    ('ok', 'Aprobado')],
                                    string='Estado',
-                                   required=True)
+                                   required=True),
+        'question1': fields.boolean(
+            "Transtornos ?"
+        ),
+        'answer1': fields.text('Respuesta'),
+        'question2': fields.boolean(
+            "Q2"
+        ),
+        'answer2': fields.text('Respuesta'),        
     }
 
     def get_contractor(self, cr, uid, context=None):
         data = self.pool.get('res.users').read(cr, uid, uid, ['contractor_id'])
-        return data['contractor_id']
+        return data['contractor_id'] and data['contractor_id'][0]
+
+    def action_validate(self, cr, uid, ids, context=None):
+        self.write(cr, uid, ids, {'state': 'request'})
+        return True
+
+    def action_print(self, cr, uid, ids, context=None):
+        return True
 
     _defaults = {
         'state': 'draft',
