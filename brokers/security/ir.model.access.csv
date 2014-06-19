@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_insurance_insurance,insurance.insurance,model_insurance_insurance,brokers.group_broker_manager,1,1,1,0
+access_insurance_insurance_d,insurance.insurance,model_insurance_insurance,brokers.group_broker_desgravamen,1,1,1,0
+access_insurance_partner,insurance.partner,model_insurance_partner,brokers.group_broker_desgravamen,1,1,1,0
+access_insurance_partner_civil,insurance.partner.civil,model_insurance_partner_civil,brokers.group_broker_user,1,1,1,0
+access_insurance_parentesco,insurance.parentesco,model_insurance_parentesco,brokers.group_broker_user,1,1,1,0

@@ -27,8 +27,8 @@
     'complexity': 'normal',
     'website': 'www.ayni.io',
     'data': [
-#        'security/brokers_security.xml',
-#        'security/ir.model.access.csv',
+        'security/brokers_security.xml',
+        'security/ir.model.access.csv',
         'view/brokers_view.xml',
 #        'report/brokers_report.xml',
 #        'data/brokers_data.xml',

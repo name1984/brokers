@@ -2,7 +2,7 @@
 <openerp>
   <data>
 
-    <menuitem id="menu_main_brokers" name="Pólizas y Seguros"/>
+    <menuitem id="menu_main_brokers" name="Pólizas y Seguros" groups="brokers.group_broker_user"/>
     <menuitem id="menu_main_seguros" name="Seguros" parent="menu_main_brokers" sequence="5"/>
     <menuitem id="menu_main_policies" name="Pólizas" parent="menu_main_brokers" sequence="10"/>
     <menuitem id="menu_main_entities" name="Entidades" parent="menu_main_brokers" sequence="15"/>
@@ -31,6 +31,8 @@
 	    </div>
 	    <group string="Registro Deudor">
 	      <field name="deudor_id" options="{'no_open': True}"/>
+	      <field name="tiene_apoderado"/>
+	      <field name="apoderado_id" domain="[('id','!=',deudor_id)]" attrs="{'required': [('tiene_apoderado','=',True)], 'invisible': [('tiene_apoderado','=',False)]}"/>
 	    </group>
 	    <group>
 	      <group string="Datos Solicitud de Crédito">
@@ -111,7 +113,11 @@
       <field name="view_mode">tree,form</field>
     </record>
 
-    <menuitem action="action_insurance_insurance" id="menu_seguros_desgravamen" name="Seguros Desgravamen" parent="menu_main_seguros"/>
+    <menuitem action="action_insurance_insurance" 
+	      id="menu_seguros_desgravamen" 
+	      name="Seguros Desgravamen" 
+	      parent="menu_main_seguros" 
+	      groups="brokers.group_broker_desgravamen"/>
 
 
     <!--
@@ -157,6 +163,63 @@
 		<field name="street" placeholder="Calle principal"/>
 	      </group>
 	    </group>
+	    <notebook>
+	      <page string="Familiares">
+		<field name="child_ids" mode="kanban">
+		  <kanban>
+		    <field name="name"/>
+		    <field name="last_name"/>
+		    <field name="sexo"/>
+		    <field name="phone"/>
+		    <field name="parentesco_id"/>
+		    <templates>
+		      <t t-name="kanban-box">
+			<div class="oe_kanban_details">
+			  <h4 class="oe_partner_heading">
+			    <a type="open"><field name="parentesco_id" widget="selection"/>: <field name="name"/> <field name="last_name"/></a>
+			  </h4>	      
+			  <ul>
+			    <li>Ident: <field name="identificador"/></li>
+			    <li><field name="phone"/></li>
+			    <li><field name="mobile"/></li>
+			    <li><field name="email"/></li>
+			  </ul>
+			</div>
+		      </t>
+		    </templates>
+		  </kanban>
+		  <form string="Familiares" version="7.0">
+		    <sheet string="Información Deudor">
+		      <label for="name" class="oe_edit_only" string="Nombres Completos"/>
+		      <h1>
+			<field name="name" class="oe_inline" placeholder="Nombres"/>
+			<field name="last_name" class="oe_inline" placeholder="Apellidos"/>
+		      </h1>
+		      <label for="tipo_identificador" string="Identificador"/>
+		      <h3>
+			<field name="tipo_identificador" class="oe_inline"/>
+			<field name="identificador" class="oe_inline" placeholder="Cédula / RUC"/>
+		      </h3>
+		      <label for="parentesco_id"/>
+		      <field name="parentesco_id" placeholder="Esposa/o" required="1"/>
+		      <group string="Información">
+			<group>
+			  <field name="birth_date"/>
+			  <field name="sexo"/>
+			  <field name="civil_id"/>
+			</group>
+			<group>
+			  <field name="mobile"/>
+			  <field name="phone"/>
+			  <field name="email"/>
+			  <field name="street" placeholder="Calle principal"/>
+			</group>
+		      </group>		    
+		    </sheet>
+		  </form>
+		</field>
+	      </page>
+	    </notebook>
 	  </sheet>
 	</form>
       </field>
@@ -225,7 +288,11 @@
       <field name="view_mode">kanban,tree,form</field>
     </record>
 
-    <menuitem action="action_insurance_partner" id="menu_seguros_partners" name="Deudores" parent="menu_main_entities"/>
+    <menuitem action="action_insurance_partner" 
+	      id="menu_seguros_partners" 
+	      name="Deudores" 
+	      parent="menu_main_entities" 
+	      groups="brokers.group_broker_manager"/>
 
     <record id="view_insurance_policy_form" model="ir.ui.view">
       <field name="name">view.insurance.policy.form</field>

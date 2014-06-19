@@ -17,8 +17,17 @@ class ResUser(osv.osv):
     }
 
 
+class InsuranceParentesco(osv.osv):
+    _name = 'insurance.parentesco'
+    _description = 'Parentezco de Deudores'
+    _columns = {
+        'name': fields.char('Parentesco', size=32, required=True),
+    }
+
+
 class InsurancePartner(osv.osv):
     _name = 'insurance.partner'
+    _description = 'Deudores'
 
     def name_get(self, cr, uid, ids, context=None):
         res = []
@@ -26,7 +35,7 @@ class InsurancePartner(osv.osv):
             name = '%s - %s %s' % (r['identificador'], r['name'], r['last_name'])
             res.append((r['id'], name))
         return res
-        
+
     _columns = {
         'name': fields.char(
             'Nombres',
@@ -64,7 +73,20 @@ class InsurancePartner(osv.osv):
         'mobile': fields.char('Celular', size=16, required=True),
         'phone': fields.char('Teléfono', size=16, required=True),
         'email': fields.char('E-mail', size=32, required=True),
-        'street': fields.char('Dirección', size=64)
+        'street': fields.char('Dirección', size=64),
+        'parentesco_id': fields.many2one(
+            'insurance.parentesco',
+            string="Parentesco"
+        ),
+        'parent_id': fields.many2one(
+            'insurance.partner',
+            string='Partner'
+        ),
+        'child_ids': fields.one2many(
+            'insurance.partner',
+            'parent_id',
+            string='Partner Padre'
+        )
     }
 
     _defaults = {
@@ -110,7 +132,7 @@ class InsuranceParameter(osv.osv):
         'amount_max2': fields.float('Monto Maximo 2', digits=(16,2))
     }
 
-        
+
 class InsurancePartnerCivil(osv.osv):
 
     _name = 'insurance.partner.civil'
@@ -123,9 +145,9 @@ class InsurancePartnerCivil(osv.osv):
 
 class InsuranceInsurance(osv.osv):
     _name = 'insurance.insurance'
-    _inherit = ['mail.thread']    
+    _inherit = ['mail.thread']
     _description = 'Seguros de Desgravamen'
-    
+
     """
     TODO:
     campos: total_active_credits, total_credits cambiar a funcion
@@ -157,11 +179,13 @@ class InsuranceInsurance(osv.osv):
         'total_credits': fields.float('Total Créditos', digits=(16,2)),
         'plazo': fields.integer('Plazo (meses)'),
         'aseguradora_id': fields.many2one('res.partner', string='Aseguradora'),
-        'state': fields.selection([('draft', 'Borrador'),
-                                   ('request', 'Solicitado'),
-                                   ('ok', 'Aprobado')],
-                                   string='Estado',
-                                   required=True),
+        'state': fields.selection(
+            [('draft', 'Borrador'),
+            ('request', 'Solicitado'),
+            ('ok', 'Aprobado')],
+            string='Estado',
+            required=True
+        ),
         'question1': fields.boolean(
             "Transtornos ?"
         ),
@@ -169,7 +193,12 @@ class InsuranceInsurance(osv.osv):
         'question2': fields.boolean(
             "Q2"
         ),
-        'answer2': fields.text('Respuesta'),        
+        'answer2': fields.text('Respuesta'),
+        'tiene_apoderado': fields.boolean('Tiene Apoderado'),
+        'apoderado_id': fields.many2one(
+            'insurance.partner',
+            string='Apoderado',
+        )
     }
 
     def get_contractor(self, cr, uid, context=None):
@@ -177,10 +206,16 @@ class InsuranceInsurance(osv.osv):
         return data['contractor_id'] and data['contractor_id'][0]
 
     def action_validate(self, cr, uid, ids, context=None):
+        """
+        
+        """
         self.write(cr, uid, ids, {'state': 'request'})
         return True
 
     def action_print(self, cr, uid, ids, context=None):
+        """
+
+        """
         return True
 
     _defaults = {

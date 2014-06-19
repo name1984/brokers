@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+  <data>
+
+    <record model="ir.module.category" id="module_category_brokers_management">
+      <field name="name">Brokers Management</field>
+      <field name="description">Brokers Management</field>
+      <field name="sequence">2</field>
+    </record>
+
+    <record id="group_broker_user" model="res.groups">
+        <field name="name">Brokers User</field>
+        <field name="category_id" ref="module_category_brokers_management"/>        
+    </record>
+
+    <record id="group_broker_manager" model="res.groups">
+        <field name="name">Brokers Manager</field>
+        <field name="category_id" ref="module_category_brokers_management"/>        
+        <field name="implied_ids" eval="[(4, ref('group_broker_user'))]"/>
+    </record>
+
+    <record id="group_broker_desgravamen" model="res.groups">
+        <field name="name">Seguros de Desgravamen</field>
+        <field name="category_id" ref="module_category_brokers_management"/>
+        <field name="implied_ids" eval="[(4, ref('group_broker_user'))]"/>
+    </record>
+
+  </data>
+</openerp>
