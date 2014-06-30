@@ -347,16 +347,48 @@
 
     <!-- Configuracion -->
 
+    <record id="view_insurance_parameter_form" model="ir.ui.view">
+      <field name="name">view.insurance.parameter.form</field>
+      <field name="model">insurance.parameter</field>
+      <field name="arch" type="xml">
+	<form string="Configuración de Valores por Póliza" editable="top" version="7.0">
+	  <group string="Póliza">
+	    <field name="policy_id" on_change="onchange_policy(policy_id)"/>
+	    <field name="partner_id" options="{'no_open': True}"/>
+	    <field name="amount_min"/>
+	    <field name="amount_max1"/>
+	    <field name="amount_max2"/>
+	  </group>
+	  <group>
+	    <group string="Deudor">
+	      <field name="age_min"/>
+	      <field name="age_max"/>
+	      <field name="age_max2"/>
+	    </group>
+	    <group string="Codeudor">
+	      <field name="age_min_codeudor"/>
+	      <field name="age_max_codeudor"/>
+	    </group>
+	  </group>
+	</form>
+      </field>
+    </record>
+
     <record id="view_insurance_parameter_tree" model="ir.ui.view">
       <field name="name">view.insurance.parameter.tree</field>
       <field name="model">insurance.parameter</field>
       <field name="arch" type="xml">
-	<tree string="Configuración de Valores por Póliza" editable="top">
-	  <field name="policy_id"/>
-	  <field name="partner_id"/>
+	<tree string="Configuración de Valores por Póliza">
+	  <field name="policy_id" on_change="onchange_policy(policy_id)"/>
+	  <field name="partner_id" invisible="1"/>
 	  <field name="amount_min"/>
 	  <field name="amount_max1"/>
 	  <field name="amount_max2"/>
+	  <field name="age_min"/>
+	  <field name="age_max"/>
+	  <field name="age_max2"/>
+	  <field name="age_min_codeudor"/>
+	  <field name="age_max_codeudor"/>
 	</tree>
       </field>
     </record>
@@ -376,10 +408,66 @@
       <field name="name">Montos por Póliza</field>
       <field name="res_model">insurance.parameter</field>
       <field name="view_type">form</field>
-      <field name="view_mode">tree</field>
+      <field name="view_mode">tree,form</field>
     </record>
 
     <menuitem action="action_insurance_parameter" id="menu_amount_conf" name="Montos por Póliza" parent="menu_main_configuration"/>
+
+    <record id="view_insurance_parameter_value_tree" model="ir.ui.view">
+      <field name="name">view.insurance.parameter.value.tree</field>
+      <field name="model">insurance.parameter.value</field>
+      <field name="arch" type="xml">
+	<tree string="Reglas para montos por edades" editable="top">
+	  <field name="amount_min"/>
+	  <field name="amount_max"/>
+	  <field name="age_min"/>
+	  <field name="age_max"/>
+	  <field name="exams" widget="many2many_tags"/>
+	</tree>
+      </field>
+    </record>
+
+    <record id="view_insurance_parameter_value_search" model="ir.ui.view">
+      <field name="name">view.insurance.parameter.value.search</field>
+      <field name="model">insurance.parameter.value</field>
+      <field name="arch" type="xml">
+	<search>
+	  <field name="amount_min"/>
+	  <field name="amount_max"/>
+	  <field name="age_min"/>
+	  <field name="age_max"/>
+	  <field name="exams"/>
+	</search>
+      </field>
+    </record>
+
+    <record id="action_insurance_parameter_value" model="ir.actions.act_window">
+      <field name="name">Exámenes por Edad</field>
+      <field name="res_model">insurance.parameter.value</field>
+      <field name="view_type">form</field>
+      <field name="view_mode">tree</field>
+    </record>
+
+    <menuitem action="action_insurance_parameter_value" id="menu_amount_conf_value" parent="menu_main_configuration"/>
+
+    <record id="view_insurance_exams_tree" model="ir.ui.view">
+      <field name="name">view.insurance.exams.tree</field>
+      <field name="model">insurance.exams</field>
+      <field name="arch" type="xml">
+	<tree string="Catálogo de Exámenes" editable="top">
+	  <field name="name"/>
+	</tree>
+      </field>
+    </record>
+
+    <record id="action_insurance_exams" model="ir.actions.act_window">
+      <field name="name">Catálogo de Exámenes</field>
+      <field name="res_model">insurance.exams</field>
+      <field name="view_type">form</field>
+      <field name="view_mode">tree</field>
+    </record>
+
+    <menuitem action="action_insurance_exams" id="menu_amount_conf_exams" parent="menu_main_configuration"/>
 
   </data>
 </openerp>

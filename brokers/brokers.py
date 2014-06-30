@@ -3,6 +3,9 @@
 import time
 
 from osv import osv, fields
+import openerp.addons.decimal_precision as dp
+
+DP = dp.get_precision('Brokers')
 
 
 class ResUser(osv.osv):
@@ -97,6 +100,14 @@ class InsurancePartner(osv.osv):
 
 class InsurancePolicy(osv.osv):
     _name = 'insurance.policy'
+
+    def name_get(self, cr, uid, ids, context=None):
+        res = []
+        for r in self.read(cr, uid, ids, ['name','aseguradora_id'], context):
+            name = "{0} - {1}".format(r['name'], r['aseguradora_id'][1])
+            res.append((r['id'], name))
+        return res    
+    
     _columns = {
         'name': fields.char('Código', size=32 ,required=True),
         'partner_id': fields.many2one(
@@ -112,26 +123,69 @@ class InsurancePolicy(osv.osv):
 
 
 class InsuranceParameter(osv.osv):
+    """
+    Parametros de configuracion para decidir que poliza
+    utilizar.
+    """
 
+    def onchange_policy(self, cr, uid, ids, policy_id):
+        if not policy_id:
+            return {}
+        data = self.pool.get('insurance.policy').read(cr, uid, policy_id, ['aseguradora_id'])
+        return {
+            'value': {'partner_id': data['aseguradora_id']}
+        }
+        
     _name = 'insurance.parameter'
     _columns = {
-        'partner_id': fields.many2one(
-            'res.partner',
-            string='Aseguradora',
-            required=True,
-            select=True
-        ),
         'policy_id': fields.many2one(
             'insurance.policy',
             string='Póliza',
             required=True,
             select=True
         ),
-        'amount_min': fields.float('Monto Mínimo', digits=(16,2)),
-        'amount_max1': fields.float('Monto Maximo 1', digits=(16,2)),
-        'amount_max2': fields.float('Monto Maximo 2', digits=(16,2))
+        'partner_id': fields.related(
+            'policy_id',
+            'aseguradora_id',
+            relation='res.partner',
+            string='Aseguradora',
+            select=True,
+            type='many2one',
+            store=True,
+            readonly=True
+        ),        
+        'amount_min': fields.float('Monto Mín', digits_compute=DP),
+        'amount_max1': fields.float('Monto Max 1', digits_compute=DP),
+        'amount_max2': fields.float('Monto Max 2', digits_compute=DP),
+        'age_min': fields.integer('Edad Mín'),
+        'age_max': fields.integer('Edad Máx'),
+        'age_max2': fields.integer('Edad Máxima 2'),
+        'age_min_codeudor': fields.integer('Edad Mín Codeudor'),
+        'age_max_codeudor': fields.integer('Edad Máx Codeudor'),
     }
 
+
+class InsuranceExam(osv.osv):
+    _name = 'insurance.exams'
+    _columns = {
+        'name': fields.char('Examen', size=128, required=True)
+    }
+
+
+class InsuranceParameterValue(osv.osv):
+    """
+    Parametros de configuracion para decidir segun la edad
+    el monto limite de seguro a entregar
+    """
+    _name = 'insurance.parameter.value'
+    _columns = {
+        'amount_min': fields.float('Monto Mínimo', digits_compute=DP),
+        'amount_max': fields.float('Monto Máximo', digits_compute=DP),
+        'age_min': fields.integer('Edad Mínima'),
+        'age_max': fields.integer('Edad Máxima'),
+        'exams': fields.many2many('insurance.exams', string='Examenes')
+    }
+    
 
 class InsurancePartnerCivil(osv.osv):
 
