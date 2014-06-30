@@ -30,13 +30,13 @@
 	      </h2>
 	    </div>
 	    <group string="Registro Deudor">
-	      <field name="deudor_id" options="{'no_open': True}"/>
+	      <field name="deudor_id"/>
 	      <field name="tiene_apoderado"/>
 	      <field name="apoderado_id" domain="[('id','!=',deudor_id)]" attrs="{'required': [('tiene_apoderado','=',True)], 'invisible': [('tiene_apoderado','=',False)]}"/>
 	    </group>
 	    <group>
 	      <group string="Datos Solicitud de Crédito">
-		<field name="city_id"/>
+		<field name="city_id" options="{'no_open': True}"/>
 		<field name="date" required="1"/>
 		<field name="account_number"/>
 		<field name="nro_operacion_credito"/>
@@ -45,8 +45,8 @@
 	      <group string="Datos Créditos Vigentes">
 		<field name="has_active_credit"/>
 		<group class="oe_subtotal_footer oe_right">
-		  <field name="total_active_credits" widget="monetary"/>
-		  <field name="monto_credito_solicitado" widget="monetary"/>
+		  <field name="total_active_credits" widget="monetary" on_change="onchange_credit(total_active_credits, monto_credito_solicitado)"/>
+		  <field name="monto_credito_solicitado" widget="monetary" on_change="onchange_credit(total_active_credits, monto_credito_solicitado)"/>
 		  <field name="total_credits" class="oe_subtotal_footer_separator" widget="monetary"/>
 		</group>
 	      </group>
@@ -152,7 +152,8 @@
 	    </h3>
 	    <group string="Información">
 	      <group>
-		<field name="birth_date"/>
+		<field name="birth_date" class="oe_inline"/>
+		<field name="age" class="oe_inline"/>
 		<field name="sexo"/>
 		<field name="civil_id"/>
 	      </group>
@@ -418,7 +419,7 @@
       <field name="model">insurance.parameter.value</field>
       <field name="arch" type="xml">
 	<tree string="Reglas para montos por edades" editable="top">
-	  <field name="amount_min"/>
+	  <field name="amount_min" required="1"/>
 	  <field name="amount_max"/>
 	  <field name="age_min"/>
 	  <field name="age_max"/>

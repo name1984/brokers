@@ -31,7 +31,7 @@
         'security/ir.model.access.csv',
         'view/brokers_view.xml',
 #        'report/brokers_report.xml',
-#        'data/brokers_data.xml',
+        'data/brokers_data.xml',
     ],
     'depends' : [
         'base',
