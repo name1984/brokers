@@ -166,9 +166,12 @@ class InsuranceParameter(osv.osv):
     def onchange_policy(self, cr, uid, ids, policy_id):
         if not policy_id:
             return {}
-        data = self.pool.get('insurance.policy').read(cr, uid, policy_id, ['aseguradora_id'])
+        data = self.pool.get('insurance.policy').read(cr, uid, policy_id, ['aseguradora_id','partner_id'])
         return {
-            'value': {'partner_id': data['aseguradora_id']}
+            'value': {
+                'aseguradora_id': data['aseguradora_id'],
+                'partner_id': data['partner_id']
+            }
         }
         
     _name = 'insurance.parameter'
@@ -179,7 +182,7 @@ class InsuranceParameter(osv.osv):
             required=True,
             select=True
         ),
-        'partner_id': fields.related(
+        'aseguradora_id': fields.related(
             'policy_id',
             'aseguradora_id',
             relation='res.partner',
@@ -188,7 +191,17 @@ class InsuranceParameter(osv.osv):
             type='many2one',
             store=True,
             readonly=True
-        ),        
+        ),
+        'partner_id': fields.related(
+            'policy_id',
+            'partner_id',
+            relation='res.partner',
+            string='Cliente',
+            select=True,
+            type='many2one',
+            store=True,
+            readonly=True
+        ),
         'amount_min': fields.float('Monto Mín', digits_compute=DP),
         'amount_max1': fields.float('Monto Max 1', digits_compute=DP),
         'amount_max2': fields.float('Monto Max 2', digits_compute=DP),
@@ -197,6 +210,7 @@ class InsuranceParameter(osv.osv):
         'age_max2': fields.integer('Edad Máxima 2'),
         'age_min_codeudor': fields.integer('Edad Mín Codeudor'),
         'age_max_codeudor': fields.integer('Edad Máx Codeudor'),
+        'certificate': fields.boolean('Emite Certificado ?'),
     }
 
     _sql_constraints = [
@@ -206,7 +220,29 @@ class InsuranceParameter(osv.osv):
         ('age_min_max2', 'CHECK (age_max2 > age_min)', u'Edad máx 2 debe ser mayor !.'),
         ('age_codeudor', 'CHECK (age_max_codeudor > age_min_codeudor)', u'Edades de codeudor incorrectas !'),
         ('not_zero_values', 'CHECK (amount_min*amount_max1*amount_max2 > 0)', u'Los valores deben ser positivos !')
-    ]    
+    ]
+
+    def validate(self, cr, uid, credit_requested, deudor, partner_id):
+        """
+        """
+        msg1 = 'Las personas que tengan %s años 1 día, no tendrán cobertura'
+        msg2 = 'El monto asegurado máximo por persona para los socios que tengan desde %s años 1 día hasta el día que cumpla %s años será de hasta $%s'
+        msg3 = 'Desde el Día que cumpla %s años de edad hasta el día que cumpla %s años de edad, al momento de contratar el crédito con cobertura hasta %s'
+        ids = self.search(cr, uid, [('partner_id','=',partner_id)])
+        if not ids:
+            raise osv.except_osv('Error', 'No existen polizas configuradas para este canal.')
+        for obj in self.browse(cr, uid, ids):
+            edad = int(deudor.age.split(' ')[0])
+            if not obj.age_min <= edad <= obj.age_max:
+                return False, msg3 % obj.age_max
+            if edad > obj.age_max2:
+                if credit_requested > obj.amount_max2:
+                    return False, msg2 % (obj.age_max2, obj.age_max, obj.amount_max2)
+                if obj.certificate:
+                    return True, 'certificate'                
+            if not obj.amount_min <= credit_requested <= obj.amount_max1:
+                return False, msg3 % (obj.age_min, obj.age_max2, obj.amount_max1)
+        return True, 'ok'
 
 
 class InsuranceExam(osv.osv):
@@ -301,6 +337,7 @@ class InsuranceInsurance(osv.osv):
         'state': fields.selection(
             [('draft', 'Borrador'),
             ('request', 'Solicitado'),
+            ('certificate', 'Certificado'),
             ('ok', 'Aprobado')],
             string='Estado',
             required=True
@@ -347,17 +384,20 @@ class InsuranceInsurance(osv.osv):
     def _check_values(self, cr, uid, ids, context=None):
         exam_obj = self.pool.get('insurance.parameter')
         for obj in self.browse(cr, uid, ids, context):
-            res, msg = exam_obj.validate(cr, uid, obj.monto_credito_solicitado, obj.deudor_id)
+            res, msg = exam_obj.validate(cr, uid, obj.monto_credito_solicitado, obj.deudor_id, obj.contractor_id.id)
             if not res:
-                raise osv.except_osv('Alerta', msg)        
-        return True
+                raise osv.except_osv('Alerta', msg)
+        return True, msg
 
-    def _check_exams(self, cr, uid, ids, context=None):
+    def _get_exams(self, cr, uid, ids, context=None):
         """
         Metodo de validacion por monto para identificar
         que examenes debe realizarse el deudor.
         """
         return True
+
+    def action_draft(self, cr, uid, ids, context=None):
+        self.write(cr, uid, ids, {'state': 'draft'})
 
     def action_validate(self, cr, uid, ids, context=None):
         """
@@ -365,9 +405,12 @@ class InsuranceInsurance(osv.osv):
         Tabla 1: insurance.parameter
         Tabla 2: insurance.parameter.value
         """
-        self._check_values(cr, uid, ids, context)
-        self._check_exams(cr, uid, ids, context)
-        self.write(cr, uid, ids, {'state': 'request'})
+        state = 'request'
+        flag, msg = self._check_values(cr, uid, ids, context)
+        if msg == 'certificate':
+            state = msg
+        exams = self._get_exams(cr, uid, ids, context)
+        self.write(cr, uid, ids, {'state': state, 'exams': [(6,0,exams)]})
         return True
 
     def action_print(self, cr, uid, ids, context=None):

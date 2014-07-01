@@ -15,6 +15,7 @@
 	<form string="Gestión de Seguros" version="7.0">
 	  <header>
 	    <button name="action_validate" string="Validar Datos" states="draft" class="oe_highlight" type="object"/>
+	    <button name="action_draft" string="Borrador" type="object"/>
 	    <button name="action_print" string="Declaración de Asegurabilidad" states="request" class="oe_highlight" type="object"/>
 	    <field name="state" widget="statusbar" statusbar_visible="draft,request,ok"/>
 	  </header>
@@ -353,12 +354,16 @@
       <field name="model">insurance.parameter</field>
       <field name="arch" type="xml">
 	<form string="Configuración de Valores por Póliza" editable="top" version="7.0">
-	  <group string="Póliza">
-	    <field name="policy_id" on_change="onchange_policy(policy_id)"/>
-	    <field name="partner_id" options="{'no_open': True}"/>
-	    <field name="amount_min"/>
-	    <field name="amount_max1"/>
-	    <field name="amount_max2"/>
+	  <group>
+	    <group string="Póliza">
+	      <field name="policy_id" on_change="onchange_policy(policy_id)"/>
+	      <field name="partner_id"/>
+	      <field name="aseguradora_id"/>
+	      <field name="amount_min"/>
+	      <field name="amount_max1"/>
+	      <field name="amount_max2"/>
+	      <field name="certificate"/>
+	    </group>
 	  </group>
 	  <group>
 	    <group string="Deudor">
