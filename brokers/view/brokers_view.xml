@@ -71,6 +71,9 @@
 	      </div>
 	      <field name="answer2" attrs="{'required': [('question2','=',True)]}" nolabel="1"/>
 	    </group>
+	    <group>
+	      <field name="exams" widget="many2many_tags" attrs="{'invisible': [('state','=','draft')]}"/>
+	    </group>
 	  </sheet>
           <div class="oe_chatter">
             <field name="message_follower_ids" widget="mail_followers" 

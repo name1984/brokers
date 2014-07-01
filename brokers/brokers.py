@@ -258,6 +258,7 @@ class InsuranceParameterValue(osv.osv):
     el monto limite de seguro a entregar
     """
     _name = 'insurance.parameter.value'
+    _order = 'amount_min ASC, age_min ASC'
     _columns = {
         'amount_min': fields.float('Monto Mínimo', digits_compute=DP),
         'amount_max': fields.float('Monto Máximo', digits_compute=DP),
@@ -270,7 +271,25 @@ class InsuranceParameterValue(osv.osv):
         ('amount_max_min' ,'CHECK (amount_max > amount_min)' ,u'El monto máx. debe ser mayor !.'),
         ('age_max_min' ,'CHECK (age_max > age_min)' ,u'La edad máx. debe ser mayor !.'),        
     ]
-    
+
+    def get_exams(self, cr, uid, value_requested, age):
+        """
+        Consulta de examenes segun monto y edad
+        """
+        edad = int(age.split(' ')[0])
+        ids = self.search(
+            cr, uid,
+            [('amount_min','<=', value_requested),
+             ('amount_max','>=', value_requested),
+             ('age_min','<=', edad),
+             ('age_max','>=', edad)
+            ]
+        )
+        if not ids:
+            raise osv.except_osv('Error', u'No aplica a ningun caso de la configuración.')
+        data = self.read(cr, uid, ids, ['exams'])
+        return data[0]['exams']
+        
 
 class InsurancePartnerCivil(osv.osv):
 
@@ -359,7 +378,8 @@ class InsuranceInsurance(osv.osv):
             'res.users',
             required=True,
             string='Usuario'
-        )
+        ),
+        'exams': fields.many2many('insurance.exams', string='Examenes')
     }
 
     def _get_contractor(self, cr, uid, context=None):
@@ -382,9 +402,9 @@ class InsuranceInsurance(osv.osv):
     ]
 
     def _check_values(self, cr, uid, ids, context=None):
-        exam_obj = self.pool.get('insurance.parameter')
+        param_obj = self.pool.get('insurance.parameter')
         for obj in self.browse(cr, uid, ids, context):
-            res, msg = exam_obj.validate(cr, uid, obj.monto_credito_solicitado, obj.deudor_id, obj.contractor_id.id)
+            res, msg = param_obj.validate(cr, uid, obj.monto_credito_solicitado, obj.deudor_id, obj.contractor_id.id)
             if not res:
                 raise osv.except_osv('Alerta', msg)
         return True, msg
@@ -394,7 +414,10 @@ class InsuranceInsurance(osv.osv):
         Metodo de validacion por monto para identificar
         que examenes debe realizarse el deudor.
         """
-        return True
+        exam_obj = self.pool.get('insurance.parameter.value')
+        for obj in self.browse(cr, uid, ids, context):
+            exams = exam_obj.get_exams(cr, uid, obj.monto_credito_solicitado, obj.deudor_id.age)
+        return exams
 
     def action_draft(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state': 'draft'})
