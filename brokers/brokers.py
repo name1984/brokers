@@ -225,12 +225,12 @@ class InsuranceParameter(osv.osv):
     def validate(self, cr, uid, credit_requested, deudor, partner_id):
         """
         """
-        msg1 = 'Las personas que tengan %s años 1 día, no tendrán cobertura'
-        msg2 = 'El monto asegurado máximo por persona para los socios que tengan desde %s años 1 día hasta el día que cumpla %s años será de hasta $%s'
-        msg3 = 'Desde el Día que cumpla %s años de edad hasta el día que cumpla %s años de edad, al momento de contratar el crédito con cobertura hasta %s'
+        msg1 = u'Las personas que tengan %s años 1 día, no tendrán cobertura'
+        msg2 = u'El monto asegurado máximo por persona para los socios que tengan desde %s años 1 día hasta el día que cumpla %s años será de hasta $%s'
+        msg3 = u'Desde el Día que cumpla %s años de edad hasta el día que cumpla %s años de edad, al momento de contratar el crédito con cobertura hasta %s'
         ids = self.search(cr, uid, [('partner_id','=',partner_id)])
         if not ids:
-            raise osv.except_osv('Error', 'No existen polizas configuradas para este canal.')
+            raise osv.except_osv('Error', u'No existen polizas configuradas para este canal.')
         for obj in self.browse(cr, uid, ids):
             edad = int(deudor.age.split(' ')[0])
             if not obj.age_min <= edad <= obj.age_max:
