@@ -435,7 +435,7 @@ class InsuranceInsurance(osv.osv):
         data = {'state': state}
         flag, msg = self._check_values(cr, uid, ids, context)
         if msg == 'certificate':
-            state = msg
+            data['state'] = msg
         else:
             exams = self._get_exams(cr, uid, ids, context)
             data.update({'exams': [(6,0,exams)]})

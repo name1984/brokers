@@ -16,7 +16,8 @@
 	  <header>
 	    <button name="action_validate" string="Validar Datos" states="draft" class="oe_highlight" type="object"/>
 	    <button name="action_draft" string="Borrador" type="object"/>
-	    <button name="action_print" string="Declaración de Asegurabilidad" states="request" class="oe_highlight" type="object"/>
+	    <button name="action_print" string="Declaración de Asegurabilidad" icon="gtk-print" states="request" class="oe_highlight" type="object"/>
+	    <button name="action_print" string="Certificado" icon="gtk-print" states="certificate" class="oe_highlight" type="object"/>
 	    <field name="state" widget="statusbar" statusbar_visible="draft,request,ok"/>
 	  </header>
 	  <sheet string="Seguro de Desgravamen">
