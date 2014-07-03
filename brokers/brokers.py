@@ -214,7 +214,6 @@ class InsuranceParameter(osv.osv):
     }
 
     _sql_constraints = [
-        ('amount_max1_min' ,'CHECK (amount_max1 > amount_min)' ,u'El monto máx. debe ser mayor !.'),
         ('amount_max2_min' ,'CHECK (amount_max2 > 0)' ,u'El monto máx 2. debe ser positivo !.'),
         ('age_min_max', 'CHECK (age_max > age_min)', u'Edad máx debe ser mayor !".'),
         ('age_min_max2', 'CHECK (age_max2 > age_min)', u'Edad máx 2 debe ser mayor !.'),

@@ -92,7 +92,7 @@
 	  <field name="name"/>
 	  <field name="contractor_id"/>
 	  <field name="deudor_id"/>
-	  <field name="total_credits"/>
+	  <field name="total_credits" sum="TOTAL"/>
 	  <field name="state"/>
 	</tree>
       </field>
