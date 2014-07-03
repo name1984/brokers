@@ -241,6 +241,8 @@ class InsuranceParameter(osv.osv):
                     return True, 'certificate'                
             if obj.amount_min <= credit_requested <= obj.amount_max1:
                 return True, 'ok'
+            elif obj.amount_min > credit_requested :
+                return True, 'certificate'
             else:
                 return False, msg3 % (obj.age_min, obj.age_max2, obj.amount_max1)
         return True, 'ok'
