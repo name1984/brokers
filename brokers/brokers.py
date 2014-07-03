@@ -286,7 +286,7 @@ class InsuranceParameterValue(osv.osv):
             ]
         )
         if not ids:
-            raise osv.except_osv('Error', u'No aplica a ningun caso de la configuración.')
+            raise osv.except_osv('Error', u'No aplica a ningun caso de la configuración de exámenes.')
         data = self.read(cr, uid, ids, ['exams'])
         return data[0]['exams']
         
