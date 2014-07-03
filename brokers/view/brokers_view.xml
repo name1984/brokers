@@ -53,7 +53,8 @@
 		</group>
 	      </group>
 	    </group>
-	    <group attrs="{'invisible': [('state','=','draft')]}">
+	    <field name="show_questions" invisible="1"/>
+	    <group attrs="{'invisible': [('show_questions','=',False)]}">
 	      <div>
                 ¿ Sufre o ha sufrido trastornos cardiovasculares, trastornos renales, 
 		tensión arterial alta, derrame cerebral, cáncer, tumor, diabetes, 
@@ -63,7 +64,7 @@
 	      <field name="answer1" nolabel="1" placeholder="Transtornos..." attrs="{'required': [('question1','=',True)]}"/>
 	    </group>
 	    <newline/>
-	    <group attrs="{'invisible': [('state','=','draft')]}">
+	    <group attrs="{'invisible': [('show_questions','=',False)]}">
 	      <div>
 		¿ Tiene en la actualidad alguna enfermedad o pérdida funcional o anatómica, 
 		o ha sufrido un accidente que le impide desempeñar labores propias de su ocupación, 

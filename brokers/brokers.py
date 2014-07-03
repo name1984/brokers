@@ -364,6 +364,7 @@ class InsuranceInsurance(osv.osv):
             string='Estado',
             required=True
         ),
+        'show_questions': fields.boolean('Mostrar Preguntas'),
         'question1': fields.boolean(
             "Transtornos ?"
         ),
