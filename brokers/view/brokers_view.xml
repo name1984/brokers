@@ -106,6 +106,10 @@
 	  <field name="name"/>
 	  <field name="deudor_id"/>
 	  <field name="total_credits"/>
+	  <group string="Agrupar por...">
+            <filter string="Deudor" icon="terp-partner" domain="[]" context="{'group_by':'deudor_id'}"/>
+            <filter string="Estado" domain="[]" context="{'group_by':'state'}"/>
+	  </group>
 	</search>
       </field>
     </record>

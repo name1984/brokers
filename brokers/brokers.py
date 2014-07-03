@@ -404,7 +404,7 @@ class InsuranceInsurance(osv.osv):
     def _check_values(self, cr, uid, ids, context=None):
         param_obj = self.pool.get('insurance.parameter')
         for obj in self.browse(cr, uid, ids, context):
-            res, msg = param_obj.validate(cr, uid, obj.monto_credito_solicitado, obj.deudor_id, obj.contractor_id.id)
+            res, msg = param_obj.validate(cr, uid, obj.total_credits, obj.deudor_id, obj.contractor_id.id)
             if not res:
                 raise osv.except_osv('Alerta', msg)
         return True, msg
@@ -416,7 +416,7 @@ class InsuranceInsurance(osv.osv):
         """
         exam_obj = self.pool.get('insurance.parameter.value')
         for obj in self.browse(cr, uid, ids, context):
-            exams = exam_obj.get_exams(cr, uid, obj.monto_credito_solicitado, obj.deudor_id.age)
+            exams = exam_obj.get_exams(cr, uid, obj.total_credits, obj.deudor_id.age)
         return exams
 
     def action_draft(self, cr, uid, ids, context=None):
@@ -429,11 +429,14 @@ class InsuranceInsurance(osv.osv):
         Tabla 2: insurance.parameter.value
         """
         state = 'request'
+        data = {'state': state}
         flag, msg = self._check_values(cr, uid, ids, context)
         if msg == 'certificate':
             state = msg
-        exams = self._get_exams(cr, uid, ids, context)
-        self.write(cr, uid, ids, {'state': state, 'exams': [(6,0,exams)]})
+        else:
+            exams = self._get_exams(cr, uid, ids, context)
+            data.update({'exams': [(6,0,exams)]})
+        self.write(cr, uid, ids, data)
         return True
 
     def action_print(self, cr, uid, ids, context=None):
