@@ -476,7 +476,7 @@ class InsuranceInsurance(osv.osv):
                 obj.total_credits,
                 obj.deudor_id,
                 obj.contractor_id.id,
-                part_obj.get_conyugue(obj.deudor_id)
+                part_obj.get_conyugue(cr, uid, obj.deudor_id)
             )
             if not res:
                 raise osv.except_osv('Alerta', msg)
