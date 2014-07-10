@@ -9,6 +9,28 @@
     <menuitem id="menu_main_configuration" name="Configuración" parent="menu_main_brokers" sequence="20"/>
     <menuitem id="menu_main_master_data" name="Datos Base" parent="menu_main_configuration"/>
 
+    <record id="view_insurance_parentesco_tree" model="ir.ui.view">
+      <field name="name">view.insurance.parentesco.tree</field>
+      <field name="model">insurance.parentesco</field>
+      <field name="arch" type="xml">
+	<tree string="Estado Civil" editable="bottom">
+	  <field name="name"/>
+	  <field name="conyugue"/>
+	</tree>
+      </field>
+    </record>
+
+    <record id="action_insurance_parentesco" model="ir.actions.act_window">
+      <field name="name">Catálogo de Parentezco</field>
+      <field name="res_model">insurance.partner.civil</field>
+      <field name="view_type">form</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem action="action_insurance_parentesco" 
+	      id="menu_insurance_parentezco" 
+	      parent="menu_main_master_data"/>
+
     <record id="view_insurance_partner_civil_form" model="ir.ui.view">
       <field name="name">view.insurance.partner.civil.form</field>
       <field name="model">insurance.partner.civil</field>
@@ -17,6 +39,7 @@
 	  <group string="Información">
 	    <field name="code"/>
 	    <field name="name"/>
+	    <field name="married"/>
 	  </group>
 	</form>
       </field>
@@ -26,7 +49,7 @@
       <field name="name">view.insurance.partner.civil.tree</field>
       <field name="model">insurance.partner.civil</field>
       <field name="arch" type="xml">
-	<tree string="Estado Civil">
+	<tree string="Estado Civil" editable="bottom">
 	    <field name="code"/>
 	    <field name="name"/>
 	    <field name="married"/>
@@ -54,8 +77,9 @@
 	    <button name="action_validate" string="Validar Datos" states="draft" class="oe_highlight" type="object"/>
 	    <button name="action_draft" string="Borrador" type="object"/>
 	    <button name="action_print" string="Declaración de Asegurabilidad" icon="gtk-print" states="request" class="oe_highlight" type="object"/>
-	    <button name="action_print" string="Certificado" icon="gtk-print" states="certificate" class="oe_highlight" type="object"/>
+	    <button name="action_print" string="Certificado" icon="gtk-print" attrs="{'invisible': [('print_certificate','=',False)]}" class="oe_highlight" type="object"/>
 	    <field name="state" widget="statusbar" statusbar_visible="draft,request,ok"/>
+	    <field name="print_certificate" invisible="1"/>
 	  </header>
 	  <sheet string="Seguro de Desgravamen">
             <div class="oe_title">
@@ -76,7 +100,7 @@
 	    <group>
 	      <group string="Datos Solicitud de Crédito">
 		<field name="city_id" options="{'no_open': True}"/>
-		<field name="date" required="1"/>
+		<field name="date" required="1" readonly="1"/>
 		<field name="account_number"/>
 		<field name="nro_operacion_credito"/>
 		<field name="plazo"/>
@@ -91,7 +115,7 @@
 	      </group>
 	    </group>
 	    <field name="show_questions" invisible="1"/>
-	    <group attrs="{'invisible': [('show_questions','=',False)]}">
+	    <group>
 	      <div>
                 ¿ Sufre o ha sufrido trastornos cardiovasculares, trastornos renales, 
 		tensión arterial alta, derrame cerebral, cáncer, tumor, diabetes, 
@@ -101,7 +125,7 @@
 	      <field name="answer1" nolabel="1" placeholder="Transtornos..." attrs="{'required': [('question1','=',True)]}"/>
 	    </group>
 	    <newline/>
-	    <group attrs="{'invisible': [('show_questions','=',False)]}">
+	    <group>
 	      <div>
 		¿ Tiene en la actualidad alguna enfermedad o pérdida funcional o anatómica, 
 		o ha sufrido un accidente que le impide desempeñar labores propias de su ocupación, 
@@ -206,7 +230,7 @@
 		<field name="birth_date" class="oe_inline"/>
 		<field name="age" class="oe_inline"/>
 		<field name="sexo"/>
-		<field name="civil_id"/>
+		<field name="civil_id" widget="selection" on_change="onchange_civil(civil_id)"/>
 	      </group>
 	      <group>
 		<field name="mobile"/>
@@ -216,7 +240,7 @@
 	      </group>
 	    </group>
 	    <notebook>
-	      <page string="Familiares">
+	      <page string="Familiares / Conyugue">
 		<field name="child_ids" mode="kanban">
 		  <kanban>
 		    <field name="name"/>
@@ -258,7 +282,7 @@
 			<group>
 			  <field name="birth_date"/>
 			  <field name="sexo"/>
-			  <field name="civil_id"/>
+			  <field name="civil_id" widget="selection"/>
 			</group>
 			<group>
 			  <field name="mobile"/>

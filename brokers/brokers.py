@@ -81,8 +81,13 @@ class InsurancePartner(osv.osv):
     def _compute_age(self, cr, uid, ids, name, args, context=None):
         res = {}
         for obj in self.browse(cr, uid, ids, context):
+            res[obj.id] = {
+                'age': '',
+                'age_int': 0
+            }
             age = self.compute_age(obj.birth_date)
-            res[obj.id] = age
+            res[obj.id]['age'] = age
+            res[obj.id]['age_int'] = int(age.split(' ')[0])
         return res    
 
     _columns = {
@@ -109,7 +114,20 @@ class InsurancePartner(osv.osv):
             select=True
         ),
         'birth_date': fields.date('Fecha de Nacimiento', required=True),
-        'age': fields.function(_compute_age, string='Edad', type='char'),
+        'age': fields.function(
+            _compute_age,
+            string='Edad',
+            type='char',
+            multi='age',
+            store={'insurance.partner': (lambda self, cr, uid, ids, c={}: ids, ['birth_date'], 20)}
+        ),
+        'age_int': fields.function(
+            _compute_age,
+            string='Edad (Años)',
+            type='integer',
+            multi='age',
+            store={'insurance.partner': (lambda self, cr, uid, ids, c={}: ids, ['birth_date'], 20)}
+        ),
         'sexo': fields.selection(
             [('m', 'MASCULINO'),
              ('f', 'FEMENINO')],
@@ -139,26 +157,27 @@ class InsurancePartner(osv.osv):
         )
     }
 
-    def _check_civil(self, cr, uid, ids):
-        for obj in self.browse(cr, uid, ids):
-            if not obj.civil_id.married:
-                return True
-            flag = False
-            for part in obj.child_ids:
-                if part.conyugue:
-                    flag = True
-            if not flag:
-                return False
-        return True
-
-    _constraints = [
-        (_check_civil, 'Requiere los datos del Codeudor (conyugue)', ['Familiares'])
-    ]
-
     _defaults = {
         'sexo': 'm',
         'tipo_identificador': 'cedula'
     }
+
+    def onchange_civil(self, cr, uid, ids, civil_id):
+        res = {'warning': {'title': 'Aviso', 'message': u'Debe ingresar la información del conyugue.'}}
+        if not civil_id:
+            return {}
+        data = self.pool.get('insurance.partner.civil').read(cr, uid, [civil_id], ['married'])
+        if data[0]['married']:
+            return res
+        return {}
+
+    def get_conyugue(self, cr, uid, deudor):
+        if not deudor.civil_id.married:
+            return False
+        for obj in deudor.child_ids:
+            if obj.parentesco_id.conyugue:
+                return obj
+        return False
 
 
 class InsurancePolicy(osv.osv):
@@ -256,11 +275,11 @@ class InsuranceParameter(osv.osv):
         msg2 = u'El monto asegurado máximo por persona para los socios que tengan desde %s años 1 día hasta el día que cumpla %s años será de hasta $%s'
         msg3 = u'Desde el Día que cumpla %s años de edad hasta el día que cumpla %s años de edad, al momento de contratar el crédito con cobertura hasta %s'
         ids = self.search(cr, uid, [('partner_id','=',partner_id)])
+        conyugue = self.pool.get('insurance.partner').get_conyugue(cr, uid, deudor)
         if not ids:
             raise osv.except_osv('Error', u'No existen polizas configuradas para este canal.')
         for obj in self.browse(cr, uid, ids):
-            edad = int(deudor.age.split(' ')[0])
-    
+            edad = deudor.age_int
             if credit > obj.amount_max1 or edad < obj.age_min or edad > obj.age_max:
                 return False, msg2 % (obj.age_max2, obj.age_max, obj.amount_max2)
             if credit < obj.amount_min and obj.age_min <= edad <= obj.age_max2:
@@ -272,14 +291,16 @@ class InsuranceParameter(osv.osv):
                 if obj.certificate:
                     return True, 'certificate'
                 return False, msg1 % obj.age_max
-            return True, 'question'
-
+            if obj.age_min_codeudor < conyugue.age_int <= obj.age_max_codeudor:
+                pass
+            return True, 'ok'
 
 
 class InsuranceExam(osv.osv):
     _name = 'insurance.exams'
     _columns = {
-        'name': fields.char('Examen', size=128, required=True)
+        'name': fields.char('Examen', size=128, required=True),
+        'print': fields.boolean('Imprimir ?'),
     }
 
 
@@ -307,6 +328,7 @@ class InsuranceParameterValue(osv.osv):
         """
         Consulta de examenes segun monto y edad
         """
+        flag = False
         edad = int(age.split(' ')[0])
         ids = self.search(
             cr, uid,
@@ -319,7 +341,10 @@ class InsuranceParameterValue(osv.osv):
         if not ids:
             raise osv.except_osv('Error', u'No aplica a ningun caso de la configuración de exámenes.')
         data = self.read(cr, uid, ids, ['exams'])
-        return data[0]['exams']
+        for ex in self.pool.get('insurance.exams').read(cr, uid, data['exams'], ['print']):
+            if ex['print']:
+                flag = True
+        return data[0]['exams'], flag
 
 
 class InsuranceInsurance(osv.osv):
@@ -396,6 +421,7 @@ class InsuranceInsurance(osv.osv):
             "Q2"
         ),
         'answer2': fields.text('Respuesta'),
+        'print_certificate': fields.boolean('Imprime Certificado ?'),
         'tiene_apoderado': fields.boolean('Tiene Apoderado'),
         'apoderado_id': fields.many2one(
             'insurance.partner',
@@ -424,14 +450,34 @@ class InsuranceInsurance(osv.osv):
         'user_id': _get_user
     }
 
+    def _check_conyugue(self, cr, uid, ids):
+        for obj in self.browse(cr, uid, ids):
+            if not obj.deudor_id.civil_id.married:
+                return True
+            for parent in obj.deudor_id.child_ids:
+                if parent.parentesco_id.conyugue:
+                    return True
+        return False
+
     _sql_constraints = [
         ('plazo_not_zero' ,'CHECK (plazo > 0)' ,'El plazo debe ser positivo !.')
     ]
 
+    _constraints = [
+        (_check_conyugue, 'Requiere los datos del Codeudor (conyugue)', ['Familiares'])
+    ]        
+
     def _check_values(self, cr, uid, ids, context=None):
         param_obj = self.pool.get('insurance.parameter')
+        part_obj = self.pool.get('insurance.partner')
         for obj in self.browse(cr, uid, ids, context):
-            res, msg = param_obj.validate(cr, uid, obj.total_credits, obj.deudor_id, obj.contractor_id.id)
+            res, msg = param_obj.validate(
+                cr, uid,
+                obj.total_credits,
+                obj.deudor_id,
+                obj.contractor_id.id,
+                part_obj.get_conyugue(obj.deudor_id)
+            )
             if not res:
                 raise osv.except_osv('Alerta', msg)
         return True, msg
@@ -457,13 +503,16 @@ class InsuranceInsurance(osv.osv):
         """
         state = 'request'
         data = {'state': state}
-        flag, msg = self._check_values(cr, uid, ids, context)
-        if msg == 'certificate':
-            data['state'] = msg
-        else:
-            exams = self._get_exams(cr, uid, ids, context)
-            data.update({'exams': [(6,0,exams)], 'show_questions': True})
-        self.write(cr, uid, ids, data)
+        for obj in self.browse(cr, uid, ids, context):
+            flag, msg = self._check_values(cr, uid, [obj.id], context)
+            if msg == 'certificate':
+                data['print_certificate'] = True
+            else:
+                exams, flag = self._get_exams(cr, uid, [obj.id], context)
+                if obj.answer1 and obj.answer2 and flag:
+                    data.update({'print_certificate': True})
+            data.update({'exams': [(6,0,exams)]})
+            self.write(cr, uid, ids, data)
         return True
 
     def action_questions(self, cr, uid, ids, context=None):
