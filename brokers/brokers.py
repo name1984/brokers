@@ -511,7 +511,7 @@ class InsuranceInsurance(osv.osv):
                 exams, flag = self._get_exams(cr, uid, [obj.id], context)
                 if obj.answer1 and obj.answer2 and flag:
                     data.update({'print_certificate': True})
-            data.update({'exams': [(6,0,exams)]})
+                data.update({'exams': [(6,0,exams)]})
             self.write(cr, uid, ids, data)
         return True
 
