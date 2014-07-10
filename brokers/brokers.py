@@ -26,7 +26,19 @@ class InsuranceParentesco(osv.osv):
     _description = 'Parentezco de Deudores'
     _columns = {
         'name': fields.char('Parentesco', size=32, required=True),
+        'conyugue': fields.boolean('Conyugue ?')
     }
+
+
+class InsurancePartnerCivil(osv.osv):
+
+    _name = 'insurance.partner.civil'
+
+    _columns = {
+        'code': fields.char('Código', size=8, required=True),
+        'name': fields.char('Nombre', size=16, required=True),
+        'married': fields.boolean('Casado ?')
+        }
 
 
 class InsurancePartner(osv.osv):
@@ -127,6 +139,22 @@ class InsurancePartner(osv.osv):
         )
     }
 
+    def _check_civil(self, cr, uid, ids):
+        for obj in self.browse(cr, uid, ids):
+            if not obj.civil_id.married:
+                return True
+            flag = False
+            for part in obj.child_ids:
+                if part.conyugue:
+                    flag = True
+            if not flag:
+                return False
+        return True
+
+    _constraints = [
+        (_check_civil, 'Requiere los datos del Codeudor (conyugue)', ['Familiares'])
+    ]
+
     _defaults = {
         'sexo': 'm',
         'tipo_identificador': 'cedula'
@@ -221,7 +249,7 @@ class InsuranceParameter(osv.osv):
         ('not_zero_values', 'CHECK (amount_min*amount_max1*amount_max2 > 0)', u'Los valores deben ser positivos !')
     ]
 
-    def validate(self, cr, uid, credit_requested, deudor, partner_id):
+    def validate(self, cr, uid, credit, deudor, partner_id, codeudor=False):
         """
         """
         msg1 = u'Las personas que tengan %s años 1 día, no tendrán cobertura'
@@ -232,20 +260,20 @@ class InsuranceParameter(osv.osv):
             raise osv.except_osv('Error', u'No existen polizas configuradas para este canal.')
         for obj in self.browse(cr, uid, ids):
             edad = int(deudor.age.split(' ')[0])
-            if not obj.age_min <= edad <= obj.age_max:
-                return False, msg3 % obj.age_max
-            if edad > obj.age_max2:
-                if credit_requested > obj.amount_max2:
-                    return False, msg2 % (obj.age_max2, obj.age_max, obj.amount_max2)
+    
+            if credit > obj.amount_max1 or edad < obj.age_min or edad > obj.age_max:
+                return False, msg2 % (obj.age_max2, obj.age_max, obj.amount_max2)
+            if credit < obj.amount_min and obj.age_min <= edad <= obj.age_max2:
                 if obj.certificate:
-                    return True, 'certificate'                
-            if obj.amount_min <= credit_requested <= obj.amount_max1:
-                return True, 'ok'
-            elif obj.amount_min > credit_requested :
-                return True, 'certificate'
-            else:
+                    #Genera certificado de asegurabilidad
+                    return True, 'certificate'
                 return False, msg3 % (obj.age_min, obj.age_max2, obj.amount_max1)
-        return True, 'ok'
+            if credit <= obj.amount_max2 and obj.age_max2 < edad <= obj.age_max:
+                if obj.certificate:
+                    return True, 'certificate'
+                return False, msg1 % obj.age_max
+            return True, 'question'
+
 
 
 class InsuranceExam(osv.osv):
@@ -292,16 +320,6 @@ class InsuranceParameterValue(osv.osv):
             raise osv.except_osv('Error', u'No aplica a ningun caso de la configuración de exámenes.')
         data = self.read(cr, uid, ids, ['exams'])
         return data[0]['exams']
-        
-
-class InsurancePartnerCivil(osv.osv):
-
-    _name = 'insurance.partner.civil'
-
-    _columns = {
-        'code': fields.char('Código', size=8, required=True),
-        'name': fields.char('Nombre', size=16, required=True)
-        }
 
 
 class InsuranceInsurance(osv.osv):
@@ -343,7 +361,6 @@ class InsuranceInsurance(osv.osv):
             required=True
         ),
         'has_active_credit': fields.boolean('El deudor tiene créditos vigentes ?'),
-        'total_active_credits': fields.float('Total Créditos Vigentes', digits=(16,2)),
         'city_id': fields.many2one(
             'res.country.state.city',
             string='Cuidad de Trámite',
@@ -352,8 +369,14 @@ class InsuranceInsurance(osv.osv):
         'date': fields.date('Fecha de Solicitud de Crédito'),
         'account_number': fields.char('Número de Cuenta', size=32, required=True),
         'nro_operacion_credito': fields.char('Nro Operación Crédito', size=32, required=True),
-        'monto_credito_solicitado': fields.float('Monto Crédito Solicitado', digits_compute=DP),
-        'total_credits': fields.function(_compute_total, string='Total Créditos', digits_compute=DP),
+        'total_active_credits': fields.float('Total Créditos Vigentes', digits_compute=DP),        
+        'monto_credito_solicitado': fields.float('Monto Crédito Solicitado', digits_compute=DP),        
+        'total_credits': fields.function(
+            _compute_total,
+            string='Total Créditos',
+            digits_compute=DP,
+            store={'insurance.insurance': (lambda self, cr, uid, ids, c={}: ids, ['monto_credito_solicitado','total_active_credits'], 20),}
+        ),
         'plazo': fields.integer('Plazo (meses)'),
         'aseguradora_id': fields.many2one('res.partner', string='Aseguradora'),
         'state': fields.selection(
@@ -439,9 +462,14 @@ class InsuranceInsurance(osv.osv):
             data['state'] = msg
         else:
             exams = self._get_exams(cr, uid, ids, context)
-            data.update({'exams': [(6,0,exams)]})
+            data.update({'exams': [(6,0,exams)], 'show_questions': True})
         self.write(cr, uid, ids, data)
         return True
+
+    def action_questions(self, cr, uid, ids, context=None):
+        """
+        """
+        pass
 
     def action_print(self, cr, uid, ids, context=None):
         """

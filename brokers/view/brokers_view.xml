@@ -7,6 +7,43 @@
     <menuitem id="menu_main_policies" name="Pólizas" parent="menu_main_brokers" sequence="10"/>
     <menuitem id="menu_main_entities" name="Entidades" parent="menu_main_brokers" sequence="15"/>
     <menuitem id="menu_main_configuration" name="Configuración" parent="menu_main_brokers" sequence="20"/>
+    <menuitem id="menu_main_master_data" name="Datos Base" parent="menu_main_configuration"/>
+
+    <record id="view_insurance_partner_civil_form" model="ir.ui.view">
+      <field name="name">view.insurance.partner.civil.form</field>
+      <field name="model">insurance.partner.civil</field>
+      <field name="arch" type="xml">
+	<form string="Estado Civil">
+	  <group string="Información">
+	    <field name="code"/>
+	    <field name="name"/>
+	  </group>
+	</form>
+      </field>
+    </record>
+
+    <record id="view_insurance_partner_civil_tree" model="ir.ui.view">
+      <field name="name">view.insurance.partner.civil.tree</field>
+      <field name="model">insurance.partner.civil</field>
+      <field name="arch" type="xml">
+	<tree string="Estado Civil">
+	    <field name="code"/>
+	    <field name="name"/>
+	    <field name="married"/>
+	</tree>
+      </field>
+    </record>
+
+    <record id="action_insurance_partner_civil" model="ir.actions.act_window">
+      <field name="name">Estado Civil</field>
+      <field name="res_model">insurance.partner.civil</field>
+      <field name="view_type">form</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem action="action_insurance_partner_civil" 
+	      id="menu_insurance_partner_civil" 
+	      parent="menu_main_master_data"/>
 
     <record id="view_insurance_insurance_form" model="ir.ui.view">
       <field name="name">view.insurance.insurance.form</field>
@@ -91,9 +128,13 @@
       <field name="model">insurance.insurance</field>
       <field name="arch" type="xml">
 	<tree string="Seguros de Desgravamen" colors="blue:state == 'draft';black:state in ('done');gray:state == 'cancel'">
+	  <field name="contractor_id" invisible="1"/>
+	  <field name="city_id" invisible="1"/>
 	  <field name="name"/>
-	  <field name="contractor_id"/>
+	  <field name="date"/>
 	  <field name="deudor_id"/>
+	  <field name="total_active_credits" sum="TOTAL"/>
+	  <field name="monto_credito_solicitado" sum="TOTAL"/>
 	  <field name="total_credits" sum="TOTAL"/>
 	  <field name="state"/>
 	</tree>
