@@ -291,8 +291,9 @@ class InsuranceParameter(osv.osv):
                 if obj.certificate:
                     return True, 'certificate'
                 return False, msg1 % obj.age_max
-            if obj.age_min_codeudor < conyugue.age_int <= obj.age_max_codeudor:
-                pass
+            if conyugue:
+                if obj.age_min_codeudor < conyugue.age_int <= obj.age_max_codeudor:
+                    pass
             return True, 'ok'
 
 
