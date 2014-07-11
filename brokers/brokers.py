@@ -342,7 +342,7 @@ class InsuranceParameterValue(osv.osv):
         if not ids:
             raise osv.except_osv('Error', u'No aplica a ningun caso de la configuración de exámenes.')
         data = self.read(cr, uid, ids, ['exams'])
-        for ex in self.pool.get('insurance.exams').read(cr, uid, data['exams'], ['print']):
+        for ex in self.pool.get('insurance.exams').read(cr, uid, data[0]['exams'], ['print']):
             if ex['print']:
                 flag = True
         return data[0]['exams'], flag
