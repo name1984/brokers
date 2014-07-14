@@ -35,7 +35,7 @@ class SeguroSinCoberturaTest(TransactionCase):
         )        
         
 
-    def test_seguro_sin_cobertura_menor_edad(self):
+    def test_seguro_cobertura_edad52_soltero(self):
         cursor = self.cr
         user_id = self.uid
         deudor_id = self.Deudor.create(
@@ -46,7 +46,7 @@ class SeguroSinCoberturaTest(TransactionCase):
                 'last_name': 'Perez',
                 'tipo_identificador': 'cedula',
                 'identificador': '0103893962',
-                'birth_date': '2000-01-01',
+                'birth_date': '1962-01-01',
                 'mobile': '0994112233',
                 'phone': '072888888',
                 'sexo': 'm',
@@ -63,11 +63,10 @@ class SeguroSinCoberturaTest(TransactionCase):
                 'account_number': '00980981',
                 'nro_operacion_credito': '14343',
                 'plazo': 12,
-                'total_active_credits': 10000,
+                'total_active_credits': 30000,
                 'monto_credito_solicitado': 30000
             }
         )
         self.assertNotEqual(seguro_id, 0)
         self.Seguro.action_validate(cursor, user_id, [seguro_id])
-        
         

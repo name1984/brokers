@@ -47,8 +47,8 @@ class InsurancePartner(osv.osv):
 
     def name_get(self, cr, uid, ids, context=None):
         res = []
-        for r in self.read(cr, uid, ids, ['name','last_name', 'identificador'], context):
-            name = '%s - %s %s' % (r['identificador'], r['name'], r['last_name'])
+        for r in self.read(cr, uid, ids, ['name','last_name', 'identificador', 'age_int'], context):
+            name = u'%s - %s %s (%d años)' % (r['identificador'], r['name'], r['last_name'], r['age_int'])
             res.append((r['id'], name))
         return res
 
@@ -356,7 +356,15 @@ class InsuranceInsurance(osv.osv):
     def onchange_credit(self, cr, uid, ids, current, requested):
         return {
             'value': {'total_credits': self.sumar(current, requested) }
-            }
+        }
+
+    def onchange_total(self, cr, uid, ids, total, contractor_id):
+        result = {'value': {'show_questions': False}}
+        params_obj = self.pool.get('insurance.parameter')
+        res = params_obj.search(cr, uid, [('partner_id','=',contractor_id),('amount_min','<=',total)], limit=1)
+        if res:
+            result['value']['show_questions'] = True
+        return result
 
     def sumar(self, val1, val2):
         return val1 + val2
@@ -423,6 +431,7 @@ class InsuranceInsurance(osv.osv):
         ),
         'answer2': fields.text('Respuesta'),
         'print_certificate': fields.boolean('Imprime Certificado ?'),
+        'print_declaration': fields.boolean('Imprime Declaración ?'),        
         'tiene_apoderado': fields.boolean('Tiene Apoderado'),
         'apoderado_id': fields.many2one(
             'insurance.partner',
@@ -448,7 +457,9 @@ class InsuranceInsurance(osv.osv):
         'name': '/',
         'contractor_id': _get_contractor,
         'date': time.strftime('%Y-%m-%d'),
-        'user_id': _get_user
+        'user_id': _get_user,
+        'answer1': '\n\n\n\n\n\n',
+        'answer2': '\n\n\n\n\n\n'        
     }
 
     def _check_conyugue(self, cr, uid, ids):
@@ -521,8 +532,34 @@ class InsuranceInsurance(osv.osv):
         """
         pass
 
-    def action_print(self, cr, uid, ids, context=None):
+    def action_print_declaracion(self, cr, uid, ids, context=None):
         """
+        Impresion de declaracion de asegurabilidad
+        """
+        if not context:
+            context = {}
+        obj = self.browse(cr, uid, ids, context)[0]
+        datas = {'ids': [obj.id], 'model': 'insurance.insurance'}
+        return {
+            'type': 'ir.actions.report.xml',
+            'report_name': 'declaracion_report',
+            'model': 'insurance.insurance',
+            'datas': datas,
+            'nodestroy': True,                        
+        }        
 
+    def action_print_certificate(self, cr, uid, ids, context=None):
         """
-        return True
+        Impresion de certificado de asegurabilidad
+        """
+        if not context:
+            context = {}
+        obj = self.browse(cr, uid, ids, context)[0]
+        datas = {'ids': [obj.id], 'model': 'insurance.insurance'}
+        return {
+            'type': 'ir.actions.report.xml',
+            'report_name': 'declaracion_report',
+            'model': 'insurance.insurance',
+            'datas': datas,
+            'nodestroy': True,                        
+        }

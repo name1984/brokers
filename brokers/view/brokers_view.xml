@@ -9,6 +9,19 @@
     <menuitem id="menu_main_configuration" name="Configuración" parent="menu_main_brokers" sequence="20"/>
     <menuitem id="menu_main_master_data" name="Datos Base" parent="menu_main_configuration"/>
 
+    <menuitem action="city.action_country_state_city" id="menu_res_city" name="Ciudades" parent="menu_main_master_data"/>
+
+    <record id="view_insurance_parentesco_tree" model="ir.ui.view">
+      <field name="name">view.insurance.parentesco.tree</field>
+      <field name="model">insurance.parentesco</field>
+      <field name="arch" type="xml">
+	<tree string="Estado Civil" editable="bottom">
+	  <field name="name"/>
+	  <field name="conyugue"/>
+	</tree>
+      </field>
+    </record>
+
     <record id="view_insurance_parentesco_tree" model="ir.ui.view">
       <field name="name">view.insurance.parentesco.tree</field>
       <field name="model">insurance.parentesco</field>
@@ -76,10 +89,11 @@
 	  <header>
 	    <button name="action_validate" string="Validar Datos" states="draft" class="oe_highlight" type="object"/>
 	    <button name="action_draft" string="Borrador" type="object"/>
-	    <button name="action_print" string="Declaración de Asegurabilidad" icon="gtk-print" states="request" class="oe_highlight" type="object"/>
-	    <button name="action_print" string="Certificado" icon="gtk-print" attrs="{'invisible': [('print_certificate','=',False)]}" class="oe_highlight" type="object"/>
+	    <button name="action_print_declaracion" string="Declaración de Asegurabilidad" attrs="{'invisible': [('print_declaration','=',False)]}" icon="gtk-print"  class="oe_highlight" type="object"/>
+	    <button name="action_print_certificate" string="Certificado" icon="gtk-print" attrs="{'invisible': [('print_certificate','=',False)]}" class="oe_highlight" type="object"/>
 	    <field name="state" widget="statusbar" statusbar_visible="draft,request,ok"/>
 	    <field name="print_certificate" invisible="1"/>
+	    <field name="print_declaration" invisible="1"/>
 	  </header>
 	  <sheet string="Seguro de Desgravamen">
             <div class="oe_title">
@@ -99,7 +113,7 @@
 	    </group>
 	    <group>
 	      <group string="Datos Solicitud de Crédito">
-		<field name="city_id" options="{'no_open': True}"/>
+		<field name="city_id" widget="selection"/>
 		<field name="date" required="1" readonly="1"/>
 		<field name="account_number"/>
 		<field name="nro_operacion_credito"/>
@@ -110,30 +124,29 @@
 		<group class="oe_subtotal_footer oe_right">
 		  <field name="total_active_credits" widget="monetary" on_change="onchange_credit(total_active_credits, monto_credito_solicitado)"/>
 		  <field name="monto_credito_solicitado" widget="monetary" on_change="onchange_credit(total_active_credits, monto_credito_solicitado)"/>
-		  <field name="total_credits" class="oe_subtotal_footer_separator" widget="monetary"/>
+		  <field name="total_credits" class="oe_subtotal_footer_separator" widget="monetary" on_change="onchange_total(total_credits, contractor_id)"/>
 		</group>
 	      </group>
 	    </group>
 	    <field name="show_questions" invisible="1"/>
-	    <group>
+	    <group attrs="{'invisible': [('show_questions','=',False)]}">
 	      <div>
                 ¿ Sufre o ha sufrido trastornos cardiovasculares, trastornos renales, 
 		tensión arterial alta, derrame cerebral, cáncer, tumor, diabetes, 
 		epilepsia, asma, trastornos inmunológicos o padecimientos relacionados con el SIDA ?
 		<field name="question1" nolabel="1"/>
 	      </div>
-	      <field name="answer1" nolabel="1" placeholder="Transtornos..." attrs="{'required': [('question1','=',True)]}"/>
 	    </group>
-	    <newline/>
-	    <group>
+	    <field name="answer1" attrs="{'required': [('question1','=',True)], 'invisible': [('show_questions','=',False)]}"/>
+	    <group attrs="{'invisible': [('show_questions','=',False)]}">
 	      <div>
 		¿ Tiene en la actualidad alguna enfermedad o pérdida funcional o anatómica, 
 		o ha sufrido un accidente que le impide desempeñar labores propias de su ocupación, 
 		o sabe si será hospitalizado o intervenido quirúrgicamente ?
 		<field name="question2" nolabel="1"/>
 	      </div>
-	      <field name="answer2" attrs="{'required': [('question2','=',True)]}" nolabel="1"/>
 	    </group>
+	    <field name="answer2" attrs="{'required': [('question2','=',True)], 'invisible': [('show_questions','=',False)]}"/>
 	    <group>
 	      <field name="exams" widget="many2many_tags" attrs="{'invisible': [('state','=','draft')]}"/>
 	    </group>
