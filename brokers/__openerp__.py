@@ -32,6 +32,7 @@
         'view/brokers_view.xml',
 #        'report/brokers_report.xml',
         'data/brokers_data.xml',
+        'data/sequence_brokers.xml'        
     ],
     'depends' : [
         'base',

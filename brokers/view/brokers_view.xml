@@ -87,10 +87,14 @@
       <field name="arch" type="xml">
 	<form string="Gestión de Seguros" version="7.0">
 	  <header>
+	    <button name="action_ok" string="Aprobar" states="request" groups="brokers.group_broker_manager" type="object"/>
 	    <button name="action_validate" string="Validar Datos" states="draft" class="oe_highlight" type="object"/>
-	    <button name="action_draft" string="Borrador" type="object"/>
-	    <button name="action_print_declaracion" string="Declaración de Asegurabilidad" attrs="{'invisible': [('print_declaration','=',False)]}" icon="gtk-print"  class="oe_highlight" type="object"/>
-	    <button name="action_print_certificate" string="Certificado" icon="gtk-print" attrs="{'invisible': [('print_certificate','=',False)]}" class="oe_highlight" type="object"/>
+	    <!-- button name="action_draft" string="Regresar a Borrador" type="object" states="request"/ -->
+	    <button name="action_draft" string="Regresar a Borrador" type="object" states="request,ok" groups="brokers.group_broker_manager"/>
+	    <button name="action_print_declaracion" string="Declaración de Asegurabilidad" 
+		    attrs="{'invisible': [('print_declaration','=',False)]}" icon="gtk-print"  class="oe_highlight" type="object"/>
+	    <button name="action_print_certificate" string="Certificado" icon="gtk-print" 
+		    attrs="{'invisible': [('print_certificate','=',False)]}" class="oe_highlight" type="object"/>
 	    <field name="state" widget="statusbar" statusbar_visible="draft,request,ok"/>
 	    <field name="print_certificate" invisible="1"/>
 	    <field name="print_declaration" invisible="1"/>
@@ -103,7 +107,7 @@
 	      </h2>
 	      <h2>
                 <label string="Solicitud de Seguro" attrs="{'invisible': ['|',('state','&lt;&gt;','draft')]}"/>
-                <field name="name" class="oe_inline"  attrs="{'invisible': [('state', '=', 'draft')]}"/>
+                <field name="name" class="oe_inline" attrs="{'invisible': [('state','=','draft')]}" readonly="1"/>
 	      </h2>
 	    </div>
 	    <group string="Registro Deudor">
@@ -129,26 +133,23 @@
 	      </group>
 	    </group>
 	    <field name="show_questions" invisible="1"/>
-	    <group attrs="{'invisible': [('show_questions','=',False)]}">
+	    <group attrs="{'invisible': [('show_questions','=',False)]}" string="Preguntas de Asegurabilidad">
 	      <div>
-                ¿ Sufre o ha sufrido trastornos cardiovasculares, trastornos renales, 
-		tensión arterial alta, derrame cerebral, cáncer, tumor, diabetes, 
+                ¿ Sufre o ha sufrido trastornos cardiovasculares, trastornos renales, tensión arterial alta, derrame cerebral, cáncer, tumor, diabetes, 
 		epilepsia, asma, trastornos inmunológicos o padecimientos relacionados con el SIDA ?
-		<field name="question1" nolabel="1"/>
 	      </div>
+	      <field name="question1" nolabel="1" style="width: 20%%"/>
 	    </group>
-	    <field name="answer1" attrs="{'required': [('question1','=',True)], 'invisible': [('show_questions','=',False)]}"/>
+	    <field name="answer1" attrs="{'required': [('question1','=','si')], 'invisible': [('show_questions','=',False)]}"/>
 	    <group attrs="{'invisible': [('show_questions','=',False)]}">
 	      <div>
-		¿ Tiene en la actualidad alguna enfermedad o pérdida funcional o anatómica, 
-		o ha sufrido un accidente que le impide desempeñar labores propias de su ocupación, 
-		o sabe si será hospitalizado o intervenido quirúrgicamente ?
-		<field name="question2" nolabel="1"/>
+		¿ Tiene en la actualidad alguna enfermedad o pérdida funcional o anatómica, o ha sufrido un accidente que le impide desempeñar labores propias de su ocupación, o sabe si será hospitalizado o intervenido quirúrgicamente ?
 	      </div>
+	      <field name="question2" nolabel="1" style="width: 20%%"/>
 	    </group>
-	    <field name="answer2" attrs="{'required': [('question2','=',True)], 'invisible': [('show_questions','=',False)]}"/>
+	    <field name="answer2" attrs="{'required': [('question2','=','si')], 'invisible': [('show_questions','=',False)]}"/>
 	    <group>
-	      <field name="exams" widget="many2many_tags" attrs="{'invisible': [('state','=','draft')]}"/>
+	      <field name="exams" widget="many2many_tags" attrs="{'invisible': [('state','=','draft')]}" readonly="1"/>
 	    </group>
 	  </sheet>
           <div class="oe_chatter">
@@ -549,6 +550,7 @@
       <field name="arch" type="xml">
 	<tree string="Catálogo de Exámenes" editable="top">
 	  <field name="name"/>
+	  <field name="print"/>
 	</tree>
       </field>
     </record>

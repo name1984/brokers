@@ -352,6 +352,7 @@ class InsuranceInsurance(osv.osv):
     _name = 'insurance.insurance'
     _inherit = ['mail.thread']
     _description = 'Seguros de Desgravamen'
+    STATES = {'draft': [('readonly', False)]}    
 
     def onchange_credit(self, cr, uid, ids, current, requested):
         return {
@@ -383,66 +384,140 @@ class InsuranceInsurance(osv.osv):
     revisar: solicitud llenada por
     """
     _columns = {
-        'name': fields.char('Código', size=16, required=True),
+        'name': fields.char('Código', size=32, required=True),
         'contractor_id': fields.many2one(
             'res.partner',
             string='Contratante',
-            required=True
+            required=True,
+            readonly=True,
+            states=STATES
         ),
         'deudor_id': fields.many2one(
             'insurance.partner',
             string='Deudor',
-            required=True
+            required=True,
+            readonly=True,
+            states=STATES            
         ),
         'has_active_credit': fields.boolean('El deudor tiene créditos vigentes ?'),
         'city_id': fields.many2one(
             'res.country.state.city',
             string='Cuidad de Trámite',
-            required=True
+            required=True,
+            readonly=True,
+            states=STATES            
         ),
-        'date': fields.date('Fecha de Solicitud de Crédito'),
-        'account_number': fields.char('Número de Cuenta', size=32, required=True),
-        'nro_operacion_credito': fields.char('Nro Operación Crédito', size=32, required=True),
-        'total_active_credits': fields.float('Total Créditos Vigentes', digits_compute=DP),        
-        'monto_credito_solicitado': fields.float('Monto Crédito Solicitado', digits_compute=DP),        
+        'date': fields.date('Fecha de Solicitud de Crédito', readonly=True),
+        'account_number': fields.char(
+            'Número de Cuenta',
+            size=32,
+            required=True,
+            readonly=True,
+            states=STATES            
+        ),
+        'nro_operacion_credito': fields.char(
+            'Nro Operación Crédito',
+            size=32,
+            required=True,
+            readonly=True,
+            states=STATES            
+        ),
+        'total_active_credits': fields.float(
+            'Total Créditos Vigentes',
+            digits_compute=DP,
+            readonly=True,
+            states=STATES            
+        ),
+        'monto_credito_solicitado': fields.float(
+            'Monto Crédito Solicitado',
+            digits_compute=DP,
+            readonly=True,
+            states=STATES            
+        ),
         'total_credits': fields.function(
             _compute_total,
             string='Total Créditos',
             digits_compute=DP,
             store={'insurance.insurance': (lambda self, cr, uid, ids, c={}: ids, ['monto_credito_solicitado','total_active_credits'], 20),}
         ),
-        'plazo': fields.integer('Plazo (meses)'),
-        'aseguradora_id': fields.many2one('res.partner', string='Aseguradora'),
+        'plazo': fields.integer(
+            'Plazo (meses)',
+            readonly=True,
+            states=STATES            
+        ),
+        'aseguradora_id': fields.many2one(
+            'res.partner',
+            string='Aseguradora',
+            readonly=True,
+            states=STATES            
+        ),
         'state': fields.selection(
             [('draft', 'Borrador'),
             ('request', 'Solicitado'),
             ('certificate', 'Certificado'),
             ('ok', 'Aprobado')],
             string='Estado',
+            readonly=True,
             required=True
         ),
-        'show_questions': fields.boolean('Mostrar Preguntas'),
-        'question1': fields.boolean(
-            "Transtornos ?"
+        'show_questions': fields.boolean(
+            'Mostrar Preguntas',
+            readonly=True,
+            states=STATES            
         ),
-        'answer1': fields.text('Respuesta'),
-        'question2': fields.boolean(
-            "Q2"
+        'question1': fields.selection(
+            [('si','SI'),('no','NO')],
+            string='Respuesta',
+            readonly=True,
+            states=STATES            
         ),
-        'answer2': fields.text('Respuesta'),
-        'print_certificate': fields.boolean('Imprime Certificado ?'),
-        'print_declaration': fields.boolean('Imprime Declaración ?'),        
-        'tiene_apoderado': fields.boolean('Tiene Apoderado'),
+        'answer1': fields.text(
+            'Respuesta',
+            readonly=True,
+            states=STATES            
+        ),
+        'question2': fields.selection(
+            [('si','SI'),('no','NO')],
+            string='Respuesta 2',
+            readonly=True,
+            states=STATES            
+        ),
+        'answer2': fields.text(
+            'Respuesta',
+            readonly=True,
+            states=STATES            
+        ),
+        'print_certificate': fields.boolean(
+            'Imprime Certificado ?',
+            readonly=True,
+            states=STATES            
+        ),
+        'print_declaration': fields.boolean(
+            'Imprime Declaración ?',
+            readonly=True,
+            states=STATES            
+        ),
+        'tiene_apoderado': fields.boolean(
+            'Tiene Apoderado',
+            readonly=True,
+            states=STATES            
+        ),
         'apoderado_id': fields.many2one(
             'insurance.partner',
             string='Apoderado',
+            readonly=True,
+            states=STATES            
         ),
         'user_id': fields.many2one(
             'res.users',
             required=True,
             string='Usuario'
         ),
-        'exams': fields.many2many('insurance.exams', string='Examenes')
+        'exams': fields.many2many(
+            'insurance.exams',
+            string='Examenes',
+            readonly=True
+        )
     }
 
     def _get_contractor(self, cr, uid, context=None):
@@ -458,6 +533,8 @@ class InsuranceInsurance(osv.osv):
         'contractor_id': _get_contractor,
         'date': time.strftime('%Y-%m-%d'),
         'user_id': _get_user,
+        'question1': 'no',
+        'question2': 'no',
         'answer1': '\n\n\n\n\n\n',
         'answer2': '\n\n\n\n\n\n'        
     }
@@ -505,7 +582,31 @@ class InsuranceInsurance(osv.osv):
         return exams
 
     def action_draft(self, cr, uid, ids, context=None):
-        self.write(cr, uid, ids, {'state': 'draft'})
+        self.write(
+            cr, uid,
+            ids,
+            {
+                'state': 'draft',
+                'print_declaration':False,
+                'print_certificate': False,
+                'show_questions': False
+            }
+        )
+
+    def get_number(self, cr, uid, ids, context=None):
+        seq_obj = self.pool.get('ir.sequence')
+        param_obj = self.pool.get('insurance.parameter')
+        for obj in self.browse(cr, uid, ids, context):
+            number = seq_obj.get(cr, uid, 'insurance.insurance', context=context)
+            pre, suf = number.split('/')
+            res = param_obj.search(cr, uid, [('partner_id','=',obj.contractor_id.id)], limit=1)
+            if not res:
+                raise osv.except_osv('Error', 'No se ha encontrado una póliza para este canal.')
+            param = param_obj.browse(cr, uid, res[0])
+            policy = param.policy_id.name
+            name = '/'.join([pre, policy, suf])
+            return name
+            
 
     def action_validate(self, cr, uid, ids, context=None):
         """
@@ -519,18 +620,22 @@ class InsuranceInsurance(osv.osv):
             flag, msg = self._check_values(cr, uid, [obj.id], context)
             if msg == 'certificate':
                 data['print_certificate'] = True
-            else:
-                exams, flag = self._get_exams(cr, uid, [obj.id], context)
-                if obj.answer1 and obj.answer2 and flag:
-                    data.update({'print_certificate': True})
-                data.update({'exams': [(6,0,exams)]})
-            self.write(cr, uid, ids, data)
+            exams, flag_exam = self._get_exams(cr, uid, [obj.id], context)
+            if obj.show_questions:
+                data.update({'print_declaration': True})
+            if obj.question1 == 'no' and obj.question2 == 'no' and flag_exam:
+                data.update({'print_certificate': True})
+            data.update({'exams': [(6,0,exams)]})
+            name = self.get_number(cr, uid, ids, context)
+            data.update({'name': name})
+            self.write(cr, uid, ids, data)            
         return True
 
-    def action_questions(self, cr, uid, ids, context=None):
+    def action_ok(self, cr, uid, ids, context=None):
         """
         """
-        pass
+        self.write(cr, uid, ids, {'state': 'ok'})
+        return True
 
     def action_print_declaracion(self, cr, uid, ids, context=None):
         """
