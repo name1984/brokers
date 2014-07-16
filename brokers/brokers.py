@@ -281,12 +281,12 @@ class InsuranceParameter(osv.osv):
         for obj in self.browse(cr, uid, ids):
             edad = deudor.age_int
             if credit > obj.amount_max1 or edad < obj.age_min or edad > obj.age_max:
-                return False, msg2 % (obj.age_max2, obj.age_max, obj.amount_max2)
+                return False, msg3 % (obj.age_min, obj.age_max, obj.amount_max1)
             if credit < obj.amount_min and obj.age_min <= edad <= obj.age_max2:
                 if obj.certificate:
                     #Genera certificado de asegurabilidad
                     return True, 'certificate'
-                return False, msg3 % (obj.age_min, obj.age_max2, obj.amount_max1)
+                return False, msg2 % (obj.age_min, obj.age_max2, obj.amount_max1)
             if credit <= obj.amount_max2 and obj.age_max2 < edad <= obj.age_max:
                 if obj.certificate:
                     return True, 'certificate'
@@ -587,9 +587,6 @@ class InsuranceInsurance(osv.osv):
             ids,
             {
                 'state': 'draft',
-                'print_declaration':False,
-                'print_certificate': False,
-                'show_questions': False
             }
         )
 
