@@ -140,14 +140,14 @@
 	      </div>
 	      <field name="question1" nolabel="1" style="width: 20%%"/>
 	    </group>
-	    <field name="answer1" attrs="{'required': [('question1','=','si')], 'invisible': [('show_questions','=',False)]}"/>
+	    <field name="answer1" attrs="{'required': [('question1','=','si')], 'invisible': [('question1','=','no')]}"/>
 	    <group attrs="{'invisible': [('show_questions','=',False)]}">
 	      <div>
 		¿ Tiene en la actualidad alguna enfermedad o pérdida funcional o anatómica, o ha sufrido un accidente que le impide desempeñar labores propias de su ocupación, o sabe si será hospitalizado o intervenido quirúrgicamente ?
 	      </div>
 	      <field name="question2" nolabel="1" style="width: 20%%"/>
 	    </group>
-	    <field name="answer2" attrs="{'required': [('question2','=','si')], 'invisible': [('show_questions','=',False)]}"/>
+	    <field name="answer2" attrs="{'required': [('question2','=','si')], 'invisible': [('question2','=','no')]}"/>
 	    <group>
 	      <field name="exams" widget="many2many_tags" attrs="{'invisible': [('state','=','draft')]}" readonly="1"/>
 	    </group>

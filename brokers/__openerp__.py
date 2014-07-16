@@ -30,14 +30,15 @@
         'security/brokers_security.xml',
         'security/ir.model.access.csv',
         'view/brokers_view.xml',
-#        'report/brokers_report.xml',
+        'report/brokers_report.xml',
         'data/brokers_data.xml',
         'data/sequence_brokers.xml'        
     ],
     'depends' : [
         'base',
         'city',
-        'mail'
+        'mail',
+        'report_webkit'
     ],
     'js': [
     ],

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+  <data>
+
+    <report auto="False" id="certificado_asegurabilidad" model="insurance.insurance"
+            name="certificado_asegurabilidad" rml="brokers/report/certificado_asegurabilidad.mako"
+            usage="default" string="Certificado Asegurabilidad" header="False" report_type="webkit"/>
+    
+    <report auto="False" id="declaracion" model="insurance.insurance"
+            name="declaracion" rml="brokers/report/declaracion.mako"
+            usage="default" string="Declaracion" header="False" report_type="webkit" menu="False"/>
+
+  </data>
+</openerp>
