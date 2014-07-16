@@ -274,28 +274,31 @@ class InsuranceParameter(osv.osv):
         msg1 = u'Las personas que tengan %s años 1 día, no tendrán cobertura'
         msg2 = u'El monto asegurado máximo por persona para los socios que tengan desde %s años 1 día hasta el día que cumpla %s años será de hasta $%s'
         msg3 = u'Desde el Día que cumpla %s años de edad hasta el día que cumpla %s años de edad, al momento de contratar el crédito con cobertura hasta %s'
+        msg4 = u'Monto asegurado no requiere Declaración de Asegurabilidad'
         ids = self.search(cr, uid, [('partner_id','=',partner_id)])
         conyugue = self.pool.get('insurance.partner').get_conyugue(cr, uid, deudor)
         if not ids:
             raise osv.except_osv('Error', u'No existen polizas configuradas para este canal.')
         for obj in self.browse(cr, uid, ids):
             edad = deudor.age_int
-            if credit > obj.amount_max1 or edad < obj.age_min or edad > obj.age_max:
-                return False, msg3 % (obj.age_min, obj.age_max, obj.amount_max1)
-            if credit < obj.amount_min and obj.age_min <= edad <= obj.age_max2:
-                if obj.certificate:
-                    #Genera certificado de asegurabilidad
-                    return True, 'certificate'
-                return False, msg2 % (obj.age_min, obj.age_max2, obj.amount_max1)
-            if credit <= obj.amount_max2 and obj.age_max2 < edad <= obj.age_max:
-                if obj.certificate:
-                    return True, 'certificate'
-                return False, msg1 % obj.age_max
-            if conyugue:
-                if obj.age_min_codeudor < conyugue.age_int <= obj.age_max_codeudor:
-                    pass
-            return True, 'ok'
-
+            if obj.age_min <= edad <= obj.age_max:
+                if obj.age_min <= edad <= obj.age_max2:
+                    if obj.amount_min <= credit <= obj.amount_max1:
+                        return True, 'show_declaration'
+                    elif credit < obj.amount_min:
+                        if obj.certificate:
+                            return True, 'show_certificate'
+                        return False, msg4
+                    else:
+                        return False, msg3 % (obj.age_min, obj.age_max, obj.amount_max1)
+                else:
+                    if credit < obj.amount_max2:
+                        if obj.certificate:
+                            return True, 'show_certificate'
+                        return False, msg2 % (obj.age_max2, obj.age_max1, obj.amount_max2)
+            else:
+                return False, msg1 % obj.age_max1
+                    
 
 class InsuranceExam(osv.osv):
     _name = 'insurance.exams'
@@ -615,8 +618,10 @@ class InsuranceInsurance(osv.osv):
         data = {'state': state}
         for obj in self.browse(cr, uid, ids, context):
             flag, msg = self._check_values(cr, uid, [obj.id], context)
-            if msg == 'certificate':
+            if msg == 'show_certificate':
                 data['print_certificate'] = True
+            elif msg == 'show_declaration':
+                data['print_declaration'] = True
             exams, flag_exam = self._get_exams(cr, uid, [obj.id], context)
             if obj.show_questions:
                 data.update({'print_declaration': True})
