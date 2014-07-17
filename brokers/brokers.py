@@ -342,7 +342,7 @@ class InsuranceParameterValue(osv.osv):
         edad = int(age.split(' ')[0])
         cr.execute("SELECT min(amount_min) as minimo FROM insurance_parameter_value;")
         res = cr.fetchone()
-        if value_requested < res[0]['minimo']:
+        if value_requested < res[0]:
             return False, False
         ids = self.search(
             cr, uid,
@@ -638,7 +638,8 @@ class InsuranceInsurance(osv.osv):
                 data.update({'print_declaration': True})
             if obj.question1 == 'no' and obj.question2 == 'no' and flag_exam:
                 data.update({'print_certificate': True})
-            data.update({'exams': [(6,0,exams)]})
+            if exams:
+                data.update({'exams': [(6,0,exams)]})
             name = self.get_number(cr, uid, ids, context)
             data.update({'name': name})
             self.write(cr, uid, ids, data)            
