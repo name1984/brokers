@@ -339,6 +339,7 @@
 	  <field name="sexo"/>
 	  <field name="phone"/>
 	  <field name="email"/>
+	  <field name="identificador"/>
 	</search>
       </field>
     </record>

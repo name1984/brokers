@@ -162,6 +162,12 @@ class InsurancePartner(osv.osv):
         'tipo_identificador': 'cedula'
     }
 
+    _sql_constraints = [
+        ('unique_identificador',
+         'unique(tipo_identificador,identificador)',
+        u'El identificador es único.')
+    ]
+
     def onchange_civil(self, cr, uid, ids, civil_id):
         res = {'warning': {'title': 'Aviso', 'message': u'Debe ingresar la información del conyugue.'}}
         if not civil_id:
