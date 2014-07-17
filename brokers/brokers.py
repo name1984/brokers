@@ -340,6 +340,10 @@ class InsuranceParameterValue(osv.osv):
         """
         flag = False
         edad = int(age.split(' ')[0])
+        cr.execute("SELECT min(amount_min) as minimo FROM insurance_parameter_value;")
+        res = cr.fetchone()
+        if value_requested < res[0]['minimo']:
+            return False, False
         ids = self.search(
             cr, uid,
             [('amount_min','<=', value_requested),
@@ -622,6 +626,7 @@ class InsuranceInsurance(osv.osv):
         """
         state = 'request'
         data = {'state': state}
+        param_obj = self.pool.get('insurance.parameter')
         for obj in self.browse(cr, uid, ids, context):
             flag, msg = self._check_values(cr, uid, [obj.id], context)
             if msg == 'show_certificate':
