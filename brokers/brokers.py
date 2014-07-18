@@ -274,7 +274,7 @@ class InsuranceParameter(osv.osv):
         ('not_zero_values', 'CHECK (amount_min*amount_max1*amount_max2 > 0)', u'Los valores deben ser positivos !')
     ]
 
-    def validate(self, cr, uid, credit, deudor, partner_id, codeudor=False):
+    def validate(self, cr, uid, credit, deudor, partner_id):
         """
         """
         msg1 = u'Las personas que tengan %s años 1 día, no tendrán cobertura'
@@ -282,7 +282,6 @@ class InsuranceParameter(osv.osv):
         msg3 = u'Desde el Día que cumpla %s años de edad hasta el día que cumpla %s años de edad, al momento de contratar el crédito con cobertura hasta %s'
         msg4 = u'Monto asegurado no requiere Declaración de Asegurabilidad'
         ids = self.search(cr, uid, [('partner_id','=',partner_id)])
-        conyugue = self.pool.get('insurance.partner').get_conyugue(cr, uid, deudor)
         if not ids:
             raise osv.except_osv('Error', u'No existen polizas configuradas para este canal.')
         for obj in self.browse(cr, uid, ids):
@@ -301,7 +300,7 @@ class InsuranceParameter(osv.osv):
                     if credit < obj.amount_max2:
                         if obj.certificate:
                             return True, 'show_certificate'
-                        return False, msg2 % (obj.age_max2, obj.age_max1, obj.amount_max2)
+                    return False, msg2 % (obj.age_max2, obj.age_max, obj.amount_max2)
             else:
                 return False, msg1 % obj.age_max
                     
@@ -573,12 +572,12 @@ class InsuranceInsurance(osv.osv):
         param_obj = self.pool.get('insurance.parameter')
         part_obj = self.pool.get('insurance.partner')
         for obj in self.browse(cr, uid, ids, context):
+            codeudor = part_obj.get_conyugue(cr, uid, obj.deudor_id)
             res, msg = param_obj.validate(
                 cr, uid,
                 obj.total_credits,
                 obj.deudor_id,
                 obj.contractor_id.id,
-                part_obj.get_conyugue(cr, uid, obj.deudor_id)
             )
             if not res:
                 raise osv.except_osv('Alerta', msg)
