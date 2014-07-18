@@ -177,6 +177,10 @@ class InsurancePartner(osv.osv):
             return res
         return {}
 
+    def is_married(self, cr, uid, deudor_id):
+        deudor = self.browse(cr, uid, deudor_id)
+        return deudor.civil_id.married
+
     def get_conyugue(self, cr, uid, deudor):
         if not deudor.civil_id.married:
             return False
@@ -206,6 +210,7 @@ class InsurancePolicy(osv.osv):
         'aseguradora_id': fields.many2one(
             'res.partner',
             string='Aseguradora',
+            required=True
         )
     }
 
@@ -271,7 +276,8 @@ class InsuranceParameter(osv.osv):
         ('age_min_max', 'CHECK (age_max > age_min)', u'Edad máx debe ser mayor !".'),
         ('age_min_max2', 'CHECK (age_max2 > age_min)', u'Edad máx 2 debe ser mayor !.'),
         ('age_codeudor', 'CHECK (age_max_codeudor > age_min_codeudor)', u'Edades de codeudor incorrectas !'),
-        ('not_zero_values', 'CHECK (amount_min*amount_max1*amount_max2 > 0)', u'Los valores deben ser positivos !')
+        ('not_zero_values', 'CHECK (amount_min*amount_max1*amount_max2 > 0)', u'Los valores deben ser positivos !'),
+        ('unique_policy', 'unique(policy_id)', u'Los parámetros son únicos por póliza.')
     ]
 
     def validate(self, cr, uid, credit, deudor, partner_id):
@@ -325,7 +331,12 @@ class InsuranceParameterValue(osv.osv):
         'amount_max': fields.float('Monto Máximo', digits_compute=DP),
         'age_min': fields.integer('Edad Mínima'),
         'age_max': fields.integer('Edad Máxima'),
-        'exams': fields.many2many('insurance.exams', string='Examenes')
+        'exams': fields.many2many('insurance.exams', string='Examenes'),
+        'policy_id': fields.many2one(
+            'insurance.policy',
+            string='Póliza',
+            required=True
+        )
     }
 
     _sql_constraints = [
@@ -333,13 +344,13 @@ class InsuranceParameterValue(osv.osv):
         ('age_max_min' ,'CHECK (age_max > age_min)' ,u'La edad máx. debe ser mayor !.'),        
     ]
 
-    def get_exams(self, cr, uid, value_requested, age):
+    def get_exams(self, cr, uid, value_requested, age, policy_id):
         """
         Consulta de examenes segun monto y edad
         """
         flag = False
         edad = int(age.split(' ')[0])
-        cr.execute("SELECT min(amount_min) as minimo FROM insurance_parameter_value;")
+        cr.execute("SELECT min(amount_min) as minimo FROM insurance_parameter_value WHERE policy_id=%s;" % policy_id)
         res = cr.fetchone()
         if value_requested < res[0]:
             return False, False
@@ -348,7 +359,8 @@ class InsuranceParameterValue(osv.osv):
             [('amount_min','<=', value_requested),
              ('amount_max','>=', value_requested),
              ('age_min','<=', edad),
-             ('age_max','>=', edad)
+             ('age_max','>=', edad),
+             ('policy_id','=',policy_id)
             ]
         )
         if not ids:
@@ -364,11 +376,20 @@ class InsuranceInsurance(osv.osv):
     _name = 'insurance.insurance'
     _inherit = ['mail.thread']
     _description = 'Seguros de Desgravamen'
-    STATES = {'draft': [('readonly', False)]}    
+    STATES = {'draft': [('readonly', False)]}
 
-    def onchange_credit(self, cr, uid, ids, current, requested):
+    def onchange_deudor(self, cr, uid, ids, deudor_id):
+        res = {}
+        if not deudor_id:
+            return res
+        married = self.pool.get('insurance.partner').is_married(cr, uid, deudor_id)
         return {
-            'value': {'total_credits': self.sumar(current, requested) }
+            'value': {'has_codeudor': married}
+        }
+
+    def onchange_credit(self, cr, uid, ids, current, requested, codeudor):
+        return {
+            'value': {'total_credits': codeudor + self.sumar(current, requested) }
         }
 
     def onchange_total(self, cr, uid, ids, total, contractor_id):
@@ -412,6 +433,7 @@ class InsuranceInsurance(osv.osv):
             states=STATES            
         ),
         'has_active_credit': fields.boolean('El deudor tiene créditos vigentes ?'),
+        'has_codeudor': fields.boolean('Tiene Codeudor'),
         'city_id': fields.many2one(
             'res.country.state.city',
             string='Cuidad de Trámite',
@@ -435,11 +457,17 @@ class InsuranceInsurance(osv.osv):
             states=STATES            
         ),
         'total_active_credits': fields.float(
-            'Total Créditos Vigentes',
+            'Créditos Vigentes Deudor',
             digits_compute=DP,
             readonly=True,
             states=STATES            
         ),
+        'credits_codeudor': fields.float(
+            'Créditos Vigentes Codeudor',
+            digits_compute=DP,
+            readonly=True,
+            states=STATES            
+        ),        
         'monto_credito_solicitado': fields.float(
             'Monto Crédito Solicitado',
             digits_compute=DP,
@@ -529,12 +557,32 @@ class InsuranceInsurance(osv.osv):
             'insurance.exams',
             string='Examenes',
             readonly=True
+        ),
+        'policy_id': fields.many2one(
+            'insurance.policy',
+            string='Poliza en Uso',
+            required=True,
+            readonly=True,
+            states=STATES
         )
     }
 
     def _get_contractor(self, cr, uid, context=None):
         data = self.pool.get('res.users').read(cr, uid, uid, ['contractor_id'])
         return data['contractor_id'] and data['contractor_id'][0]
+
+    def _get_policy(self, cr, uid, context=None):
+        param_obj = self.pool.get('insurance.parameter')
+        contractor_id = self._get_contractor(cr, uid, context=context)
+        res = param_obj.search(
+            cr, uid,
+            [('partner_id','=',contractor_id)],
+            limit=1
+        )
+        if not res:
+            raise osv.except_osv('Alerta', 'No tiene una poliza asignada.')
+        data = param_obj.read(cr, uid, res, ['policy_id'])
+        return data[0]['policy_id'][0]
 
     def _get_user(self, cr, uid, context=None):
         return uid
@@ -561,7 +609,8 @@ class InsuranceInsurance(osv.osv):
         return False
 
     _sql_constraints = [
-        ('plazo_not_zero' ,'CHECK (plazo > 0)' ,'El plazo debe ser positivo !.')
+        ('plazo_not_zero' ,'CHECK (plazo > 0)' ,'El plazo debe ser positivo !.'),
+        ('monto_not_zero', 'CHECK (monto_credito_solicitado > 0)', 'Debe solicitar un monto mayor a cero !')
     ]
 
     _constraints = [
@@ -590,7 +639,7 @@ class InsuranceInsurance(osv.osv):
         """
         exam_obj = self.pool.get('insurance.parameter.value')
         for obj in self.browse(cr, uid, ids, context):
-            exams = exam_obj.get_exams(cr, uid, obj.total_credits, obj.deudor_id.age)
+            exams = exam_obj.get_exams(cr, uid, obj.total_credits, obj.deudor_id.age, obj.policy_id.id)
         return exams
 
     def action_draft(self, cr, uid, ids, context=None):
