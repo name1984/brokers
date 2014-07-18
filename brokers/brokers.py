@@ -303,7 +303,7 @@ class InsuranceParameter(osv.osv):
                             return True, 'show_certificate'
                         return False, msg2 % (obj.age_max2, obj.age_max1, obj.amount_max2)
             else:
-                return False, msg1 % obj.age_max1
+                return False, msg1 % obj.age_max
                     
 
 class InsuranceExam(osv.osv):
