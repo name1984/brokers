@@ -22,7 +22,6 @@
     <record id="group_broker_desgravamen" model="res.groups">
         <field name="name">Seguros de Desgravamen</field>
         <field name="category_id" ref="module_category_brokers_management"/>
-        <field name="implied_ids" eval="[(4, ref('group_broker_user'))]"/>
     </record>
 
     <!-- Record Rules -->

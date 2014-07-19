@@ -384,8 +384,21 @@ class InsuranceInsurance(osv.osv):
             return res
         married = self.pool.get('insurance.partner').is_married(cr, uid, deudor_id)
         return {
-            'value': {'has_codeudor': married}
+            'value': {
+                'has_codeudor': married,
+                'total_active_credits': 0,
+                'credits_codeudor': 0,
+                'monto_credito_solicitado': 0
+            }
         }
+
+    def onchange_has_codeudor(self, cr, uid, ids, has_codeudor):
+        return {'value': {'credits_codeudor': 0}}
+
+    def onchange_has_credit(self, cr, uid, ids, has_active_credit):
+        if not has_active_credit:
+            return {'value': {'total_active_credits': 0, 'credits_codeudor': 0}}
+        return {}
 
     def onchange_credit(self, cr, uid, ids, current, requested, codeudor):
         return {
