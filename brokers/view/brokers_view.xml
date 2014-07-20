@@ -35,7 +35,7 @@
 
     <record id="action_insurance_parentesco" model="ir.actions.act_window">
       <field name="name">Catálogo de Parentezco</field>
-      <field name="res_model">insurance.partner.civil</field>
+      <field name="res_model">insurance.parentesco</field>
       <field name="view_type">form</field>
       <field name="view_mode">tree,form</field>
     </record>

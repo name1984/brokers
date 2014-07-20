@@ -189,6 +189,11 @@ class InsurancePartner(osv.osv):
                 return obj
         return False
 
+    def name_search(self, cr, uid, name, args=None, operator='ilike', context=None, limit=100):
+        domain = ['|',('name',operator,name),'|',('last_name',operator,name),('identificador',operator,name)]
+        ids = self.search(cr, uid, args + domain, limit=limit, context=context)
+        return self.name_get(cr, uid, ids, context)
+
 
 class InsurancePolicy(osv.osv):
     _name = 'insurance.policy'
@@ -743,3 +748,4 @@ class InsuranceInsurance(osv.osv):
             'datas': datas,
             'nodestroy': True,                        
         }
+
