@@ -3,7 +3,7 @@
 import time
 from datetime import date
 
-from osv import osv, fields
+from openerp.osv import fields, osv
 import openerp.addons.decimal_precision as dp
 
 DP = dp.get_precision('Brokers')

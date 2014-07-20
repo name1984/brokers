@@ -35,6 +35,7 @@
         'data/sequence_brokers.xml'        
     ],
     'depends' : [
+        'decimal_precision',
         'base',
         'city',
         'mail',

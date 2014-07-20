@@ -2,10 +2,51 @@
 <openerp>
   <data noupdate="1">
 
-    <record forcecreate="True" id="decimal_budget" model="decimal.precision">
+    <record forcecreate="True" id="decimal_brokers" model="decimal.precision">
       <field name="name">Brokers</field>
       <field name="digits">2</field>
     </record>
 
+  </data>
+
+  <data>
+    <record id="exam1" model="insurance.exams">
+      <field name="name">Declaración de Asegurabilidad</field>
+      <field name="print">True</field>
+    </record>
+
+    <record id="exam2" model="insurance.exams">
+      <field name="name">Examen Médico y Examen elemental microscopico de orina</field>
+    </record>
+
+    <record id="exam3" model="insurance.exams">
+      <field name="name">Electrocardiograma en reposo</field>
+    </record>
+
+    <record id="exam4" model="insurance.exams">
+      <field name="name">Test de detección de Sida</field>
+    </record>
+
+    <record id="soltero" model="insurance.partner.civil">
+      <field name="code">01</field>
+      <field name="name">SOLTERO</field>
+    </record>
+    <record id="casado" model="insurance.partner.civil">
+      <field name="code">02</field>
+      <field name="name">CASADO</field>
+      <field name="married">True</field>
+    </record>
+    <record id="viudo" model="insurance.partner.civil">
+      <field name="code">03</field>
+      <field name="name">VIUDO</field>
+    </record>
+    <record id="union_libre" model="insurance.partner.civil">
+      <field name="code">04</field>
+      <field name="name">UNION LIBRE</field>
+    </record>
+    <record id="divorciado" model="insurance.partner.civil">
+      <field name="code">05</field>
+      <field name="name">DIVORCIADO</field>
+    </record>
   </data>
 </openerp>
