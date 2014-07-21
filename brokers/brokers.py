@@ -460,6 +460,7 @@ class InsuranceInsurance(osv.osv):
             states=STATES            
         ),
         'date': fields.date('Fecha de Solicitud de Crédito', readonly=True),
+        'date_ok': fields.date('Fecha Aprobacion', readonly=True),
         'account_number': fields.char(
             'Número de Cuenta',
             size=32,
