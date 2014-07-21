@@ -744,7 +744,7 @@ class InsuranceInsurance(osv.osv):
         datas = {'ids': [obj.id], 'model': 'insurance.insurance'}
         return {
             'type': 'ir.actions.report.xml',
-            'report_name': 'declaracion_report',
+            'report_name': 'certificado_report',
             'model': 'insurance.insurance',
             'datas': datas,
             'nodestroy': True,                        

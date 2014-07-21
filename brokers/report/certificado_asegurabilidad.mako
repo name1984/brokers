@@ -2,6 +2,10 @@
 <html>
   <head>
   </head>
+<%
+meses = {'01': 'Enero', '02': 'Febrero', '03': 'Marzo', '04': 'Abril', '05': 'Mayo', '06': 'Junio', '07': 'Julio',
+         '08': 'Agosto', '09': 'Septiembre', '10': 'Octubre', '11': 'Noviembre', '12': 'Diciembre'}
+%>
   % for obj in objects:
   <body>
     <table class="mceItemTable" border="0">
@@ -50,7 +54,7 @@
 	</tr>
 	<tr>
 	  <td align="justify">
-	    <p>Yo, ${ obj.deudor_id.name } ${ obj.deudor_id.last_name }, con c&eacute;dula n&uacute;mero ${ obj.deudor_id.identificador} solicito a ${'ASEGURADORA'} de forma expresa, libre y voluntariamente adherirme a la P&oacute;liza n&uacute;mero @#DdPoliza_label del Contratante <b>${ obj.contractor_id.name }, </b>y&nbsp;designo a E&amp;A Brokers Cia. Ltda., como mi asesor de seguros.</p>
+	    <p>Yo, ${ obj.deudor_id.name } ${ obj.deudor_id.last_name }, con c&eacute;dula n&uacute;mero ${ obj.deudor_id.identificador} solicito a ${obj.policy_id.aseguradora_id.name } de forma expresa, libre y voluntariamente adherirme a la P&oacute;liza n&uacute;mero ${ obj.policy_id.name } del Contratante <b>${ obj.contractor_id.name }, </b>y&nbsp;designo a E&amp;A Brokers Cia. Ltda., como mi asesor de seguros.</p>
 	  </td>
 	</tr>
 	<tr>
@@ -66,14 +70,14 @@
 	</tr>
 	<tr>
 	  <td>
-	    <p align="justify">Que tengo derecho a que se le entregue copias debidamente suscritas y sumilladas de la P&oacute;liza y todos sus anexos, para cuyo efecto podr&eacute; &nbsp;acceder en todo momento a la p&aacute;gina web <a href="http://www.equivida.com/">www.equivida.com</a> y obtener una copia de su p&oacute;liza siguiendo las instrucciones que ah&iacute; constan, pues <span>@#DdAseguradora_label,</span> ha puesto a mi disposici&oacute;n la P&oacute;liza y todos sus anexos para que pueda tener las mismas en todo momento.</p>
+	    <p align="justify">Que tengo derecho a que se le entregue copias debidamente suscritas y sumilladas de la P&oacute;liza y todos sus anexos, para cuyo efecto podr&eacute; &nbsp;acceder en todo momento a la p&aacute;gina web <a href="http://www.equivida.com/">www.equivida.com</a> y obtener una copia de su p&oacute;liza siguiendo las instrucciones que ah&iacute; constan, pues <span>${obj.policy_id.aseguradora_id.name },</span> ha puesto a mi disposici&oacute;n la P&oacute;liza y todos sus anexos para que pueda tener las mismas en todo momento.</p>
 	  </td>
 	</tr>
 	<tr>
 	  <td align="justify"></td>
 	</tr>
 	<tr>
-	  <td align="justify">Y que de requerir una copia certificada de la P&oacute;liza y sus anexos, tengo derecho de requerir a la Compa&ntilde;&iacute;a la entrega de una copia con la constancia de ser fiel al original suscrito por el representante de la Aseguradora, la copia as&iacute; entregada se tendr&aacute; por el texto fidedigno de lo pactado para todos los efectos legales.&nbsp; Para el efecto anterior, enviar&aacute; un mensaje electr&oacute;nico a <span>@#DdAseguradora_label</span>&nbsp;a la direcci&oacute;n servicioalcliente@equivida.com solicitando copia de la P&oacute;liza y sus Anexos indicado su nombre completo y n&uacute;mero de c&eacute;dula de ciudadan&iacute;a o identidad e indicando la direcci&oacute;n d&oacute;nde se deber&aacute; entregar la copia certificada indicada, o me acercar&eacute; a cualquier oficina de <span>@#DdAseguradora_label</span>&nbsp;a formular el indicado requerimiento.</td>
+	  <td align="justify">Y que de requerir una copia certificada de la P&oacute;liza y sus anexos, tengo derecho de requerir a la Compa&ntilde;&iacute;a la entrega de una copia con la constancia de ser fiel al original suscrito por el representante de la Aseguradora, la copia as&iacute; entregada se tendr&aacute; por el texto fidedigno de lo pactado para todos los efectos legales.&nbsp; Para el efecto anterior, enviar&aacute; un mensaje electr&oacute;nico a <span>${obj.policy_id.aseguradora_id.name }</span>&nbsp;a la direcci&oacute;n servicioalcliente@equivida.com solicitando copia de la P&oacute;liza y sus Anexos indicado su nombre completo y n&uacute;mero de c&eacute;dula de ciudadan&iacute;a o identidad e indicando la direcci&oacute;n d&oacute;nde se deber&aacute; entregar la copia certificada indicada, o me acercar&eacute; a cualquier oficina de <span>${obj.policy_id.aseguradora_id.name }</span>&nbsp;a formular el indicado requerimiento.</td>
 	</tr>
 	<tr>
 	  <td>
@@ -81,7 +85,7 @@
 	  </td>
 	</tr>
 	<tr>
-	  <td>Para constancia de lo anterior, suscribo el presente documento, en la ciudad de @#TxtAgencia el&nbsp;<span>@#fechaFormato.</span></td>
+	  <td>Para constancia de lo anterior, suscribo el presente documento, en la ciudad de ${obj.city_id.name} el&nbsp;<span>${ convert_date(obj.date) }.</span></td>
 	</tr>
 	<tr>
 	  <td></td>
@@ -106,7 +110,7 @@
 	</tr>
 	<tr>
 	  <td>
-	    <p align="justify">Yo, <span>@#TxtNombreDeudor @#TxtApellidoDeudor</span>&nbsp;con c&eacute;dula n&uacute;mero <span>@#TxtCedulaDeudor</span>&nbsp;solicito a <span>@#DdAseguradora_label, </span>la adhesi&oacute;n a la p&oacute;liza No. <span>@#DdPoliza_label</span>&nbsp;de forma expresa, libre y voluntariamente; adicionalmente designo a E&amp;A Brokers Cia. Ltda., como mi asesor de seguros, y autorizo a la <b>@#TxtContratante</b>, se incluya el valor para cubrir la prima del seguro en la cuota de mi cr&eacute;dito Nro. @#TxtOperacion, que estoy solicitando y que esta prima sea cancelada por la <b>@#TxtContratante</b>, a dicha Aseguradora. En caso de ser requerido autorizo que todas las primas de seguros de <span>@#DdAseguradora_label,</span> sean debitadas de mi cuenta No. @#TxtNumero que mantengo en la @#TxtContratante.</p>
+	    <p align="justify">Yo, <span>${obj.deudor_id.name} ${obj.deudor_id.last_name}</span>&nbsp;con c&eacute;dula n&uacute;mero <span>${obj.deudor_id.identificador}</span>&nbsp;solicito a <span>${obj.policy_id.aseguradora_id.name}, </span>la adhesi&oacute;n a la p&oacute;liza No. <span>${obj.policy_id.name }</span>&nbsp;de forma expresa, libre y voluntariamente; adicionalmente designo a E&amp;A Brokers Cia. Ltda., como mi asesor de seguros, y autorizo a la <b>${obj.contractor_id.name}</b>, se incluya el valor para cubrir la prima del seguro en la cuota de mi cr&eacute;dito Nro. ${obj.nro_operacion_credito}, que estoy solicitando y que esta prima sea cancelada por la <b>${obj.contractor_id.name}</b>, a dicha Aseguradora. En caso de ser requerido autorizo que todas las primas de seguros de <span>${obj.policy_id.aseguradora_id.name},</span> sean debitadas de mi cuenta No. ${obj.account_number} que mantengo en la ${obj.contractor_id.name}.</p>
 	  </td>
 	</tr>
 	<tr>
@@ -114,7 +118,7 @@
 	</tr>
 	<tr>
 	  <td>
-	    <p>Lugar y Fecha:&nbsp;@#TxtAgencia, @#fechaFormato.</p>
+	    <p>Lugar y Fecha:&nbsp;${obj.city_id.name}, ${ convert_date(obj.date) }.</p>
 	  </td>
 	</tr>
 	<tr>
@@ -141,11 +145,11 @@
 		  <td><b>FIRMA</b></td>
 		</tr>
 		<tr>
-		  <td><span>@#TxtNombreDeudor @#TxtApellidoDeudor</span></td>
+		  <td><span>${obj.deudor_id.name} ${obj.deudor_id.last_name}</span></td>
 		  <td>@#TxtNombreCodeudor @#TxtApellidoCodeudor</td>
 		</tr>
 		<tr>
-		  <td><b>CI/PAS:&nbsp;</b>@#TxtCedulaDeudor</td>
+		  <td><b>CI/PAS:&nbsp;</b>${obj.deudor_id.identificador}</td>
 		  <td><b>CI/PAS:&nbsp;</b>@#TxtCedulaCodeudor</td>
 		</tr>
 	      </tbody>
@@ -208,9 +212,9 @@
 	</tr>
 	<tr>
 	  <td>
-	    <p align="justify">Declaro expresa e irrevocablemente que los datos consignados en el presente formulario son correctos y fidedignos. As&iacute; mismo declaro que el origen de los fondos entregados a <span>@#DdAseguradora_label</span> por la P&oacute;liza, tienen un origen l&iacute;cito, permitido por las leyes del Ecuador.</p>
-	    <p align="justify">Faculto a <span>@#DdAseguradora_label</span>, a proceder con la comprobaci&oacute;n de esta declaraci&oacute;n; para el efecto podr&aacute; realizar todas las indagaciones que considere necesarias, por los medios que considere convenientes y queda expresamente autorizado para que pueda utilizar, o entregar dicha informaci&oacute;n a las autoridades competentes, organismos de control y/o a otras instituciones o personas jur&iacute;dicas, legal o reglamentariamente facultadas.</p>
-	    <p align="justify">Ex&iacute;mo a <span>@#DdAseguradora_label</span>, de toda responsabilidad, inclusive respecto de terceros, si esta declaraci&oacute;n fuese falsa.</p>
+	    <p align="justify">Declaro expresa e irrevocablemente que los datos consignados en el presente formulario son correctos y fidedignos. As&iacute; mismo declaro que el origen de los fondos entregados a <span>${obj.policy_id.aseguradora_id.name}</span> por la P&oacute;liza, tienen un origen l&iacute;cito, permitido por las leyes del Ecuador.</p>
+	    <p align="justify">Faculto a <span>${obj.policy_id.aseguradora_id.name}</span>, a proceder con la comprobaci&oacute;n de esta declaraci&oacute;n; para el efecto podr&aacute; realizar todas las indagaciones que considere necesarias, por los medios que considere convenientes y queda expresamente autorizado para que pueda utilizar, o entregar dicha informaci&oacute;n a las autoridades competentes, organismos de control y/o a otras instituciones o personas jur&iacute;dicas, legal o reglamentariamente facultadas.</p>
+	    <p align="justify">Ex&iacute;mo a <span>${obj.policy_id.aseguradora_id.name}</span>, de toda responsabilidad, inclusive respecto de terceros, si esta declaraci&oacute;n fuese falsa.</p>
 	  </td>
 	</tr>
 	<tr>
@@ -224,14 +228,14 @@
 	</tr>
 	<tr>
 	  <td>
-	    <p align="justify">En los casos que&nbsp;<span>@#DdAseguradora_label</span> considere necesario solicitar&aacute; documentaci&oacute;n adicional para identificar plenamente al cliente, en cumplimiento de la pol&iacute;tica "Conozca a su Cliente", estipulada en la normativa legal vigente en materia de Prevenci&oacute;n de Lavado de Activos y Financiamiento de Delitos.</p>
+	    <p align="justify">En los casos que&nbsp;<span>${obj.policy_id.aseguradora_id.name}</span> considere necesario solicitar&aacute; documentaci&oacute;n adicional para identificar plenamente al cliente, en cumplimiento de la pol&iacute;tica "Conozca a su Cliente", estipulada en la normativa legal vigente en materia de Prevenci&oacute;n de Lavado de Activos y Financiamiento de Delitos.</p>
 	  </td>
 	</tr>
 	<tr>
 	  <td></td>
 	</tr>
 	<tr>
-	  <td>Lugar y Fecha:&nbsp;@#TxtAgencia el&nbsp;@#fechaFormato.</td>
+	  <td>Lugar y Fecha:&nbsp;${obj.city_id.name} el&nbsp;@#fechaFormato.</td>
 	</tr>
 	<tr>
 	  <td></td>
@@ -258,11 +262,11 @@
 		  <td><b>FIRMA &nbsp;</b></td>
 		</tr>
 		<tr>
-		  <td><span>@#TxtNombreDeudor @#TxtApellidoDeudor</span></td>
+		  <td><span>${obj.deudor_id.name} ${obj.deudor_id.last_name}</span></td>
 		  <td>@#TxtNombreCodeudor @#TxtApellidoCodeudor</td>
 		</tr>
 		<tr>
-		  <td><b>CI/PAS:&nbsp;</b>@#TxtCedulaDeudor</td>
+		  <td><b>CI/PAS:&nbsp;</b>${obj.deudor_id.identificador}</td>
 		  <td><b>CI/PAS:&nbsp;</b>@#TxtCedulaCodeudor</td>
 		</tr>
 	      </tbody>
@@ -345,7 +349,7 @@
 	</tr>
 	<tr>
 	  <td>
-	    <p align="justify">@#DdAseguradora_label certifica que el Sr(a) <span>@#TxtNombreDeudor @#TxtApellidoDeudor</span>, con c&eacute;dula n&uacute;mero @#TxtCedulaDeudor y el Sr(a) @#TxtNombreCodeudor @#TxtApellidoCodeudor, con c&eacute;dula n&uacute;mero @#TxtCedulaCodeudor, est&aacute;n asegurados bajo la P&oacute;liza n&uacute;mero <span>@#DdPoliza_label&nbsp;</span>cuyo Contratante es <b>@#TxtContratante</b>, bajo las siguientes coberturas y montos:&nbsp;</p>
+	    <p align="justify">@#DdAseguradora_label certifica que el Sr(a) <span>${obj.deudor_id.name} ${obj.deudor_id.last_name}</span>, con c&eacute;dula n&uacute;mero ${obj.deudor_id.identificador} y el Sr(a) @#TxtNombreCodeudor @#TxtApellidoCodeudor, con c&eacute;dula n&uacute;mero @#TxtCedulaCodeudor, est&aacute;n asegurados bajo la P&oacute;liza n&uacute;mero <span>@#DdPoliza_label&nbsp;</span>cuyo Contratante es <b>@#TxtContratante</b>, bajo las siguientes coberturas y montos:&nbsp;</p>
 	  </td>
 	</tr>
 	<tr>
@@ -467,12 +471,12 @@
 		</tr>
 		<tr>
 		  <td><b>EQUIVIDA COMPA&Ntilde;&Iacute;A DE</b></td>
-		  <td>@#TxtNombreDeudor @#TxtApellidoDeudor</td>
+		  <td>${obj.deudor_id.name} ${obj.deudor_id.last_name}</td>
 		  <td><span>@#TxtNombreCodeudor @#TxtApellidoCodeudor</span></td>
 		</tr>
 		<tr>
 		  <td><b>SEGUROS Y REASEGUROS S.A.&nbsp; &nbsp;</b></td>
-		  <td><b>CI/PAS:&nbsp;</b>@#TxtCedulaDeudor</td>
+		  <td><b>CI/PAS:&nbsp;</b>${obj.deudor_id.identificador}</td>
 		  <td><b>CI/PAS:&nbsp;</b>@#TxtCedulaCodeudor</td>
 		</tr>
 	      </tbody>
@@ -808,12 +812,12 @@
 		</tr>
 		<tr>
 		  <td><b>EQUIVIDA COMPA&Ntilde;&Iacute;A DE</b></td>
-		  <td>@#TxtNombreDeudor @#TxtApellidoDeudor</td>
+		  <td>${obj.deudor_id.name} ${obj.deudor_id.last_name}</td>
 		  <td>@#TxtNombreCodeudor @#TxtApellidoCodeudor</td>
 		</tr>
 		<tr>
 		  <td><b>SEGUROS Y REASEGUROS S.A.&nbsp; &nbsp;</b></td>
-		  <td><b>CI/PAS:&nbsp;</b>@#TxtCedulaDeudor</td>
+		  <td><b>CI/PAS:&nbsp;</b>${obj.deudor_id.identificador}</td>
 		  <td><b>CI/PAS:&nbsp;</b>@#TxtCedulaCodeudor</td>
 		</tr>
 	      </tbody>

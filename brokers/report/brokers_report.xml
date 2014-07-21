@@ -2,8 +2,8 @@
 <openerp>
   <data>
 
-    <report auto="False" id="certificado_asegurabilidad" model="insurance.insurance"
-            name="certificado_asegurabilidad" rml="brokers/report/certificado_asegurabilidad.mako"
+    <report auto="False" id="certificado_report" model="insurance.insurance"
+            name="certificado_report" rml="brokers/report/certificado_asegurabilidad.mako"
             usage="default" string="Certificado Asegurabilidad" header="False" report_type="webkit"/>
     
     <report auto="False" id="declaracion_report" model="insurance.insurance"
