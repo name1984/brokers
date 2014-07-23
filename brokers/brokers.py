@@ -141,7 +141,9 @@ class InsurancePartner(osv.osv):
         'mobile': fields.char('Celular', size=16, required=True),
         'phone': fields.char('Teléfono', size=16, required=True),
         'email': fields.char('E-mail', size=32, required=True),
-        'street': fields.char('Dirección', size=64),
+        'street': fields.char('Calle Principal', size=64),
+        'street2': fields.char('Calle Secundaria', size=64),
+        'street_number': fields.char('Nro Domicilio',size=16),
         'parentesco_id': fields.many2one(
             'insurance.parentesco',
             string="Parentesco"
@@ -153,7 +155,7 @@ class InsurancePartner(osv.osv):
         'child_ids': fields.one2many(
             'insurance.partner',
             'parent_id',
-            string='Partner Padre'
+            string='Codeudor o Conviviente Legal'
         )
     }
 

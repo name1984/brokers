@@ -121,7 +121,7 @@
 	    <group>
 	      <group string="Datos Solicitud de Crédito">
 		<field name="city_id" widget="selection"/>
-		<field name="date" required="1" readonly="1"/>
+		<field name="date" required="1" readonly="1" placeholder="dd/mm/aaaa"/>
 		<field name="account_number"/>
 		<field name="nro_operacion_credito"/>
 		<field name="plazo"/>
@@ -266,12 +266,17 @@
 		<field name="mobile"/>
 		<field name="phone"/>
 		<field name="email"/>
-		<field name="street" placeholder="Calle principal"/>
+		<label for="street" string="Dirección"/>
+		<div>
+		  <field name="street" placeholder="Calle principal"/>
+		  <field name="street_number" placeholder="Nro. Domicilio"/>
+		  <field name="street2" placeholder="Calle secundaria"/>
+		</div>
 	      </group>
 	    </group>
 	    <notebook>
-	      <page string="Familiares / Conyugue">
-		<field name="child_ids" mode="kanban">
+	      <page string="Conyugue / Codeudor">
+		<field name="child_ids" mode="tree,kanban">
 		  <kanban>
 		    <field name="name"/>
 		    <field name="last_name"/>
@@ -310,7 +315,7 @@
 		      <field name="parentesco_id" placeholder="Esposa/o" required="1"/>
 		      <group string="Información">
 			<group>
-			  <field name="birth_date"/>
+			  <field name="birth_date" placeholder="dd/mm/aaaa"/>
 			  <field name="sexo"/>
 			  <field name="civil_id" widget="selection"/>
 			</group>

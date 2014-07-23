@@ -421,7 +421,7 @@ else
 catch(e){this[i]=this[i];}}
 else
 {}}
-return this;};"><font size="2" face="arial,helvetica,sans-serif">${ obj.question1.upper() }</font></td>
+return this;};"><font size="2" face="arial,helvetica,sans-serif">SI(${ obj.question1=='si' and 'X' or '' }) NO(${ obj.question1=='no' and 'X' or '' })</font></td>
 </tr>
 <tr>
 <td><font size="2" face="arial,helvetica,sans-serif">Explique:</font><br /> <span style="font-family: arial, helvetica, sans-serif; font-size: small;">${ obj.answer1 }</span></td>
@@ -433,7 +433,7 @@ return this;};"><font size="2" face="arial,helvetica,sans-serif">${ obj.question
 <tr>
 <td align="justify"><font size="2" face="arial,helvetica,sans-serif">&iquest; Tiene en la actualidad alguna enfermedad o p&eacute;rdida funcional o anat&oacute;mica, o ha sufrido un accidente que le impide desempe&ntilde;ar labores propias de su ocupaci&oacute;n, o sabe si ser&aacute; hospitalizado o intervenido quir&uacute;rgicamente?</font></td>
 <td><font size="2" face="arial,helvetica,sans-serif"><span></span></font></td>
-<td><font size="2" face="arial,helvetica,sans-serif"><span>${ obj.question2.upper() }</span></font></td>
+<td><font size="2" face="arial,helvetica,sans-serif"><span>SI(${ obj.question2=='si' and 'X' or '' }) NO(${ obj.question2=='no' and 'X' or '' })</span></font></td>
 </tr>
 <tr>
 <td>
