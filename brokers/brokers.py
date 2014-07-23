@@ -548,6 +548,29 @@ class InsuranceInsurance(osv.osv):
             readonly=True,
             states=STATES            
         ),
+
+        'question3': fields.selection(
+            [('si','SI'),('no','NO')],
+            string='Respuesta',
+            readonly=True,
+            states=STATES
+        ),
+        'answer3': fields.text(
+            'Respuesta',
+            readonly=True,
+            states=STATES
+        ),
+        'question4': fields.selection(
+            [('si','SI'),('no','NO')],
+            string='Respuesta 2',
+            readonly=True,
+            states=STATES
+        ),
+        'answer4': fields.text(
+            'Respuesta',
+            readonly=True,
+            states=STATES
+        ),
         'print_certificate': fields.boolean(
             'Imprime Certificado ?',
             readonly=True,
@@ -617,7 +640,11 @@ class InsuranceInsurance(osv.osv):
         'question1': 'no',
         'question2': 'no',
         'answer1': '\n\n\n\n\n\n',
-        'answer2': '\n\n\n\n\n\n'        
+        'answer2': '\n\n\n\n\n\n',
+        'question3': 'no',
+        'question4': 'no',
+        'answer3': '\n\n\n\n\n\n',
+        'answer4': '\n\n\n\n\n\n'
     }
 
     def _check_conyugue(self, cr, uid, ids):
