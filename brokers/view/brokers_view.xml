@@ -143,11 +143,12 @@
 		  <field name="total_credits" 
 			 class="oe_subtotal_footer_separator" 
 			 widget="monetary" 
-			 on_change="onchange_total(total_credits, contractor_id)"/>
+			 on_change="onchange_total(total_credits, contractor_id,has_codeudor)"/>
 		</group>
 	      </group>
 	    </group>
 	    <field name="show_questions" invisible="1"/>
+	    <field name="show_questions2" invisible="1"/>
 	    <group string="Preguntas de Asegurabilidad: Deudor" attrs="{'invisible': [('show_questions','=',False)]}">
 	      <group>
 		<group>
@@ -177,7 +178,7 @@
 	      </group>
 	    </group>
 
-	    <group string="Preguntas de Asegurabilidad: Codeudor" attrs="{'invisible': [('has_codeudor','=',False)]}">
+	    <group string="Preguntas de Asegurabilidad: Codeudor" attrs="{'invisible': [('show_questions2','=',False)]}">
 	      <group>
 		<group>
 		  <label string="

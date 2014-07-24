@@ -412,12 +412,16 @@ class InsuranceInsurance(osv.osv):
             'value': {'total_credits': codeudor + self.sumar(current, requested) }
         }
 
-    def onchange_total(self, cr, uid, ids, total, contractor_id):
-        result = {'value': {'show_questions': False}}
+    def onchange_total(self, cr, uid, ids, total, contractor_id, has_codeudor):
+        if total == 0:
+            return {}
+        result = {'value': {'show_questions': False, 'show_question2': False}}
         params_obj = self.pool.get('insurance.parameter')
         res = params_obj.search(cr, uid, [('partner_id','=',contractor_id),('amount_min','<=',total)], limit=1)
         if res:
             result['value']['show_questions'] = True
+            if has_codeudor:
+                result['value']['show_questions2'] = True
         return result
 
     def sumar(self, val1, val2):
@@ -526,6 +530,10 @@ class InsuranceInsurance(osv.osv):
             readonly=True,
             states=STATES            
         ),
+        'show_questions2': fields.boolean(
+            'Mostrar Preguntas Codeudor',
+            readonly=True,
+        ),        
         'question1': fields.selection(
             [('si','SI'),('no','NO')],
             string='Respuesta',
@@ -637,12 +645,8 @@ class InsuranceInsurance(osv.osv):
         'contractor_id': _get_contractor,
         'date': time.strftime('%Y-%m-%d'),
         'user_id': _get_user,
-        'question1': 'no',
-        'question2': 'no',
         'answer1': '\n\n\n\n\n\n',
         'answer2': '\n\n\n\n\n\n',
-        'question3': 'no',
-        'question4': 'no',
         'answer3': '\n\n\n\n\n\n',
         'answer4': '\n\n\n\n\n\n'
     }
