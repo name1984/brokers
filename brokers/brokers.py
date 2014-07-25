@@ -399,9 +399,6 @@ class InsuranceInsurance(osv.osv):
             }
         }
 
-    def onchange_has_codeudor(self, cr, uid, ids, has_codeudor):
-        return {'value': {'credits_codeudor': 0}}
-
     def onchange_has_credit(self, cr, uid, ids, has_active_credit):
         if not has_active_credit:
             return {'value': {'total_active_credits': 0, 'credits_codeudor': 0}}
@@ -418,7 +415,7 @@ class InsuranceInsurance(osv.osv):
         result = {'value': {'show_questions': False, 'show_question2': False}}
         params_obj = self.pool.get('insurance.parameter')
         res = params_obj.search(cr, uid, [('partner_id','=',contractor_id),('amount_min','<=',total)], limit=1)
-        if res:
+        if res and res[0]:
             result['value']['show_questions'] = True
             if has_codeudor:
                 result['value']['show_questions2'] = True
@@ -532,7 +529,6 @@ class InsuranceInsurance(osv.osv):
         ),
         'show_questions2': fields.boolean(
             'Mostrar Preguntas Codeudor',
-            readonly=True,
         ),        
         'question1': fields.selection(
             [('si','SI'),('no','NO')],
