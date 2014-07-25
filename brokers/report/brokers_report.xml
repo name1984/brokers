@@ -5,9 +5,19 @@
     <report auto="False" id="certificado_report" model="insurance.insurance"
             name="certificado_report" rml="brokers/report/certificado_asegurabilidad.mako"
             usage="default" string="Certificado Asegurabilidad" header="False" report_type="webkit" multi="True"/>
+
+    <report auto="False" id="certificado_deudor_report" model="insurance.insurance"
+            name="certificado_deudor_report" rml="brokers/report/certificado_deudor.mako"
+            usage="default" string="Certificado Asegurabilidad" header="False" report_type="webkit" multi="True"/>
+
+    <!-- Declaraciones -->
     
     <report auto="False" id="declaracion_report" model="insurance.insurance"
             name="declaracion_report" rml="brokers/report/declaracion.mako"
+            usage="default" string="Declaracion" header="False" report_type="webkit" multi="True"/>
+
+    <report auto="False" id="declaracion_deudor_codeudor_report" model="insurance.insurance"
+            name="declaracion_deudor_codeudor_report" rml="brokers/report/declaracion_deudor_codeudor.mako"
             usage="default" string="Declaracion" header="False" report_type="webkit" multi="True"/>
 
   </data>

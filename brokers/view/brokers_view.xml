@@ -115,6 +115,7 @@
 	    <group string="Registro Deudor">
 	      <field name="deudor_id" on_change="onchange_deudor(deudor_id)"/>
 	      <field name="has_codeudor" invisible="1"/>
+	      <field name="codeudor_id" invisible="1"/>
 	      <field name="tiene_apoderado"/>
 	      <field name="apoderado_id" domain="[('id','!=',deudor_id)]" attrs="{'required': [('tiene_apoderado','=',True)], 'invisible': [('tiene_apoderado','=',False)]}"/>
 	    </group>
@@ -306,6 +307,7 @@
 	      <group>
 		<field name="mobile"/>
 		<field name="phone"/>
+		<field name="phone2"/>
 		<field name="email"/>
 		<label for="street" string="Dirección"/>
 		<div>

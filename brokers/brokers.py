@@ -139,7 +139,8 @@ class InsurancePartner(osv.osv):
             string='Estado Civil'
         ),
         'mobile': fields.char('Celular', size=16, required=True),
-        'phone': fields.char('Teléfono', size=16, required=True),
+        'phone': fields.char('Teléfono Casa', size=16, required=True),
+        'phone2': fields.char('Teléfono Oficina', size=16, required=True),        
         'email': fields.char('E-mail', size=32, required=True),
         'street': fields.char('Calle Principal', size=64),
         'street2': fields.char('Calle Secundaria', size=64),
@@ -183,7 +184,8 @@ class InsurancePartner(osv.osv):
         deudor = self.browse(cr, uid, deudor_id)
         return deudor.civil_id.married
 
-    def get_conyugue(self, cr, uid, deudor):
+    def get_conyugue(self, cr, uid, deudor_id):
+        deudor = self.browse(cr, uid, deudor_id)
         if not deudor.civil_id.married:
             return False
         for obj in deudor.child_ids:
@@ -386,16 +388,19 @@ class InsuranceInsurance(osv.osv):
     STATES = {'draft': [('readonly', False)]}
 
     def onchange_deudor(self, cr, uid, ids, deudor_id):
+        part_obj = self.pool.get('insurance.partner')
         res = {}
         if not deudor_id:
             return res
-        married = self.pool.get('insurance.partner').is_married(cr, uid, deudor_id)
+        married = part_obj.is_married(cr, uid, deudor_id)
+        conyugue = part_obj.get_conyugue(cr, uid, deudor_id)
         return {
             'value': {
                 'has_codeudor': married,
                 'total_active_credits': 0,
                 'credits_codeudor': 0,
-                'monto_credito_solicitado': 0
+                'monto_credito_solicitado': 0,
+                'codeudor_id': conyugue.id
             }
         }
 
@@ -453,6 +458,13 @@ class InsuranceInsurance(osv.osv):
             readonly=True,
             states=STATES            
         ),
+        'codeudor_id': fields.many2one(
+            'insurance.partner',
+            string='Deudor',
+            required=True,
+            readonly=True,
+            states=STATES            
+        ),        
         'has_active_credit': fields.boolean('El deudor tiene créditos vigentes ?'),
         'has_codeudor': fields.boolean('Tiene Codeudor'),
         'city_id': fields.many2one(
@@ -669,7 +681,7 @@ class InsuranceInsurance(osv.osv):
         param_obj = self.pool.get('insurance.parameter')
         part_obj = self.pool.get('insurance.partner')
         for obj in self.browse(cr, uid, ids, context):
-            codeudor = part_obj.get_conyugue(cr, uid, obj.deudor_id)
+            codeudor = obj.codeudor_id
             res, msg = param_obj.validate(
                 cr, uid,
                 obj.total_credits,
@@ -679,6 +691,7 @@ class InsuranceInsurance(osv.osv):
             if not res:
                 raise osv.except_osv('Alerta', msg)
         return True, msg
+
 
     def _get_exams(self, cr, uid, ids, context=None):
         """
@@ -753,14 +766,17 @@ class InsuranceInsurance(osv.osv):
         """
         if not context:
             context = {}
+        report_name = 'declaracion_report'            
         obj = self.browse(cr, uid, ids, context)[0]
+        if obj.has_codeudor:
+            report_name = 'declaracion_deudor_codeudor_report'
         datas = {'ids': [obj.id], 'model': 'insurance.insurance'}
         return {
             'type': 'ir.actions.report.xml',
-            'report_name': 'declaracion_report',
+            'report_name': report_name,
             'model': 'insurance.insurance',
             'datas': datas,
-            'nodestroy': True,                        
+            'nodestroy': True,
         }        
 
     def action_print_certificate(self, cr, uid, ids, context=None):
@@ -769,11 +785,14 @@ class InsuranceInsurance(osv.osv):
         """
         if not context:
             context = {}
+        report_name = 'certificado_deudor_report'
         obj = self.browse(cr, uid, ids, context)[0]
+        if obj.has_codeudor:
+            report_name = 'certificado_report'
         datas = {'ids': [obj.id], 'model': 'insurance.insurance'}
         return {
             'type': 'ir.actions.report.xml',
-            'report_name': 'certificado_report',
+            'report_name': report_name,
             'model': 'insurance.insurance',
             'datas': datas,
             'nodestroy': True,                        
