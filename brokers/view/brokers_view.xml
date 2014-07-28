@@ -92,9 +92,9 @@
 	    <!-- button name="action_draft" string="Regresar a Borrador" type="object" states="request"/ -->
 	    <button name="action_draft" string="Regresar a Borrador" type="object" states="request,ok" groups="brokers.group_broker_manager"/>
 	    <button name="action_print_declaracion" string="Declaración de Asegurabilidad" 
-		    attrs="{'invisible': [('print_declaration','=',False)]}" icon="gtk-print"  class="oe_highlight" type="object"/>
+		    attrs="{'invisible': ['|',('print_declaration','=',False),('state','=','draft')]}" icon="gtk-print"  class="oe_highlight" type="object"/>
 	    <button name="action_print_certificate" string="Certificado" icon="gtk-print" 
-		    attrs="{'invisible': [('print_certificate','=',False)]}" class="oe_highlight" type="object"/>
+		    attrs="{'invisible': ['|',('print_certificate','=',False),('state','=','draft')]}" class="oe_highlight" type="object"/>
 	    <field name="state" widget="statusbar" statusbar_visible="draft,request,ok"/>
 	    <field name="print_certificate" invisible="1"/>
 	    <field name="print_declaration" invisible="1"/>

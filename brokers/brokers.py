@@ -477,7 +477,7 @@ class InsuranceInsurance(osv.osv):
         ),
         'date': fields.date('Fecha de Solicitud de Crédito', readonly=True),
         'date_ok': fields.date('Fecha Aprobacion', readonly=True),
-        'date_due': fields.date('Fecha Vencimiento', readonly=True)
+        'date_due': fields.date('Fecha Vencimiento', readonly=True),
         'account_number': fields.char(
             'Número de Cuenta',
             size=32,
