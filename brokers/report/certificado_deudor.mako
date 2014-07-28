@@ -1,319 +1,320 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
+  <style>
+    table {border-collapse:collapse; border: none;}
+  </style>
 </head>
 %for obj in objects:
 <body>
-<table class="mceItemTable" border="0">
-<tbody>
-<tr>
-<td>
-<table style="width: 549px; height: 73px;" class="mceItemTable" border="0">
-<tbody>
-<tr>
-<td></td>
-<td align="right">
-<p></p>
-</td>
-</tr>
-<tr>
-<td><img src="http://50.31.134.204:8080/images/equivida.png" height="47" width="400" /></td>
-<td align="right">
-<p><a href="http://www.equivida.com">www.equivida.com</a></p>
-<p>Pag. 1 de 6</p>
-</td>
-</tr>
-</tbody>
-</table>
-</td>
-</tr>
-<tr>
-<td>
-<p align="center"></p>
-</td>
-</tr>
-<tr>
-<td>
-<p align="center"><b>SOLICITUD DE ADHESI&Oacute;N</b></p>
-</td>
-</tr>
-<tr>
-<td align="center"><b>${obj.contractor_id.name}.</b></td>
-</tr>
-<tr>
-<td></td>
-</tr>
-<tr>
-<td align="justify">
-<p></p>
-</td>
-</tr>
-<tr>
-<td align="justify">
-<p>Yo, ${obj.deudor_id.name} ${obj.deudor_id.last_name}, con c&eacute;dula n&uacute;mero ${obj.deudor_id.identificador} solicito a ${obj.policy_id.aseguradora_id.name} de forma expresa, libre y voluntariamente adherirme a la P&oacute;liza n&uacute;mero ${obj.policy_id.name} del Contratante <b>${obj.contractor_id.name}. </b>y&nbsp;designo a E&amp;A Brokers Cia. Ltda., como mi asesor de seguros.</p>
-</td>
-</tr>
-<tr>
-<td></td>
-</tr>
-<tr>
-<td>
-<p>Adicional en mi calidad de Asegurado declaro que s&eacute; y conozco lo siguiente:</p>
-</td>
-</tr>
-<tr>
-<td></td>
-</tr>
-<tr>
-<td>
-<p align="justify">Que tengo derecho a que se le entregue copias debidamente suscritas y sumilladas de la P&oacute;liza y todos sus anexos, para cuyo efecto podr&eacute; &nbsp;acceder en todo momento a la p&aacute;gina web <a href="http://www.equivida.com/">www.equivida.com</a> y obtener una copia de su p&oacute;liza siguiendo las instrucciones que ah&iacute; constan, pues <span>${obj.policy_id.aseguradora_id.name},</span> ha puesto a mi disposici&oacute;n la P&oacute;liza y todos sus anexos para que pueda tener las mismas en todo momento.</p>
-</td>
-</tr>
-<tr>
-<td align="justify"></td>
-</tr>
-<tr>
-<td align="justify">Y que de requerir una copia certificada de la P&oacute;liza y sus anexos, tengo derecho de requerir a la Compa&ntilde;&iacute;a la entrega de una copia con la constancia de ser fiel al original suscrito por el representante de la Aseguradora, la copia as&iacute; entregada se tendr&aacute; por el texto fidedigno de lo pactado para todos los efectos legales.&nbsp; Para el efecto anterior, enviar&aacute; un mensaje electr&oacute;nico a <span>${obj.policy_id.aseguradora_id.name}</span>&nbsp;a la direcci&oacute;n servicioalcliente@equivida.com solicitando copia de la P&oacute;liza y sus Anexos indicado su nombre completo y n&uacute;mero de c&eacute;dula de ciudadan&iacute;a o identidad e indicando la direcci&oacute;n d&oacute;nde se deber&aacute; entregar la copia certificada indicada, o me acercar&eacute; a cualquier oficina de <span>${obj.policy_id.aseguradora_id.name}</span>&nbsp;a formular el indicado requerimiento.</td>
-</tr>
-<tr>
-<td>
-<p></p>
-</td>
-</tr>
-<tr>
-<td>Para constancia de lo anterior, suscribo el presente documento, en la ciudad de ${obj.city_id.name.capitalize()} el&nbsp;<span>${convert_date(obj.date)}.</span></td>
-</tr>
-<tr>
-<td></td>
-</tr>
-<tr>
-<td>
-<p></p>
-</td>
-</tr>
-<tr>
-<td>
-<p><b>AUTORIZACI&Oacute;N DE D&Eacute;BITO</b></p>
-</td>
-</tr>
-<tr>
-<td>
-<p></p>
-</td>
-</tr>
-<tr>
-<td></td>
-</tr>
-<tr>
-<td>
-<p align="justify">Yo, <span>${obj.deudor_id.name} ${obj.deudor_id.last_name}</span>&nbsp;con c&eacute;dula n&uacute;mero <span>${obj.deudor_id.identificador}</span>&nbsp;solicito a <span>${obj.policy_id.aseguradora_id.name}, </span>la adhesi&oacute;n a la p&oacute;liza No. <span>${obj.policy_id.name}</span>&nbsp;de forma expresa, libre y voluntariamente; adicionalmente designo a E&amp;A Brokers Cia. Ltda., como mi asesor de seguros, y autorizo a la <b>${obj.contractor_id.name}</b>, se incluya el valor para cubrir la prima del seguro en la cuota de mi cr&eacute;dito Nro. ${obj.nro_operacion_credito}, que estoy solicitando y que esta prima sea cancelada por la <b>${obj.contractor_id.name}</b>, a dicha Aseguradora. En caso de ser requerido autorizo que todas las primas de seguros de <span>${obj.policy_id.aseguradora_id.name},</span> sean debitadas de mi cuenta No<span>. ${obj.account_number}</span> &nbsp; que mantengo en la ${obj.contractor_id.name}.</p>
-</td>
-</tr>
-<tr>
-<td></td>
-</tr>
-<tr>
-<td>
-<p>Lugar y Fecha:&nbsp;${obj.city_id.name} el&nbsp;${convert_date(obj.date)}.</p>
-</td>
-</tr>
-<tr>
-<td>
-<p></p>
-</td>
-</tr>
-<tr>
-<td></td>
-</tr>
-<tr>
-<td></td>
-</tr>
-<tr>
-<td>
-<table align="center" class="mceItemTable" border="0">
-<tbody>
-<tr>
-<td><b>&nbsp;____________________________</b></td>
-</tr>
-<tr>
-<td><b>FIRMA</b></td>
-</tr>
-<tr>
-<td><span>${obj.deudor_id.name} ${obj.deudor_id.last_name}</span></td>
-</tr>
-<tr>
-<td><b>CI/PAS:&nbsp;</b>${obj.deudor_id.identificador}</td>
-</tr>
-</tbody>
-</table>
-</td>
-</tr>
-<tr>
-<td></td>
-</tr>
-<tr>
-<td></td>
-</tr>
-<tr>
-<td></td>
-</tr>
-<tr>
-<td>
-<p></p>
-</td>
-</tr>
-<tr>
-<td>
-<table style="width: 549px; height: 73px;" class="mceItemTable" border="0">
-<tbody>
-<tr>
-<td><img src="http://50.31.134.204:8080/images/equivida.png" height="47" width="400" /></td>
-<td align="right">
-<p><a href="http://www.equivida.com">www.equivida.com</a></p>
-<p>Pag. 2 de 6</p>
-</td>
-</tr>
-</tbody>
-</table>
-</td>
-</tr>
-<tr>
-<td></td>
-</tr>
-<tr>
-<td>
-<p></p>
-</td>
-</tr>
-<tr>
-<td>
-<p><b>DECLARACI&Oacute;N DE ORIGEN DE FONDOS Y AUTORIZACI&Oacute;N:</b></p>
-</td>
-</tr>
-<tr>
-<td></td>
-</tr>
-<tr>
-<td>
-<p align="justify">Declaro expresa e irrevocablemente que los datos consignados en el presente formulario son correctos y fidedignos. As&iacute; mismo declaro que el origen de los fondos entregados a <span>${obj.policy_id.aseguradora_id.name}</span> por la P&oacute;liza, tienen un origen l&iacute;cito, permitido por las leyes del Ecuador.</p>
-<p align="justify">Faculto a <span>${obj.policy_id.aseguradora_id.name}</span>, a proceder con la comprobaci&oacute;n de esta declaraci&oacute;n; para el efecto podr&aacute; realizar todas las indagaciones que considere necesarias, por los medios que considere convenientes y queda expresamente autorizado para que pueda utilizar, o entregar dicha informaci&oacute;n a las autoridades competentes, organismos de control y/o a otras instituciones o personas jur&iacute;dicas, legal o reglamentariamente facultadas.</p>
-<p align="justify">Ex&iacute;mo a <span>${obj.policy_id.aseguradora_id.name}</span>, de toda responsabilidad, inclusive respecto de terceros, si esta declaraci&oacute;n fuese falsa.</p>
-</td>
-</tr>
-<tr>
-<td></td>
-</tr>
-<tr>
-<td><b>IMPORTANTE</b></td>
-</tr>
-<tr>
-<td></td>
-</tr>
-<tr>
-<td>
-<p align="justify">En los casos que&nbsp;<span>${obj.policy_id.aseguradora_id.name}</span> considere necesario solicitar&aacute; documentaci&oacute;n adicional para identificar plenamente al cliente, en cumplimiento de la pol&iacute;tica "Conozca a su Cliente", estipulada en la normativa legal vigente en materia de Prevenci&oacute;n de Lavado de Activos y Financiamiento de Delitos.</p>
-</td>
-</tr>
-<tr>
-<td></td>
-</tr>
-<tr>
-<td>Lugar y Fecha:&nbsp;${obj.city_id.name.capitalize()} el&nbsp;${convert_date(obj.date)}.</td>
-</tr>
-<tr>
-<td></td>
-</tr>
-<tr>
-<td></td>
-</tr>
-<tr>
-<td></td>
-</tr>
-<tr>
-<td></td>
-</tr>
-<tr>
-<td>
-<table align="center" class="mceItemTable" border="0">
-<tbody>
-<tr>
-<td><b>____________________________</b></td>
-</tr>
-<tr>
-<td><b>FIRMA&nbsp;&nbsp;</b></td>
-</tr>
-<tr>
-<td><span>${obj.deudor_id.name} ${obj.deudor_id.last_name}</span></td>
-</tr>
-<tr>
-<td><b>CI/PAS:&nbsp;</b>${obj.deudor_id.identificador}</td>
-</tr>
-</tbody>
-</table>
-</td>
-</tr>
-<tr>
-<td></td>
-</tr>
-<tr>
-<td></td>
-</tr>
-<tr>
-<td></td>
-</tr>
-<tr>
-<td></td>
-</tr>
-<tr>
-<td></td>
-</tr>
-<tr>
-<td></td>
-</tr>
-<tr>
-<td></td>
-</tr>
-<tr>
-<td></td>
-</tr>
-<tr>
-<td></td>
-</tr>
-<tr>
-<td></td>
-</tr>
-<tr>
-<td></td>
-</tr>
-<tr>
-<td></td>
-</tr>
-<tr>
-<td></td>
-</tr>
-<tr>
-<td></td>
-</tr>
-<tr>
-<td></td>
-</tr>
-<tr>
-<td></td>
-</tr>
-<tr>
-<td></td>
-</tr>
-<tr>
-<td></td>
-</tr>
-<tr>
-<td></td>
-</tr>
-<tr>
-<td></td>
-</tr>
-<tr>
-<td>
+  <table cellpadding="0" cellspacing="0" border="0">
+    <tbody>
+      <tr>
+	<td>
+	  <table style="width: 549px; height: 73px;" class="mceItemTable" border="0">
+	    <tbody>
+	      <tr>
+		<td></td>
+		<td align="right">
+		  <p></p>
+		</td>
+	      </tr>
+	      <tr>
+		<td><img src="http://50.31.134.204:8080/images/equivida.png" height="47" width="400" /></td>
+		<td align="right">
+		  <p><a href="http://www.equivida.com">www.equivida.com</a></p>
+		  <p>Pag. 1 de 6</p>
+		</td>
+	      </tr>
+	    </tbody>
+	  </table>
+	</td>
+      </tr>
+      <tr>
+	<td>
+	  <p align="center"></p>
+	</td>
+      </tr>
+      <tr>
+	<td>
+	  <p align="center"><b>SOLICITUD DE ADHESI&Oacute;N</b></p>
+	</td>
+      </tr>
+      <tr>
+	<td align="center"><b>${obj.contractor_id.name}.</b></td>
+      </tr>
+      <tr>
+	<td></td>
+      </tr>
+      <tr>
+	<td align="justify">
+	  <p></p>
+	</td>
+      </tr>
+      <tr>
+	<td align="justify">
+	  Yo, ${obj.deudor_id.name} ${obj.deudor_id.last_name}, con c&eacute;dula n&uacute;mero ${obj.deudor_id.identificador} solicito a ${obj.policy_id.aseguradora_id.name} de forma expresa, libre y voluntariamente adherirme a la P&oacute;liza n&uacute;mero ${obj.policy_id.name} del Contratante <b>${obj.contractor_id.name}. </b>y&nbsp;designo a E&amp;A Brokers Cia. Ltda., como mi asesor de seguros.
+	</td>
+      </tr>
+      <tr>
+	<td>
+	  <br>
+	</td>
+      </tr>
+      <tr>
+	<td>
+	  Adicional en mi calidad de Asegurado declaro que s&eacute; y conozco lo siguiente:
+	</td>
+      </tr>
+      <tr>
+	<td>
+	  <br>
+	</td>
+      </tr>
+      <tr>
+	<td align="justify">
+	  Que tengo derecho a que se le entregue copias debidamente suscritas y sumilladas de la P&oacute;liza y todos sus anexos, para cuyo efecto podr&eacute; &nbsp;acceder en todo momento a la p&aacute;gina web <a href="http://www.equivida.com/">www.equivida.com</a> y obtener una copia de su p&oacute;liza siguiendo las instrucciones que ah&iacute; constan, pues <span>${obj.policy_id.aseguradora_id.name},</span> ha puesto a mi disposici&oacute;n la P&oacute;liza y todos sus anexos para que pueda tener las mismas en todo momento.
+	</td>
+      </tr>
+      <tr>
+	<td>
+	  <br>
+	</td>
+      </tr>      
+      <tr>
+	<td align="justify">Y que de requerir una copia certificada de la P&oacute;liza y sus anexos, tengo derecho de requerir a la Compa&ntilde;&iacute;a la entrega de una copia con la constancia de ser fiel al original suscrito por el representante de la Aseguradora, la copia as&iacute; entregada se tendr&aacute; por el texto fidedigno de lo pactado para todos los efectos legales.&nbsp; Para el efecto anterior, enviar&aacute; un mensaje electr&oacute;nico a <span>${obj.policy_id.aseguradora_id.name}</span>&nbsp;a la direcci&oacute;n servicioalcliente@equivida.com solicitando copia de la P&oacute;liza y sus Anexos indicado su nombre completo y n&uacute;mero de c&eacute;dula de ciudadan&iacute;a o identidad e indicando la direcci&oacute;n d&oacute;nde se deber&aacute; entregar la copia certificada indicada, o me acercar&eacute; a cualquier oficina de <span>${obj.policy_id.aseguradora_id.name}</span>&nbsp;a formular el indicado requerimiento.</td>
+      </tr>
+      <tr>
+	<td>
+	  <p></p>
+	</td>
+      </tr>
+      <tr>
+	<td>Para constancia de lo anterior, suscribo el presente documento, en la ciudad de ${obj.city_id.name.capitalize()} el&nbsp;<span>${convert_date(obj.date)}.</span></td>
+      </tr>
+      <tr>
+	<td></td>
+      </tr>
+      <tr>
+	<td>
+	  <p></p>
+	</td>
+      </tr>
+      <tr>
+	<td>
+	  <p><b>AUTORIZACI&Oacute;N DE D&Eacute;BITO</b></p>
+	</td>
+      </tr>
+      <tr>
+	<td>
+	  <p align="justify">Yo, <span>${obj.deudor_id.name} ${obj.deudor_id.last_name}</span>&nbsp;con c&eacute;dula n&uacute;mero <span>${obj.deudor_id.identificador}</span>&nbsp;solicito a <span>${obj.policy_id.aseguradora_id.name}, </span>la adhesi&oacute;n a la p&oacute;liza No. <span>${obj.policy_id.name}</span>&nbsp;de forma expresa, libre y voluntariamente; adicionalmente designo a E&amp;A Brokers Cia. Ltda., como mi asesor de seguros, y autorizo a la <b>${obj.contractor_id.name}</b>, se incluya el valor para cubrir la prima del seguro en la cuota de mi cr&eacute;dito Nro. ${obj.nro_operacion_credito}, que estoy solicitando y que esta prima sea cancelada por la <b>${obj.contractor_id.name}</b>, a dicha Aseguradora. En caso de ser requerido autorizo que todas las primas de seguros de <span>${obj.policy_id.aseguradora_id.name},</span> sean debitadas de mi cuenta No<span>. ${obj.account_number}</span> &nbsp; que mantengo en la ${obj.contractor_id.name}.</p>
+	</td>
+      </tr>
+      <tr>
+	<td></td>
+      </tr>
+      <tr>
+	<td>
+	  <p>Lugar y Fecha:&nbsp;${obj.city_id.name} el&nbsp;${convert_date(obj.date)}.</p>
+	</td>
+      </tr>
+      <tr>
+	<td>
+	  <p></p>
+	</td>
+      </tr>
+      <tr>
+	<td></td>
+      </tr>
+      <tr>
+	<td></td>
+      </tr>
+      <tr>
+	<td>
+	  <table align="center" class="mceItemTable" border="0">
+	    <tbody>
+	      <tr>
+		<td><b>&nbsp;____________________________</b></td>
+	      </tr>
+	      <tr>
+		<td><b>FIRMA</b></td>
+	      </tr>
+	      <tr>
+		<td><span>${obj.deudor_id.name} ${obj.deudor_id.last_name}</span></td>
+	      </tr>
+	      <tr>
+		<td><b>CI/PAS:&nbsp;</b>${obj.deudor_id.identificador}</td>
+	      </tr>
+	    </tbody>
+	  </table>
+	</td>
+      </tr>
+      <tr>
+	<td></td>
+      </tr>
+      <tr>
+	<td></td>
+      </tr>
+      <tr>
+	<td></td>
+      </tr>
+      <tr>
+	<td>
+	  <p></p>
+	</td>
+      </tr>
+      <tr>
+	<td>
+	  <table style="width: 549px; height: 73px;" class="mceItemTable" border="0">
+	    <tbody>
+	      <tr>
+		<td><img src="http://50.31.134.204:8080/images/equivida.png" height="47" width="400" /></td>
+		<td align="right">
+		  <p><a href="http://www.equivida.com">www.equivida.com</a></p>
+		  <p>Pag. 2 de 6</p>
+		</td>
+	      </tr>
+	    </tbody>
+	  </table>
+	</td>
+      </tr>
+      <tr>
+	<td></td>
+      </tr>
+      <tr>
+	<td>
+	  <p></p>
+	</td>
+      </tr>
+      <tr>
+	<td>
+	  <p><b>DECLARACI&Oacute;N DE ORIGEN DE FONDOS Y AUTORIZACI&Oacute;N:</b></p>
+	</td>
+      </tr>
+      <tr>
+	<td></td>
+      </tr>
+      <tr>
+	<td>
+	  <p align="justify">Declaro expresa e irrevocablemente que los datos consignados en el presente formulario son correctos y fidedignos. As&iacute; mismo declaro que el origen de los fondos entregados a <span>${obj.policy_id.aseguradora_id.name}</span> por la P&oacute;liza, tienen un origen l&iacute;cito, permitido por las leyes del Ecuador.</p>
+	  <p align="justify">Faculto a <span>${obj.policy_id.aseguradora_id.name}</span>, a proceder con la comprobaci&oacute;n de esta declaraci&oacute;n; para el efecto podr&aacute; realizar todas las indagaciones que considere necesarias, por los medios que considere convenientes y queda expresamente autorizado para que pueda utilizar, o entregar dicha informaci&oacute;n a las autoridades competentes, organismos de control y/o a otras instituciones o personas jur&iacute;dicas, legal o reglamentariamente facultadas.</p>
+	  <p align="justify">Ex&iacute;mo a <span>${obj.policy_id.aseguradora_id.name}</span>, de toda responsabilidad, inclusive respecto de terceros, si esta declaraci&oacute;n fuese falsa.</p>
+	</td>
+      </tr>
+      <tr>
+	<td></td>
+      </tr>
+      <tr>
+	<td><b>IMPORTANTE</b></td>
+      </tr>
+      <tr>
+	<td></td>
+      </tr>
+      <tr>
+	<td>
+	  <p align="justify">En los casos que&nbsp;<span>${obj.policy_id.aseguradora_id.name}</span> considere necesario solicitar&aacute; documentaci&oacute;n adicional para identificar plenamente al cliente, en cumplimiento de la pol&iacute;tica "Conozca a su Cliente", estipulada en la normativa legal vigente en materia de Prevenci&oacute;n de Lavado de Activos y Financiamiento de Delitos.</p>
+	</td>
+      </tr>
+      <tr>
+	<td></td>
+      </tr>
+      <tr>
+	<td>Lugar y Fecha:&nbsp;${obj.city_id.name.capitalize()} el&nbsp;${convert_date(obj.date)}.</td>
+      </tr>
+      <tr>
+	<td></td>
+      </tr>
+      <tr>
+	<td></td>
+      </tr>
+      <tr>
+	<td></td>
+      </tr>
+      <tr>
+	<td></td>
+      </tr>
+      <tr>
+	<td>
+	  <table align="center" class="mceItemTable" border="0">
+	    <tbody>
+	      <tr>
+		<td><b>____________________________</b></td>
+	      </tr>
+	      <tr>
+		<td><b>FIRMA&nbsp;&nbsp;</b></td>
+	      </tr>
+	      <tr>
+		<td><span>${obj.deudor_id.name} ${obj.deudor_id.last_name}</span></td>
+	      </tr>
+	      <tr>
+		<td><b>CI/PAS:&nbsp;</b>${obj.deudor_id.identificador}</td>
+	      </tr>
+	    </tbody>
+	  </table>
+	</td>
+      </tr>
+      <tr>
+	<td></td>
+      </tr>
+      <tr>
+	<td></td>
+      </tr>
+      <tr>
+	<td></td>
+      </tr>
+      <tr>
+	<td></td>
+      </tr>
+      <tr>
+	<td></td>
+      </tr>
+      <tr>
+	<td></td>
+      </tr>
+      <tr>
+	<td></td>
+      </tr>
+      <tr>
+	<td></td>
+      </tr>
+      <tr>
+	<td></td>
+      </tr>
+      <tr>
+	<td></td>
+      </tr>
+      <tr>
+	<td></td>
+      </tr>
+      <tr>
+	<td></td>
+      </tr>
+      <tr>
+	<td></td>
+      </tr>
+      <tr>
+	<td></td>
+      </tr>
+      <tr>
+	<td></td>
+      </tr>
+      <tr>
+	<td></td>
+      </tr>
+      <tr>
+	<td></td>
+      </tr>
+      <tr>
+	<td></td>
+      </tr>
+      <tr>
+	<td></td>
+      </tr>
+      <tr>
+	<td></td>
+      </tr>
+      <tr>
+	<td>
 <table class="mceItemTable" border="0">
 <tbody>
 <tr>
