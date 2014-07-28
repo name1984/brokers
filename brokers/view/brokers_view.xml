@@ -2,7 +2,7 @@
 <openerp>
   <data>
 
-    <menuitem id="menu_main_brokers" name="Pólizas y Seguros" groups="brokers.group_broker_user"/>
+    <menuitem id="menu_main_brokers" name="Seguros Masivos" groups="brokers.group_broker_user"/>
     <menuitem id="menu_main_seguros" name="Seguros" parent="menu_main_brokers" sequence="5"/>
     <menuitem id="menu_main_policies" name="Pólizas" parent="menu_main_brokers" sequence="10"/>
     <menuitem id="menu_main_entities" name="Entidades" parent="menu_main_brokers" sequence="15"/>
