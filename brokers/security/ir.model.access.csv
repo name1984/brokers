@@ -7,3 +7,5 @@ access_insurance_parentesco,insurance.parentesco,model_insurance_parentesco,brok
 acess_insurance_policy,insurance.policy,model_insurance_policy,brokers.group_broker_user,1,0,0,0
 access_insurance_parameter,insurance.parameter,model_insurance_parameter,brokers.group_broker_user,1,0,0,0
 access_insurance_parameter_mgr,insurance.parameter,model_insurance_parameter,brokers.group_broker_user,1,1,1,1
+access_insurance_parameter_value,insurance.parameter.value,model_insurance_parameter_value,brokers.group_broker_user,1,0,0,0
+access_insurance_parameter_value_mgr,insurance.parameter.value,model_insurance_parameter_value,brokers.group_broker_user,1,1,1,1
