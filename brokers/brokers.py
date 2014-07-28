@@ -466,7 +466,7 @@ class InsuranceInsurance(osv.osv):
             readonly=True,
             states=STATES            
         ),        
-        'has_active_credit': fields.boolean('El deudor tiene créditos vigentes ?'),
+        'has_active_credit': fields.boolean('El deudor/codeudor tiene créditos vigentes en la institución?'),
         'has_codeudor': fields.boolean('Tiene Codeudor'),
         'city_id': fields.many2one(
             'res.country.state.city',
@@ -760,7 +760,8 @@ class InsuranceInsurance(osv.osv):
             elif msg == 'show_declaration':
                 data['print_declaration'] = True
             exams, flag_exam = self._get_exams(cr, uid, [obj.id], context)
-            coexams = self._get_coexams(cr, uid, [obj.id], context)
+            if obj.codeudor_id:
+                coexams = self._get_coexams(cr, uid, [obj.id], context)
             if obj.show_questions:
                 data.update({'print_declaration': True})
             if obj.question1 == 'no' and obj.question2 == 'no' and flag_exam:

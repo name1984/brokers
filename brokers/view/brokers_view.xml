@@ -366,7 +366,12 @@
 			  <field name="mobile"/>
 			  <field name="phone"/>
 			  <field name="email"/>
-			  <field name="street" placeholder="Calle principal"/>
+			  <label for="street" string="Dirección"/>
+			  <div>
+			    <field name="street" placeholder="Calle principal"/>
+			    <field name="street_number" placeholder="Nro. Domicilio"/>
+			    <field name="street2" placeholder="Calle secundaria"/>
+			  </div>
 			</group>
 		      </group>		    
 		    </sheet>
