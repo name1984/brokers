@@ -2,14 +2,16 @@
 
 import time
 from datetime import date
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
 
-from openerp.osv import fields, osv
+from openerp.osv import fields, osv, orm
 import openerp.addons.decimal_precision as dp
 
 DP = dp.get_precision('Brokers')
 
 
-class ResUser(osv.osv):
+class ResUser(orm.Model):
 
     _inherit = 'res.users'
 
@@ -21,7 +23,7 @@ class ResUser(osv.osv):
     }
 
 
-class InsuranceParentesco(osv.osv):
+class InsuranceParentesco(orm.Model):
     _name = 'insurance.parentesco'
     _description = 'Parentezco de Deudores'
     _columns = {
@@ -460,8 +462,7 @@ class InsuranceInsurance(osv.osv):
         ),
         'codeudor_id': fields.many2one(
             'insurance.partner',
-            string='Deudor',
-            required=True,
+            string='Codeudor',
             readonly=True,
             states=STATES            
         ),        
@@ -476,6 +477,7 @@ class InsuranceInsurance(osv.osv):
         ),
         'date': fields.date('Fecha de Solicitud de Crédito', readonly=True),
         'date_ok': fields.date('Fecha Aprobacion', readonly=True),
+        'date_due': fields.date('Fecha Vencimiento', readonly=True)
         'account_number': fields.char(
             'Número de Cuenta',
             size=32,
@@ -762,7 +764,12 @@ class InsuranceInsurance(osv.osv):
     def action_ok(self, cr, uid, ids, context=None):
         """
         """
-        self.write(cr, uid, ids, {'state': 'ok'})
+        for obj in self.browse(cr, uid, ids, context):
+            date_ok = time.strftime('%Y-%m-%d')
+            y, m, d = date_ok.split('-')
+            d = datetime(year=int(y), month=int(m), day=int(d)) + relativedelta(months=obj.plazo)
+            date_due = d.strftime('%Y-%m-%d')
+            self.write(cr, uid, ids, {'state': 'ok', 'date_ok': date_ok, 'date_due': date_due})
         return True
 
     def action_print_declaracion(self, cr, uid, ids, context=None):
