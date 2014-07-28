@@ -764,7 +764,7 @@ class InsuranceInsurance(osv.osv):
                 data['print_declaration'] = True
             exams, flag_exam = self._get_exams(cr, uid, [obj.id], context)
             if obj.codeudor_id:
-                coexams = self._get_coexams(cr, uid, [obj.id], context)
+                coexams, flag_coexams = self._get_coexams(cr, uid, [obj.id], context)
             if obj.show_questions:
                 data.update({'print_declaration': True})
             if obj.question1 == 'no' and obj.question2 == 'no' and flag_exam:
