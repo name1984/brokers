@@ -752,6 +752,7 @@ class InsuranceInsurance(osv.osv):
         """
         state = 'request'
         data = {'state': state}
+        coexams = False
         param_obj = self.pool.get('insurance.parameter')
         for obj in self.browse(cr, uid, ids, context):
             flag, msg = self._check_values(cr, uid, [obj.id], context)
