@@ -726,6 +726,8 @@ class InsuranceInsurance(osv.osv):
             ids,
             {
                 'state': 'draft',
+                'show_questions1': False,
+                'show_questions2': False
             }
         )
 
@@ -770,7 +772,7 @@ class InsuranceInsurance(osv.osv):
             if exams:
                 data.update({'exams': [(6,0,exams)]})
             if coexams:
-                date.update({'exams_codeudor': [(6,0,coexams)]})
+                data.update({'exams_codeudor': [(6,0,coexams)]})
             #Fechas
             y, m, d = obj.date.split('-')
             d = datetime(year=int(y), month=int(m), day=int(d)) + relativedelta(months=obj.plazo)
