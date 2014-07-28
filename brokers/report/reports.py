@@ -16,6 +16,8 @@ class certificado(report_sxw.rml_parse):
         )
 
     def convert_date(self, date):
+        if not date:
+            return ""
         meses = {'01': 'Enero', '02': 'Febrero',
                  '03': 'Marzo', '04': 'Abril',
                  '05': 'Mayo', '06': 'Junio',

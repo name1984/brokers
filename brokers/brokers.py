@@ -710,6 +710,16 @@ class InsuranceInsurance(osv.osv):
             exams = exam_obj.get_exams(cr, uid, obj.total_credits, obj.deudor_id.age, obj.policy_id.id)
         return exams
 
+    def _get_coexams(self, cr, uid, ids, context=None):
+        """
+        Metodo de validacion por monto para identificar
+        que examenes debe realizarse el deudor.
+        """
+        exam_obj = self.pool.get('insurance.parameter.value')
+        for obj in self.browse(cr, uid, ids, context):
+            exams = exam_obj.get_exams(cr, uid, obj.total_credits, obj.codeudor_id.age, obj.policy_id.id)
+        return exams
+
     def action_draft(self, cr, uid, ids, context=None):
         self.write(
             cr, uid,
@@ -750,12 +760,21 @@ class InsuranceInsurance(osv.osv):
             elif msg == 'show_declaration':
                 data['print_declaration'] = True
             exams, flag_exam = self._get_exams(cr, uid, [obj.id], context)
+            coexams = self._get_coexams(cr, uid, [obj.id], context)
             if obj.show_questions:
                 data.update({'print_declaration': True})
             if obj.question1 == 'no' and obj.question2 == 'no' and flag_exam:
                 data.update({'print_certificate': True})
             if exams:
                 data.update({'exams': [(6,0,exams)]})
+            if coexams:
+                date.update({'exams_codeudor': [(6,0,coexams)]})
+            #Fechas
+            y, m, d = obj.date.split('-')
+            d = datetime(year=int(y), month=int(m), day=int(d)) + relativedelta(months=obj.plazo)
+            date_due = d.strftime('%Y-%m-%d')
+            data.update({'date_due': date_due, 'date_ok': obj.date})
+            
             name = self.get_number(cr, uid, ids, context)
             data.update({'name': name})
             self.write(cr, uid, ids, data)            
