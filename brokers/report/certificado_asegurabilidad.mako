@@ -146,11 +146,11 @@ meses = {'01': 'Enero', '02': 'Febrero', '03': 'Marzo', '04': 'Abril', '05': 'Ma
 		</tr>
 		<tr>
 		  <td><span>${obj.deudor_id.name} ${obj.deudor_id.last_name}</span></td>
-		  <td>@#TxtNombreCodeudor @#TxtApellidoCodeudor</td>
+		  <td>${obj.codeudor_id.name} ${obj.codeudor_id.last_name}</td>
 		</tr>
 		<tr>
 		  <td><b>CI/PAS:&nbsp;</b>${obj.deudor_id.identificador}</td>
-		  <td><b>CI/PAS:&nbsp;</b>@#TxtCedulaCodeudor</td>
+		  <td><b>CI/PAS:&nbsp;</b>${obj.codeudor_id.identificador}</td>
 		</tr>
 	      </tbody>
 	    </table>
@@ -263,11 +263,11 @@ meses = {'01': 'Enero', '02': 'Febrero', '03': 'Marzo', '04': 'Abril', '05': 'Ma
 		</tr>
 		<tr>
 		  <td><span>${obj.deudor_id.name} ${obj.deudor_id.last_name}</span></td>
-		  <td>@#TxtNombreCodeudor @#TxtApellidoCodeudor</td>
+		  <td>${obj.codeudor_id.name} ${obj.codeudor_id.last_name}</td>
 		</tr>
 		<tr>
 		  <td><b>CI/PAS:&nbsp;</b>${obj.deudor_id.identificador}</td>
-		  <td><b>CI/PAS:&nbsp;</b>@#TxtCedulaCodeudor</td>
+		  <td><b>CI/PAS:&nbsp;</b>${obj.codeudor_id.identificador}</td>
 		</tr>
 	      </tbody>
 	    </table>
@@ -341,7 +341,7 @@ meses = {'01': 'Enero', '02': 'Febrero', '03': 'Marzo', '04': 'Abril', '05': 'Ma
 	</tr>
 	<tr>
 	  <td>
-	    <p align="center"><b>SEGURO COLECTIVO DE VIDA DEUDORES<br /></b><b>CERTIFICADO INDIVIDUAL DE SEGURO<br />@#TxtContratante</b></p>
+	    <p align="center"><b>SEGURO COLECTIVO DE VIDA DEUDORES<br /></b><b>CERTIFICADO INDIVIDUAL DE SEGURO<br />${obj.contractor_id.name}</b></p>
 	  </td>
 	</tr>
 	<tr>
@@ -349,7 +349,7 @@ meses = {'01': 'Enero', '02': 'Febrero', '03': 'Marzo', '04': 'Abril', '05': 'Ma
 	</tr>
 	<tr>
 	  <td>
-	    <p align="justify">@#DdAseguradora_label certifica que el Sr(a) <span>${obj.deudor_id.name} ${obj.deudor_id.last_name}</span>, con c&eacute;dula n&uacute;mero ${obj.deudor_id.identificador} y el Sr(a) @#TxtNombreCodeudor @#TxtApellidoCodeudor, con c&eacute;dula n&uacute;mero @#TxtCedulaCodeudor, est&aacute;n asegurados bajo la P&oacute;liza n&uacute;mero <span>@#DdPoliza_label&nbsp;</span>cuyo Contratante es <b>@#TxtContratante</b>, bajo las siguientes coberturas y montos:&nbsp;</p>
+	    <p align="justify">@#DdAseguradora_label certifica que el Sr(a) <span>${obj.deudor_id.name} ${obj.deudor_id.last_name}</span>, con c&eacute;dula n&uacute;mero ${obj.deudor_id.identificador} y el Sr(a) ${obj.codeudor_id.name} ${obj.codeudor_id.last_name}, con c&eacute;dula n&uacute;mero ${obj.codeudor_id.identificador}, est&aacute;n asegurados bajo la P&oacute;liza n&uacute;mero <span>${obj.policy_id.name}&nbsp;</span>cuyo Contratante es <b>${obj.contractor_id.name}</b>, bajo las siguientes coberturas y montos:&nbsp;</p>
 	  </td>
 	</tr>
 	<tr>
@@ -387,9 +387,9 @@ meses = {'01': 'Enero', '02': 'Febrero', '03': 'Marzo', '04': 'Abril', '05': 'Ma
 	<tr>
 	  <td>
 	    <p></p>
-	    <p align="justify">*El valor asegurado para cada persona ser&aacute; igual al saldo de la deuda contra&iacute;da con la @#TxtContratante, incluyendo los intereses por los d&iacute;as transcurridos entre la fecha del &uacute;ltimo abono contabilizado y la fecha del fallecimiento a raz&oacute;n del inter&eacute;s legal contratado y por un m&aacute;ximo de hasta 6 meses.</p>
-	    <p align="justify">Se otorga cobertura para aquellos pr&eacute;stamos que, al fallecimiento del cliente deudor, se encuentren morosos en el pago puntual de su cr&eacute;dito, siempre y cuando la @#TxtContratante, reporte mensualmente tales clientes.</p>
-	    <p align="justify">Las exclusiones y dem&aacute;s condiciones constan en la respectiva P&oacute;liza que es de su conocimiento cuyo texto se env&iacute;a a su correo electr&oacute;nico: @#TxtEmailDeudor. Adicional declaro que he recibido una copia de la P&oacute;liza original, todos sus anexos y condiciones particulares de la P&oacute;liza n&uacute;mero <span>@#DdPoliza_label</span>&nbsp;los cuales he le&iacute;do y aceptado.&nbsp;</p>
+	    <p align="justify">*El valor asegurado para cada persona ser&aacute; igual al saldo de la deuda contra&iacute;da con la ${obj.contractor_id.name}, incluyendo los intereses por los d&iacute;as transcurridos entre la fecha del &uacute;ltimo abono contabilizado y la fecha del fallecimiento a raz&oacute;n del inter&eacute;s legal contratado y por un m&aacute;ximo de hasta 6 meses.</p>
+	    <p align="justify">Se otorga cobertura para aquellos pr&eacute;stamos que, al fallecimiento del cliente deudor, se encuentren morosos en el pago puntual de su cr&eacute;dito, siempre y cuando la ${obj.contractor_id.name}, reporte mensualmente tales clientes.</p>
+	    <p align="justify">Las exclusiones y dem&aacute;s condiciones constan en la respectiva P&oacute;liza que es de su conocimiento cuyo texto se env&iacute;a a su correo electr&oacute;nico: ${obj.deudor_id.email}. Adicional declaro que he recibido una copia de la P&oacute;liza original, todos sus anexos y condiciones particulares de la P&oacute;liza n&uacute;mero <span>${obj.policy_id.name}</span>&nbsp;los cuales he le&iacute;do y aceptado.&nbsp;</p>
 	  </td>
 	</tr>
 	<tr>
@@ -406,7 +406,7 @@ meses = {'01': 'Enero', '02': 'Febrero', '03': 'Marzo', '04': 'Abril', '05': 'Ma
 		  <td align="center"><b>PORCENTAJE</b></td>
 		</tr>
 		<tr>
-		  <td>@#TxtContratante</td>
+		  <td>${obj.contractor_id.name}</td>
 		  <td align="center">100%</td>
 		</tr>
 	      </tbody>
@@ -432,8 +432,8 @@ meses = {'01': 'Enero', '02': 'Febrero', '03': 'Marzo', '04': 'Abril', '05': 'Ma
 	      <tbody>
 		<tr>
 		  <td><font size="2"><b>VIGENCIA DEL CERTIFICADO:</b></font></td>
-		  <td>Desde:&nbsp;@#DatAprobacion</td>
-		  <td>Hasta: @#DatLiquidacion</td>
+		  <td>Desde:&nbsp;${formatLang(obj.date_ok, date=True)}</td>
+		  <td>Hasta: ${formatLang(obj.date_due, date=True)}</td>
 		</tr>
 		<tr>
 		  <td><font size="2"><b></b></font></td>
@@ -445,7 +445,7 @@ meses = {'01': 'Enero', '02': 'Febrero', '03': 'Marzo', '04': 'Abril', '05': 'Ma
 	  </td>
 	</tr>
 	<tr>
-	  <td>Fecha de emisi&oacute;n del certificado:&nbsp;@#TxtAgencia, @#fechaFormato.</td>
+	  <td>Fecha de emisi&oacute;n del certificado:&nbsp;${obj.city_id.name}, ${convert_date(obj.date)}.</td>
 	</tr>
 	<tr>
 	  <td></td>
@@ -472,12 +472,12 @@ meses = {'01': 'Enero', '02': 'Febrero', '03': 'Marzo', '04': 'Abril', '05': 'Ma
 		<tr>
 		  <td><b>EQUIVIDA COMPA&Ntilde;&Iacute;A DE</b></td>
 		  <td>${obj.deudor_id.name} ${obj.deudor_id.last_name}</td>
-		  <td><span>@#TxtNombreCodeudor @#TxtApellidoCodeudor</span></td>
+		  <td><span>${obj.codeudor_id.name} ${obj.codeudor_id.last_name}</span></td>
 		</tr>
 		<tr>
 		  <td><b>SEGUROS Y REASEGUROS S.A.&nbsp; &nbsp;</b></td>
 		  <td><b>CI/PAS:&nbsp;</b>${obj.deudor_id.identificador}</td>
-		  <td><b>CI/PAS:&nbsp;</b>@#TxtCedulaCodeudor</td>
+		  <td><b>CI/PAS:&nbsp;</b>${obj.codeudor_id.identificador}</td>
 		</tr>
 	      </tbody>
 	    </table>
@@ -813,12 +813,12 @@ meses = {'01': 'Enero', '02': 'Febrero', '03': 'Marzo', '04': 'Abril', '05': 'Ma
 		<tr>
 		  <td><b>EQUIVIDA COMPA&Ntilde;&Iacute;A DE</b></td>
 		  <td>${obj.deudor_id.name} ${obj.deudor_id.last_name}</td>
-		  <td>@#TxtNombreCodeudor @#TxtApellidoCodeudor</td>
+		  <td>${obj.codeudor_id.name} ${obj.codeudor_id.last_name}</td>
 		</tr>
 		<tr>
 		  <td><b>SEGUROS Y REASEGUROS S.A.&nbsp; &nbsp;</b></td>
 		  <td><b>CI/PAS:&nbsp;</b>${obj.deudor_id.identificador}</td>
-		  <td><b>CI/PAS:&nbsp;</b>@#TxtCedulaCodeudor</td>
+		  <td><b>CI/PAS:&nbsp;</b>${obj.codeudor_id.identificador}</td>
 		</tr>
 	      </tbody>
 	    </table>

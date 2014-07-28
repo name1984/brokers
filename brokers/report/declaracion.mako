@@ -115,7 +115,7 @@ return this;};"><font size="2" color="#3366FF" face="arial,helvetica,sans-serif"
 </tr>
 <tr>
 <td><font size="2" face="arial,helvetica,sans-serif"><b>Fecha de Nacimiento:</b></font></td>
-<td><font size="2" face="arial,helvetica,sans-serif">${ formatLang(obj.deudor_id.birth_date, date=True) }</font></td>
+<td><font size="2" face="arial,helvetica,sans-serif">${formatLang(obj.deudor_id.birth_date, date=True)}</font></td>
 <td><font size="2" face="arial,helvetica,sans-serif"><b>C&eacute;dula:</b></font></td>
 <td><font size="2" face="arial,helvetica,sans-serif">${ obj.deudor_id.identificador }</font></td>
 </tr>
@@ -127,7 +127,7 @@ return this;};"><font size="2" color="#3366FF" face="arial,helvetica,sans-serif"
 <tbody>
 <tr>
 <td><font size="2" face="arial,helvetica,sans-serif"><b><font color="#3366FF">MONTO ASEGURADO: (US$) &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</font></b></font></td>
-<td><font size="2" face="arial,helvetica,sans-serif">${ formatLang(obj.total_credits, digits=2) }</font></td>
+<td><font size="2" face="arial,helvetica,sans-serif">${formatLang(obj.total_credits, digits=2)}</font></td>
 </tr>
 </tbody>
 </table>

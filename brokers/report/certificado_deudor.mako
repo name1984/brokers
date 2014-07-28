@@ -2,6 +2,7 @@
 <html>
 <head>
 </head>
+%for obj in objects:
 <body>
 <table class="mceItemTable" border="0">
 <tbody>
@@ -793,4 +794,5 @@
 </tbody>
 </table>
 </body>
+%endfor
 </html>
