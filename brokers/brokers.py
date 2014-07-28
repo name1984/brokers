@@ -726,8 +726,8 @@ class InsuranceInsurance(osv.osv):
             ids,
             {
                 'state': 'draft',
-                'show_questions1': False,
-                'show_questions2': False
+                'print_certificate': False,
+                'print_declaration': False
             }
         )
 
