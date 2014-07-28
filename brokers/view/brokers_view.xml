@@ -125,7 +125,7 @@
 		<field name="date" required="1" readonly="1" placeholder="dd/mm/aaaa"/>
 		<field name="account_number"/>
 		<field name="nro_operacion_credito"/>
-		<field name="plazo"/>
+		<field name="plazo" required="1"/>
 	      </group>
 	      <group string="Datos Créditos Vigentes">
 		<field name="has_active_credit" on_change="onchange_has_credit(has_active_credit)"/>
@@ -159,7 +159,7 @@
 		  />
 		</group>
 		<newline/>
-		<field name="question1" nolabel="1" style="width: 10%%"/>
+		<field name="question1" nolabel="1" style="width: 10%%" attrs="{'required':[('show_questions','=',True)]}"/>
 		<newline/>
 		<field name="answer1" attrs="{'required': [('question1','=','si')], 'invisible': [('question1','in',['no',False])]}" nolabel="1"/>
 	      </group>
@@ -170,7 +170,7 @@
 		  />
 		</group>
 		<newline/>
-		<field name="question2" nolabel="1" style="width: 10%% "/>
+		<field name="question2" nolabel="1" style="width: 10%%" attrs="{'required':[('show_questions','=',True)]}"/>
 		<newline/>
 		<field name="answer2" attrs="{'required': [('question2','=','si')], 'invisible': [('question2','in',['no',False])]}" nolabel="1"/>
 	      </group>
@@ -188,7 +188,7 @@
 		  />
 		</group>
 		<newline/>
-		<field name="question3" nolabel="1" style="width: 10%%"/>
+		<field name="question3" nolabel="1" style="width: 10%%" attrs="{'required':[('show_questions2','=',True)]}"/>
 		<newline/>
 		<field name="answer3" attrs="{'required': [('question3','=','si')], 'invisible': [('question3','in',['no',False])]}" nolabel="1"/>
 	      </group>
@@ -199,13 +199,13 @@
 		  />
 		</group>
 		<newline/>
-		<field name="question4" nolabel="1" style="width: 10%% "/>
+		<field name="question4" nolabel="1" style="width: 10%%" attrs="{'required':[('show_questions2','=',True)]}"/>
 		<newline/>
 		<field name="answer4" attrs="{'required': [('question4','=','si')], 'invisible': [('question4','in',['no',False])]}" nolabel="1"/>
 	      </group>
-	      <!-- group>
-		<field name="exams" widget="many2many_tags" attrs="{'invisible': [('state','=','draft')]}" readonly="1"/>
-	      </group -->
+	      <group>
+		<field name="exams_codeudor" widget="many2many_tags" attrs="{'invisible': [('state','=','draft')]}" readonly="1"/>
+	      </group>
 	    </group>
 
 	  </sheet>

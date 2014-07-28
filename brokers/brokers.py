@@ -618,6 +618,11 @@ class InsuranceInsurance(osv.osv):
             string='Examenes',
             readonly=True
         ),
+        'exams_codeudor': fields.many2many(
+            'insurance.exams',
+            string='Examenes Codeudor',
+            readonly=True
+        ),
         'policy_id': fields.many2one(
             'insurance.policy',
             string='Poliza en Uso',
