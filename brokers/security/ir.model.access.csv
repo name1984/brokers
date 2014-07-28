@@ -4,3 +4,4 @@ access_insurance_insurance_d,insurance.insurance,model_insurance_insurance,broke
 access_insurance_partner,insurance.partner,model_insurance_partner,brokers.group_broker_desgravamen,1,1,1,0
 access_insurance_partner_civil,insurance.partner.civil,model_insurance_partner_civil,brokers.group_broker_user,1,1,1,0
 access_insurance_parentesco,insurance.parentesco,model_insurance_parentesco,brokers.group_broker_user,1,1,1,0
+acess_insurance_policy,insurance.policy,model_insurance_policy,brokers.group_broker_user,1,0,0,0

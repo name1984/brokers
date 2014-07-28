@@ -425,7 +425,7 @@
 <tr>
 <td><font size="2"><b>VIGENCIA DEL CERTIFICADO:</b></font></td>
 <td>Desde:&nbsp;${convert_date(obj.date_ok)}</td>
-<td>Hasta: @#DatLiquidacion</td>
+<td>Hasta: ${convert_date(obj.date_due)}</td>
 </tr>
 </tbody>
 </table>
