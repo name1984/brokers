@@ -235,7 +235,7 @@ meses = {'01': 'Enero', '02': 'Febrero', '03': 'Marzo', '04': 'Abril', '05': 'Ma
 	  <td></td>
 	</tr>
 	<tr>
-	  <td>Lugar y Fecha:&nbsp;${obj.city_id.name} el&nbsp;@#fechaFormato.</td>
+	  <td>Lugar y Fecha:&nbsp;${obj.city_id.name} el&nbsp;${convert_date(obj.date)}.</td>
 	</tr>
 	<tr>
 	  <td></td>
