@@ -136,7 +136,7 @@ return this;};"><font size="2" color="#3366FF" face="arial,helvetica,sans-serif"
 <tbody>
 <tr>
 <td><font size="2" face="arial,helvetica,sans-serif"><b><font color="#3366FF">FECHA DE INICIO DE VIGENCIA</font></b></font></td>
-<td><font size="2" face="arial,helvetica,sans-serif">${ obj.date } con una duraci&oacute;n de ${ obj.plazo } meses</font></td>
+<td><font size="2" face="arial,helvetica,sans-serif">${ formatLang(obj.date, date=True) } con una duraci&oacute;n de ${ obj.plazo } meses</font></td>
 </tr>
 </tbody>
 </table>

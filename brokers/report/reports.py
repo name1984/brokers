@@ -27,4 +27,12 @@ class certificado(report_sxw.rml_parse):
         return '{0} de {1} del {2}'.format(d,meses[m],y)
     
 
-report_sxw.report_sxw('report.certificado_report','certificado_report','brokers/report/certificado_asegurabilidad.mako',parser=certificado)
+report_sxw.report_sxw('report.certificado_report', 'certificado_report', 'brokers/report/certificado_asegurabilidad.mako',parser=certificado)
+
+report_sxw.report_sxw('report.certificado_deudor_report', 'certificado_deudor_report', 'brokers/report/certificado_deudor.mako', parser=certificado)
+
+report_sxw.report_sxw('report.declaracion_report', 'declaracion_report', 'brokers/report/declaracion.mako', parser=certificado)
+
+report_sxw.report_sxw('report.declaracion_deudor_codeudor_report',
+                      'declaracion_deudor_codeudor_report',
+                      'brokers/report/declaracion_deudor_codeudor.mako', parser=certificado)

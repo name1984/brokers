@@ -452,7 +452,7 @@ return this;};"><font face="arial,helvetica,sans-serif" size="2">SI(${ obj.quest
 </tbody>
 </table>
 <p></p>
-<p><font face="arial,helvetica,sans-serif" size="2">Firmo este documento en se&ntilde;al de aceptaci&oacute;n, en la ciudad de ${obj.city_id.name.capitalize()} el ${formatLang(obj.date, date=True)}</font></p>
+<p><font face="arial,helvetica,sans-serif" size="2">Firmo este documento en se&ntilde;al de aceptaci&oacute;n, en la ciudad de ${obj.city_id.name.capitalize()} el ${ convert_date(obj.date) }</font></p>
 <p align="right"></p>
 <p align="right"><font face="arial,helvetica,sans-serif" size="2">------------------------------------------</font><br /><font face="arial,helvetica,sans-serif" size="2"><b><font color="#3366FF">EL ASEGURADO</font></b></font><br /> <font face="arial,helvetica,sans-serif" size="2"><span>${obj.deudor_id.name} ${obj.deudor_id.last_name}</span></font><br /> <font face="arial,helvetica,sans-serif" size="2">C.I: ${obj.deudor_id.identificador}</font></p>
 <p align="left"><span style="font-family: arial, helvetica, sans-serif; font-size: small;">&nbsp;</span></p>
@@ -473,7 +473,7 @@ return this;};"><font face="arial,helvetica,sans-serif" size="2">SI(${ obj.quest
 <p></p>
 <p align="justify"><font face="arial,helvetica,sans-serif" size="2">Los requisitos de asegurabilidad ser&aacute;n revisados por la C&iacute;a. de Seguros, reserv&aacute;ndose &eacute;sta el derecho de aceptar, rechazar, extra primar, y/o realizar ex&aacute;menes adicionales a costo de la Aseguradora para determinar si se otorga o no la cobertura al seguro. </font></p>
 <p><font face="arial,helvetica,sans-serif" size="2">Le recordamos que no cumplir con estos requisitos, le priv&aacute;ra de cobertura en caso de un siniestro cubierto por el contrato de seguros.</font></p>
-<p><font face="arial,helvetica,sans-serif" size="2">En se&ntilde;al de aceptaci&oacute;n y de haber le&iacute;do, firma en ${obj.city_id.name.capitalize()} el ${formatLang(obj.date, date=True)}</font></p>
+<p><font face="arial,helvetica,sans-serif" size="2">En se&ntilde;al de aceptaci&oacute;n y de haber le&iacute;do, firma en ${obj.city_id.name.capitalize()} el ${ convert_date(obj.date) }</font></p>
 <p><font face="arial,helvetica,sans-serif" size="2">&nbsp;</font></p>
 <p><font face="arial,helvetica,sans-serif" size="2">&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;..</font><br /> <font face="arial,helvetica,sans-serif" size="2">${obj.deudor_id.last_name} ${obj.deudor_id.name}</font><br /> <font face="arial,helvetica,sans-serif" size="2">C.I: ${obj.deudor_id.identificador}</font></p>
 <p><font face="arial,helvetica,sans-serif" size="2">&nbsp;</font></p>
@@ -935,7 +935,7 @@ return this;};"><font face="arial,helvetica,sans-serif" size="2">SI (${obj.quest
 </tbody>
 </table>
 <p></p>
-<p><font face="arial,helvetica,sans-serif" size="2">Firmo este documento en se&ntilde;al de aceptaci&oacute;n, en la ciudad de ${ obj.city_id.name.capitalize() } el ${formatLang(obj.date, date=True) }</font></p>
+<p><font face="arial,helvetica,sans-serif" size="2">Firmo este documento en se&ntilde;al de aceptaci&oacute;n, en la ciudad de ${ obj.city_id.name.capitalize() } el ${convert_date(obj.date) }</font></p>
 <p align="right"></p>
 <p align="right"><font face="arial,helvetica,sans-serif" size="2">------------------------------------------</font><br /><font face="arial,helvetica,sans-serif" size="2"><b><font color="#3366FF">EL ASEGURADO</font></b></font><br /> <font face="arial,helvetica,sans-serif" size="2"><span>${ obj.codeudor_id.name} ${obj.codeudor_id.last_name}</span></font><br /> <font face="arial,helvetica,sans-serif" size="2">C.I: ${obj.codeudor_id.identificador}</font></p>
 <p align="left"><span style="font-family: arial, helvetica, sans-serif; font-size: small;">&nbsp;</span></p>

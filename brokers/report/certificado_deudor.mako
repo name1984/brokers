@@ -80,7 +80,7 @@
 </td>
 </tr>
 <tr>
-<td>Para constancia de lo anterior, suscribo el presente documento, en la ciudad de ${obj.city_id.name.capitalize()} el&nbsp;<span>${formatLang(obj.date, date=True)}.</span></td>
+<td>Para constancia de lo anterior, suscribo el presente documento, en la ciudad de ${obj.city_id.name.capitalize()} el&nbsp;<span>${convert_date(obj.date)}.</span></td>
 </tr>
 <tr>
 <td></td>
@@ -113,7 +113,7 @@
 </tr>
 <tr>
 <td>
-<p>Lugar y Fecha:&nbsp;${obj.city_id.name} el&nbsp;${formatLang(obj.date, date=True)}.</p>
+<p>Lugar y Fecha:&nbsp;${obj.city_id.name} el&nbsp;${convert_date(obj.date)}.</p>
 </td>
 </tr>
 <tr>
@@ -217,7 +217,7 @@
 <td></td>
 </tr>
 <tr>
-<td>Lugar y Fecha:&nbsp;${obj.city_id.name.capitalize()} el&nbsp;${formatLang(obj.date, date=True)}.</td>
+<td>Lugar y Fecha:&nbsp;${obj.city_id.name.capitalize()} el&nbsp;${convert_date(obj.date)}.</td>
 </tr>
 <tr>
 <td></td>
@@ -423,7 +423,7 @@
 <tbody>
 <tr>
 <td><font size="2"><b>VIGENCIA DEL CERTIFICADO:</b></font></td>
-<td>Desde:&nbsp;${formatLang(obj.date_ok, date=True)}</td>
+<td>Desde:&nbsp;${convert_date(obj.date_ok)}</td>
 <td>Hasta: @#DatLiquidacion</td>
 </tr>
 </tbody>
@@ -434,7 +434,7 @@
 <td></td>
 </tr>
 <tr>
-<td>Fecha de emisi&oacute;n del certificado:&nbsp;${obj.city_id.name.capitalize()} el&nbsp;${formatLang(obj.date, date=True)}.</td>
+<td>Fecha de emisi&oacute;n del certificado:&nbsp;${obj.city_id.name.capitalize()} el&nbsp;${convert_date(obj.date)}.</td>
 </tr>
 <tr>
 <td></td>
