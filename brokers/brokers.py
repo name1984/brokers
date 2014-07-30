@@ -402,7 +402,9 @@ class InsuranceInsurance(osv.osv):
                 'total_active_credits': 0,
                 'credits_codeudor': 0,
                 'monto_credito_solicitado': 0,
-                'codeudor_id': conyugue and conyugue.id or False
+                'codeudor_id': conyugue and conyugue.id or False,
+                'show_questions': False,
+                'show_questions2': False
             }
         }
 

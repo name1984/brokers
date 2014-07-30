@@ -8,7 +8,7 @@
 
     <report auto="False" id="certificado_deudor_report" model="insurance.insurance"
             name="certificado_deudor_report" rml="brokers/report/certificado_deudor.mako"
-            usage="default" string="Certificado Asegurabilidad" header="False" report_type="webkit" multi="True"/>
+            usage="default" string="Certificado Asegurabilidad Deudor" header="False" report_type="webkit" multi="True"/>
 
     <!-- Declaraciones -->
     

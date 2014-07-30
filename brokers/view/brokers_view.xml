@@ -128,15 +128,14 @@
 		<field name="plazo" required="1"/>
 	      </group>
 	      <group string="Datos Créditos Vigentes">
-		<field name="has_active_credit" on_change="onchange_has_credit(has_active_credit)"/>
+		<!-- field name="has_active_credit" on_change="onchange_has_credit(has_active_credit)"/ -->
 		<group class="oe_subtotal_footer oe_right">
 		  <field name="total_active_credits" 
 			 widget="monetary" 
-			 attrs="{'invisible':[('has_active_credit','=',False)]}" 
 			 on_change="onchange_credit(total_active_credits, monto_credito_solicitado, credits_codeudor)"/>
 		  <field name="credits_codeudor" 
 			 widget="monetary" 
-			 attrs="{'invisible': ['|',('has_codeudor','=',False),('has_active_credit','=',False)]}"
+			 attrs="{'invisible': [('has_codeudor','=',False)]}"
 			 on_change="onchange_credit(total_active_credits, monto_credito_solicitado, credits_codeudor)"/>
 		  <field name="monto_credito_solicitado" 
 			 widget="monetary" 
