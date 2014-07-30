@@ -45,7 +45,7 @@ class InsurancePartnerCivil(osv.osv):
 
 class InsurancePartner(osv.osv):
     _name = 'insurance.partner'
-    _description = 'Deudores'    
+    _description = 'Deudores'
 
     def name_get(self, cr, uid, ids, context=None):
         res = []

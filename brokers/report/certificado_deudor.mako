@@ -166,6 +166,18 @@
       <tr>
 	<td>
 	  <table style="width: 549px; height: 73px;" class="mceItemTable" border="0">
+	    <theader>
+              <tr>
+                <td>
+                  <br><br>
+                </td>
+              </tr>
+	      <tr>
+		<td>
+		  <br><br>
+		</td>
+	      </tr>
+	    </theader>
 	    <tbody>
 	      <tr>
 		<td><img src="http://50.31.134.204:8080/images/equivida.png" height="47" width="400" /></td>
@@ -184,6 +196,11 @@
       <tr>
 	<td>
 	  <p></p>
+	</td>
+      </tr>
+      <tr>
+	<td>
+	  <br>
 	</td>
       </tr>
       <tr>
@@ -254,64 +271,70 @@
 	</td>
       </tr>
       <tr>
-	<td></td>
+	<td> <br></td>
       </tr>
       <tr>
-	<td></td>
+	<td> <br></td>
       </tr>
       <tr>
-	<td></td>
+	<td> <br></td>
       </tr>
       <tr>
-	<td></td>
+	<td> <br></td>
       </tr>
       <tr>
-	<td></td>
+	<td> <br></td>
       </tr>
       <tr>
-	<td></td>
+	<td> <br></td>
       </tr>
       <tr>
-	<td></td>
+	<td> <br></td>
       </tr>
       <tr>
-	<td></td>
+	<td> <br></td>
       </tr>
       <tr>
-	<td></td>
+	<td> <br></td>
       </tr>
       <tr>
-	<td></td>
+	<td> <br></td>
       </tr>
       <tr>
-	<td></td>
+	<td> <br></td>
       </tr>
       <tr>
-	<td></td>
+	<td> <br></td>
       </tr>
       <tr>
-	<td></td>
+	<td> <br></td>
       </tr>
       <tr>
-	<td></td>
+	<td> <br></td>
       </tr>
       <tr>
-	<td></td>
+	<td> <br></td>
       </tr>
       <tr>
-	<td></td>
+	<td> <br></td>
       </tr>
       <tr>
-	<td></td>
+	<td> <br></td>
       </tr>
       <tr>
-	<td></td>
+	<td> <br></td>
       </tr>
       <tr>
-	<td></td>
+	<td> <br></td>
       </tr>
       <tr>
-	<td></td>
+	<td> <br></td>
+      </tr>
+      <tr>
+        <td> <br></td>
+      </tr>
+      <tr>
+        <td> <br></td>
       </tr>
       <tr>
 	<td>
@@ -485,6 +508,15 @@
 <td></td>
 </tr>
 <tr>
+      <tr>
+        <td> <br></td>
+      </tr>
+      <tr>
+        <td> <br></td>
+      </tr>
+      <tr>
+        <td> <br></td>
+      </tr>
 <td>
 <table class="mceItemTable" border="0">
 <tbody>
@@ -537,10 +569,6 @@
 <li>Intervenciones quir&uacute;rgicas o tratamientos que no hayan sido motivados por accidente o enfermedad.</li>
 <li>Guerra declarada o no, conmoci&oacute;n civil, revuelta popular, mot&iacute;n, servicio en las fuerzas armadas (ej&eacute;rcito, aviaci&oacute;n y naval) y polic&iacute;a.</li>
 <li>Viajes a&eacute;reos en aviones que no sean de l&iacute;neas comerciales autorizadas para el tr&aacute;fico regular de pasajeros, as&iacute; como tambi&eacute;n como miembro de la tripulaci&oacute;n de cualquier aeronave.</li>
-<li>Heridas autoinflingidas intencionalmente, suicidio o cualquier intento de suicidio estando o no el asegurado en uso de sus facultades mentales.</li>
-<li>Enfermedades mentales de cualquier naturaleza.</li>
-<li>Reacci&oacute;n o radiaci&oacute;n nuclear o contaminaci&oacute;n radioactiva.</li>
-<li>Infecciones bacterianas (excepto infecciones piog&eacute;nicas que deriven de cortaduras o heridas accidentales)</li>
 </ul>
 </td>
 </tr>
@@ -581,6 +609,10 @@
 <tr>
 <td>
 <ul>
+<li>Heridas autoinflingidas intencionalmente, suicidio o cualquier intento de suicidio estando o no el asegurado en uso de sus facultades mentales.</li>
+<li>Enfermedades mentales de cualquier naturaleza.</li>
+<li>Reacci&oacute;n o radiaci&oacute;n nuclear o contaminaci&oacute;n radioactiva.</li>
+<li>Infecciones bacterianas (excepto infecciones piog&eacute;nicas que deriven de cortaduras o heridas accidentales)</li>
 <li>Lesi&oacute;n corporal que de lugar a formaci&oacute;n de hernias.</li>
 <li>Lesiones a consecuencia del ejercicio de una ocupaci&oacute;n o actividad deportiva distinta a las declaradas, salvo que el contratante haya notificado de la nueva ocupaci&oacute;n o actividad deportiva por escrito a Equivida S.A. y que esta haya aceptado el nuevo riesgo por escrito.</li>
 </ul>
@@ -608,20 +640,10 @@
 </td>
 </tr>
 <tr>
-<td></td>
+<td><br></td>
 </tr>
 <tr>
-<td>
-<p><b>PROCEDIMIENTO EN CASO DE SINIESTRO:</b></p>
-</td>
-</tr>
-<tr>
-<td></td>
-</tr>
-<tr>
-<td align="justify">
-<p>El beneficiario de la P&oacute;liza, en caso de fallecimiento del deudor Asegurado, dar&aacute; aviso por escrito cuando conozca de la existencia del beneficio, con el l&iacute;mite m&aacute;ximo de dos (2) a&ntilde;os contados desde la ocurrencia del siniestro. El plazo para aviso de siniestro en las dem&aacute;s coberturas es de 60 d&iacute;as como consta en las condiciones generales de la P&oacute;liza de seguro colectivo de vida deudores; caso contrario ser&aacute; considerado como extempor&aacute;neo y perder&aacute; los derechos a los beneficios establecidos en esta p&oacute;liza, librando a Equivida Compa&ntilde;&iacute;a de Seguros y Reaseguros S.A. del pago de la indemnizaci&oacute;n que hubiere correspondido.</p>
-</td>
+  <td> <br></td>
 </tr>
 <tr>
 <td></td>
@@ -651,20 +673,26 @@
 </td>
 </tr>
 <tr>
-<td><b>DOCUMENTOS NECESARIOS EN CASO DE SINIESTRO:</b></td>
-</tr>
 <tr>
 <td>
-<p></p>
+<p><b>PROCEDIMIENTO EN CASO DE SINIESTRO:</b></p>
 </td>
+</tr>
+<tr>
+<td></td>
+</tr>
+<tr>
+<td align="justify">
+<p>El beneficiario de la P&oacute;liza, en caso de fallecimiento del deudor Asegurado, dar&aacute; aviso por escrito cuando conozca de la existencia del beneficio, con el l&iacute;mite m&aacute;ximo de dos (2) a&ntilde;os contados desde la ocurrencia del siniestro. El plazo para aviso de siniestro en las dem&aacute;s coberturas es de 60 d&iacute;as como consta en las condiciones generales de la P&oacute;liza de seguro colectivo de vida deudores; caso contrario ser&aacute; considerado como extempor&aacute;neo y perder&aacute; los derechos a los beneficios establecidos en esta p&oacute;liza, librando a Equivida Compa&ntilde;&iacute;a de Seguros y Reaseguros S.A. del pago de la indemnizaci&oacute;n que hubiere correspondido.</p>
+</td>
+</tr>
+
+<td><b>DOCUMENTOS NECESARIOS EN CASO DE SINIESTRO:</b></td>
 </tr>
 <tr>
 <td>
 <p>Para pago de vida desgravamen</p>
 </td>
-</tr>
-<tr>
-<td></td>
 </tr>
 <tr>
 <td>
@@ -679,16 +707,8 @@
 </td>
 </tr>
 <tr>
-<td></td>
-</tr>
-<tr>
 <td>
 <p>En el caso de fallecimiento por accidente: adicional a todo lo indicado anteriormente se enviara:</p>
-</td>
-</tr>
-<tr>
-<td>
-<p></p>
 </td>
 </tr>
 <tr>
@@ -702,17 +722,7 @@
 </tr>
 <tr>
 <td>
-<p></p>
-</td>
-</tr>
-<tr>
-<td>
 <p>Para pago de Sepelio</p>
-</td>
-</tr>
-<tr>
-<td>
-<p></p>
 </td>
 </tr>
 <tr>
@@ -727,17 +737,7 @@
 </tr>
 <tr>
 <td>
-<p></p>
-</td>
-</tr>
-<tr>
-<td>
 <p>Para pago de Incapacidad Total y Permanente</p>
-</td>
-</tr>
-<tr>
-<td>
-<p></p>
 </td>
 </tr>
 <tr>
@@ -754,15 +754,24 @@
 </td>
 </tr>
 <tr>
-<td></td>
-</tr>
+<td>
+  <table style="width: 549px; height: 73px;" class="mceItemTable" border="0">
+    <tbody>
+      <tr>
+	<td><img src="http://50.31.134.204:8080/images/equivida.png" height="47" width="400" /></td>
+	<td align="right">
+	  <p><a href="http://www.equivida.com">www.equivida.com</a></p>
+	  <p>Pag. 7 de 7</p>
+	</td>
+      </tr>
+    </tbody>
+  </table>
+</td>
 <tr>
+</tr>
 <td>
 <p>Nota: en caso de presentarse un siniestro amparado por la p&oacute;liza, Equivida S.A. podr&aacute; solicitar documentaci&oacute;n adicional que le permita determinar con exactitud la causa del fallecimiento y/o la incapacidad total y permanente.</p>
 </td>
-</tr>
-<tr>
-<td></td>
 </tr>
 <tr>
 <td>

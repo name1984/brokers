@@ -263,8 +263,7 @@
     <menuitem action="action_insurance_insurance" 
 	      id="menu_seguros_desgravamen" 
 	      name="Seguros Desgravamen" 
-	      parent="menu_main_seguros" 
-	      groups="brokers.group_broker_desgravamen"/>
+	      parent="menu_main_seguros"/>
 
 
     <!--

@@ -32,7 +32,9 @@
         'view/brokers_view.xml',
         'report/brokers_report.xml',
         'data/brokers_data.xml',
-        'data/sequence_brokers.xml'        
+        'data/sequence_brokers.xml',
+        'data/res.country.state.csv',
+        'data/res.country.state.city.csv'
     ],
     'depends' : [
         'decimal_precision',
