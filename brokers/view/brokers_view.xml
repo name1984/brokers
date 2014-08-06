@@ -634,5 +634,17 @@
 
     <menuitem action="action_insurance_exams" id="menu_amount_conf_exams" parent="menu_main_configuration"/>
 
+
+    <record model="ir.ui.view" id="email_compose_message_wizard_inht_form">
+      <field name="name">mail.compose.message.tmpl.inv.form</field>
+      <field name="model">mail.compose.message</field>
+      <field name="inherit_id" ref="email_template.email_compose_message_wizard_inherit_form"/>
+      <field name="arch" type="xml">
+	<xpath expr="//group[@class='oe_right']" position="attributes">
+	  <attribute name="invisible">0</attribute>
+	</xpath>
+      </field>
+    </record>
+
   </data>
 </openerp>

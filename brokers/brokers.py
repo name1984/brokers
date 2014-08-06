@@ -839,6 +839,7 @@ class InsuranceInsurance(orm.Model):
     def action_send_email(self, cr, uid, ids, context=None):
         assert len(ids) == 1, 'Esta opcion es solo para un registro'
         ir_model_data = self.pool.get('ir.model.data')
+        ins_obj = self.browse(cr, uid, ids, context)[0]
         try:
             template_id = ir_model_data.get_object_reference(cr, uid, 'brokers', 'edi_insurance_dc_canal')[1]
         except ValueError:
@@ -854,6 +855,8 @@ class InsuranceInsurance(orm.Model):
             'default_use_template': bool(template_id),
             'default_template_id': template_id,
             'default_composition_mode': 'comment',
+            'examenes_deudor': ','.join([ex.name for ex in ins_obj.exams]),
+            'examenes_codeudor': ','.join([ex.name for ex in ins_obj.exams_codeudor]),
             })
         return {
             'type': 'ir.actions.act_window',

@@ -39,9 +39,7 @@
     ],
     'depends' : [
         'decimal_precision',
-        'base',
         'city',
-        'mail',
         'edi',
         'web_m2x_options',
         'report_webkit'
