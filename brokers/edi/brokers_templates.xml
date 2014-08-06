@@ -16,7 +16,7 @@
 	<![CDATA[
 
 <body>
-<p>Se&ntilde;or(es)<br />${object.contractor_id.name}<br /><span>Atenci&oacute;n: ${object.deudor_id.name.capitalize()} ${object.deudor_id.last_name.capitalize()}</span><br />Ciudad.-<br /><br />Reciba un cordial saludo del Equipo de Soporte de &nbsp;E&amp;A Broker's, y a la vez&nbsp;notifico a Usted que de acuerdo al an&aacute;lisis realizado por el Departamento de Auditor&iacute;a M&eacute;dica de la Aseguradora, el (los) candidato (s) al seguro que detallamos a continuaci&oacute;n, requiere (n) del llenado del (los)&nbsp; siguiente (s) cuestionario (s) por su M&eacute;dico de Cabecera.</p>
+<p>Se&ntilde;or(es)<br />${object.contractor_id.name}<br /><span>Atenci&oacute;n: ${object.user_id.name}</span><br />Ciudad.-<br /><br />Reciba un cordial saludo del Equipo de Soporte de &nbsp;E&amp;A Broker's, y a la vez&nbsp;notifico a Usted que de acuerdo al an&aacute;lisis realizado por el Departamento de Auditor&iacute;a M&eacute;dica de la Aseguradora, el (los) candidato (s) al seguro que detallamos a continuaci&oacute;n, requiere (n) del llenado del (los)&nbsp; siguiente (s) cuestionario (s) por su M&eacute;dico de Cabecera.</p>
 <p>En el cuadro anexo incluimos el <b><u>link de descarga</u></b> del (los) cuestionario (s) del deudor y/o codeudor solidario, segun sea el caso.</p>
 <p></p>
 <table class="mceItemTable" border="0">
@@ -78,7 +78,7 @@
 </td>
 <td style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding: 0cm" width="77"><b>Monto Cr&eacute;dito (s) Vigente (s)</b></td>
 <td style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0cm" width="149">
-<p>${'%.2f'%object.total_credits}</p>
+<p>${'%.2f'%(object.total_active_credits + object.credits_codeudor)}</p>
 </td>
 </tr>
 <tr valign="top">
@@ -138,6 +138,7 @@
 <p><br /><br /><br /><br /></p>
 </td>
 </tr>
+%if object.has_codeudor:
 <tr>
 <td colspan="6" style="border: 1px solid #000000; padding: 0.1cm" valign="top" width="835">
 <p align="center"><b>Datos Codeudor</b></p>
@@ -215,6 +216,7 @@
 <p>${ctx.get('examenes_codeudor')}</p>
 </td>
 </tr>
+% endif
 </tbody>
 </table>
 <p><font color="#FFFFFF"><span>@&gt; Grid Cuestionarios Adicionales</span></font></p>
@@ -260,7 +262,7 @@
 	<![CDATA[
 
 <body lang="es-EC" dir="ltr" style="background: transparent">
-<p>Se&ntilde;or(es)<br />${object.policy_id.aseguradora_id.name}<br /><b>Atenci&oacute;n: </b>@#Contacto<br />Ciudad.-</p>
+<p>Se&ntilde;or(es)<br />${object.policy_id.aseguradora_id.name}<br /><b>Atenci&oacute;n: </b>${object.user_id.name}<br />Ciudad.-</p>
 <p>Reciba un cordial saludo del Equipo de Soporte de E&amp;A Broker's, y a la vez, adjunto al correo la declaraci&oacute;n del candidato al seguro que detallamos a continuaci&oacute;n:</p>
 <p></p>
 <table class="mceItemTable" border="0">
@@ -392,6 +394,7 @@
 <p><br /><br /><br /><br /></p>
 </td>
 </tr>
+% if object.has_codeudor:
 <tr>
 <td colspan="6" style="border: 1px solid #000000; padding: 0.1cm" valign="top" width="835">
 <p align="center"><b>Datos Codeudor</b></p>
@@ -458,7 +461,7 @@
 <p><b>Resp. Pregunta 2:</b></p>
 </td>
 <td colspan="5" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0cm" width="705">
-<p>${object.question4 and object.question4.upeer()} ${object.answer4}</p>
+<p>${object.question4 and object.question4.upper()} ${object.answer4}</p>
 </td>
 </tr>
 <tr valign="top">
@@ -469,6 +472,7 @@
 <p>${ ctx.get('examenes_codeudor')}</p>
 </td>
 </tr>
+% endif
 </tbody>
 </table>
 <p><br /><b>Observaci&oacute;n: </b>@#TxtMensajeEnviar<br /><br /><br /></p>
@@ -497,7 +501,7 @@
 
 <body>
   <div>
-    <p>Se&ntilde;or(es)<br/>${object.contractor_id.name}<br /><b>Atenci&oacute;n:</b> ${object.deudor_id.name.capitalize()} ${object.deudor_id.last_name.capitalize()}<br />Ciudad.-</p>
+    <p>Se&ntilde;or(es)<br/>${object.contractor_id.name}<br /><b>Atenci&oacute;n:</b> ${object.user_id.name}<br />Ciudad.-</p>
     <p>Reciba un cordial saludo del Equipo de Soporte de &nbsp;E&amp;A Broker's, y a la vez&nbsp;notifico a Usted que hemos recibido la declaraci&oacute;n del candidato al seguro que detallamos a continuaci&oacute;n, con las siguientes observaciones:</p>
     <p><b>Observaciones:</b> Formulario de declaraci&oacute;n llenado correctamente.</p>
     <p></p>
@@ -536,7 +540,7 @@
 	    <p><b>Monto Cr&eacute;dito (s) Vigente (s):</b></p>
 	  </td>
 	  <td valign="top" width="172">
-	    <p>${object.total_credits}</p>
+	    <p>${object.total_active_credits + object.credits_codeudor}</p>
 	  </td>
 	  <td valign="top" width="172">
 	    <p><b>Monto Cr&eacute;dito Solicitado:</b></p>
@@ -559,6 +563,7 @@
 	    <p>${object.deudor_id.identificador}</p>
 	  </td>
 	</tr>
+	%if object.has_codeudor:
 	<tr>
 	  <td valign="top" width="172">
 	    <p><b>Codeudor:</b></p>
@@ -573,10 +578,11 @@
 	    <p>${object.codeudor_id.identificador}</p>
 	  </td>
 	</tr>
+	% endif
       </tbody>
     </table>
   </div>
-  <div><br /><br />De acuerdo a los requisitos de asegurabilidad establecidas en el contrato de seguros, la tarea asignada al n&uacute;mero&nbsp;<b>@@CaseNumber </b>del candidato al seguro,&nbsp;ser&aacute; revisada por el Departamento de Auditor&iacute;a M&eacute;dica de la Aseguradora, cualquier novedad que se presente estaremos en contacto con Usted.</div>
+  <div><br /><br />De acuerdo a los requisitos de asegurabilidad establecidas en el contrato de seguros, la tarea asignada al n&uacute;mero&nbsp;<b>${object.name} </b>del candidato al seguro,&nbsp;ser&aacute; revisada por el Departamento de Auditor&iacute;a M&eacute;dica de la Aseguradora, cualquier novedad que se presente estaremos en contacto con Usted.</div>
   <div></div>
   <div>
     <p><span>Saludos Cordiales, </span></p>
@@ -603,9 +609,9 @@
 	<![CDATA[
 
 <body>
-  <p>Se&ntilde;or(es)<br />${object.contractor_id.name}<br /><b>Atenci&oacute;n:</b> ${object.deudor_id.name.capitalize()} ${object.deudor_id.last_name.capitalize()}<br />Ciudad.-</p>
+  <p>Se&ntilde;or(es)<br />${object.contractor_id.name}<br /><b>Atenci&oacute;n:</b> ${ object.user_id.name }<br />Ciudad.-</p>
   <p>Reciba un cordial saludo del Equipo de Soporte de &nbsp;E&amp;A Broker's, y a la vez&nbsp;notifico a Usted que hemos recibido la declaraci&oacute;n del candidato al seguro que detallamos a continuaci&oacute;n, con las siguientes observaciones:</p>
-  <p><b>Observaciones:</b> @#TxtNotaErrorDeclaracion</p>
+  <p><b>Observaciones:</b> AQUI NOTA DE ERROR DE DECLARACION</p>
   <p></p>
   <table border="1" cellpadding="0" cellspacing="0">
     <tbody>
@@ -642,7 +648,7 @@
 	  <p><b>Monto Cr&eacute;dito (s) Vigente (s):</b></p>
 	</td>
 	<td valign="top" width="172">
-	  <p>${object.total_credits}</p>
+	  <p>${object.total_active_credits + object.credits_codeudor}</p>
 	</td>
 	<td valign="top" width="172">
 	  <p><b>Monto Cr&eacute;dito Solicitado:</b></p>
@@ -665,6 +671,7 @@
 	  <p>${object.deudor_id.identificador}</p>
 	</td>
       </tr>
+      % if object.has_codeudor:
       <tr>
 	<td valign="top" width="172">
 	  <p><b>Codeudor:</b></p>
@@ -679,9 +686,10 @@
 	  <p>${object.codeudor_id.identificador}</p>
 	</td>
       </tr>
+      % endif
     </tbody>
   </table>
-  <p><br /><br />Solicitamos por favor corregir el error reportado, ingresando al sistema a Tareas en Proceso con el n&uacute;mero de tarea <b>@@CaseNumber</b> y terminar con el proceso de Declaraci&oacute;n del candidato al seguro. <br /><br /></p>
+  <p><br /><br />Solicitamos por favor corregir el error reportado, ingresando al sistema a Tareas en Proceso con el n&uacute;mero de tarea <b>${object.name}</b> y terminar con el proceso de Declaraci&oacute;n del candidato al seguro. <br /><br /></p>
   <div>De requerir soporte adicional, ponemos a consideraci&oacute;n nuestros n&uacute;meros de contacto: CUE 098-8849769, UIO:098-1563621, GYE: 099-1774795 de Lunes a Viernes de 8H30 a 13H00 y 14H30 a 18H00.</div>
   <div>
     <p><span>Saludos Cordiales, </span></p>
@@ -709,7 +717,7 @@
 <body>
   <p><span style="overflow:hidden;line-height:0px" data-mce-style="overflow:hidden;line-height:0px" id="mce_6_start" data-mce-type="bookmark"><span style="overflow:hidden;line-height:0px" data-mce-style="overflow:hidden;line-height:0px" id="mce_7_start" data-mce-type="bookmark"></span></span><span style="overflow:hidden;line-height:0px" data-mce-style="overflow:hidden;line-height:0px" id="mce_6_end" data-mce-type="bookmark"><span style="overflow:hidden;line-height:0px" data-mce-style="overflow:hidden;line-height:0px" id="mce_7_end" data-mce-type="bookmark"></span></span></p>
   <div>
-    <p>Se&ntilde;or(es)<br />${object.contractor_id.name}<br /><span>Atenci&oacute;n: ${object.deudor_id.name.capitalize()} ${object.deudor_id.last_name.capitalize()}</span><br />Ciudad.-</p>
+    <p>Se&ntilde;or(es)<br />${object.contractor_id.name}<br /><span>Atenci&oacute;n: ${ object.user_id.name }</span><br />Ciudad.-</p>
     <p>Reciba un cordial saludo del Equipo de Soporte de &nbsp;E&amp;A Broker's, y a la vez le comunico la respuesta de la Aseguradora a la solicitud del candidato al seguro, que detallamos a continuaci&oacute;n:<br /><br /></p>
     <table class="mceItemTable" border="0">
       <tbody>
@@ -830,7 +838,7 @@
   </div>
   <div><br />
   <div>
-    <p>Solicitamos por favor ingresar al sistema la <b>ACEPTACI&Oacute;N (Si) o NEGATIVA (No) </b>a la respuesta de cobertura por parte de la Aseguradora ingresando a Tareas en Proceso con el n&uacute;mero de tarea <b>@@CaseNumber</b> y terminar&nbsp; con el proceso de An&aacute;lisis de Riesgo del (los) candidato (s) al seguro. Si la misma es ACEPTADA, solicitamos por favor se emita el certificado de seguro de ser el caso.<br /><br />De requerir soporte adicional, ponemos a consideraci&oacute;n nuestros n&uacute;meros de contacto: CUE 098-8849769, UIO:098-1563621, GYE: 099-1774795 de Lunes a Viernes de 8H30 a 13H00 y 14H30 a 18H00.</p>
+    <p>Solicitamos por favor ingresar al sistema la <b>ACEPTACI&Oacute;N (Si) o NEGATIVA (No) </b>a la respuesta de cobertura por parte de la Aseguradora ingresando a Tareas en Proceso con el n&uacute;mero de tarea <b>${object.name}</b> y terminar&nbsp; con el proceso de An&aacute;lisis de Riesgo del (los) candidato (s) al seguro. Si la misma es ACEPTADA, solicitamos por favor se emita el certificado de seguro de ser el caso.<br /><br />De requerir soporte adicional, ponemos a consideraci&oacute;n nuestros n&uacute;meros de contacto: CUE 098-8849769, UIO:098-1563621, GYE: 099-1774795 de Lunes a Viernes de 8H30 a 13H00 y 14H30 a 18H00.</p>
     <div>
       <p><span><br />Saludos Cordiales, </span></p>
       <p><span>&nbsp;</span></p>
@@ -859,7 +867,211 @@
       <field name="body_html">
 	<![CDATA[
 
-
+<body>
+  <p><span style="overflow:hidden;line-height:0px" data-mce-style="overflow:hidden;line-height:0px" id="mce_6_start" data-mce-type="bookmark"><span style="overflow:hidden;line-height:0px" data-mce-style="overflow:hidden;line-height:0px" id="mce_7_start" data-mce-type="bookmark"></span></span><span style="overflow:hidden;line-height:0px" data-mce-style="overflow:hidden;line-height:0px" id="mce_6_end" data-mce-type="bookmark"><span style="overflow:hidden;line-height:0px" data-mce-style="overflow:hidden;line-height:0px" id="mce_7_end" data-mce-type="bookmark"></span></span></p>
+  <div>
+    <p style="margin-bottom: 0cm; line-height: 100%">Se&ntilde;or(es)<br />${object.policy_id.aseguradora_id.name}<br />Atenci&oacute;n: ${object.user_id.name}<br />Ciudad.-</p>
+    <p>Reciba un cordial saludo del Equipo de Soporte de E&amp;A Broker's, y a la vez, le comunico la respuesta del candidato al seguro del contratante que detallamos a continuaci&oacute;n:<br /><br />Observaci&ograve;n: @#TxtMensajeEnviar<br /><br /></p>
+    <table class="mceItemTable" border="0">
+      <tbody>
+	<tr>
+	  <td><b>Contratante:</b></td>
+	  <td>${object.contractor_id.name}</td>
+	</tr>
+	<tr>
+	  <td><b>P&oacute;liza:</b></td>
+	  <td>${object.policy_id.name}</td>
+	</tr>
+	<tr>
+	  <td><b>Agencia:</b></td>
+	  <td>${object.city_id.name.capitalize()}</td>
+	</tr>
+      </tbody>
+    </table>
+    <br /><br />
+    <table style="width: 843px;" class="mceItemTable" cellpadding="4" cellspacing="0">
+      <tbody>
+	<tr>
+	  <td colspan="6" style="border: 1px solid #000000; padding: 0cm" valign="top" width="835">
+	    <p align="center"><b>Datos Deudor</b></p>
+	  </td>
+	</tr>
+	<tr valign="top">
+	  <td style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding: 0cm" width="122">
+	    <p><b>Nombres y Apellidos:</b></p>
+	  </td>
+	  <td style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding: 0cm" width="188">
+	    <p>${object.deudor_id.name.capitalize()} ${object.deudor_id.last_name.capitalize()}</p>
+	  </td>
+	  <td style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding: 0cm" width="58">
+	    <p><b>C&eacute;dula:</b></p>
+	  </td>
+	  <td style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding: 0cm" width="200">
+	    <p>@#TxtCedulaDeudor</p>
+	  </td>
+	  <td style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding: 0cm" width="77">
+	    <p><b>Fecha de Nacimiento:</b></p>
+	  </td>
+	  <td style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0cm" width="149">
+	    <p>@#DatFechaDeudor</p>
+	  </td>
+	</tr>
+	<tr valign="top">
+	  <td style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding: 0cm" width="122">
+	    <p><b>Direcci&oacute;n:</b></p>
+	  </td>
+	  <td style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding: 0cm" width="188">
+	    <p>@#TxtDireccionDomicilioDeudor @#TxtNroDomicilioDeudor, @#TxtInterseccionDomicilioDeudor</p>
+	  </td>
+	  <td style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding: 0cm" width="58">
+	    <p><b>Tel&eacute;fono:</b></p>
+	  </td>
+	  <td style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding: 0cm" width="200">
+	    <p>@#TxtCelularDeudor, @#TxtTelefonoDomicilioDeudor<br />@#TxtTelefonoOficinaDeudor</p>
+	  </td>
+	  <td style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding: 0cm" width="77"><b>Monto Asegurado:</b></td>
+	  <td style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0cm" width="149">
+	    <p>@#TxtMontoAprobado</p>
+	  </td>
+	</tr>
+	<tr valign="top">
+	  <td style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding: 0cm" width="122">
+	    <p><b>Operaci&oacute;n:</b></p>
+	  </td>
+	  <td style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding: 0cm" width="188">
+	    <p>@#TxtOperacion</p>
+	  </td>
+	  <td style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding: 0cm" width="58">
+	    <p><b>Plazo en Meses:</b></p>
+	  </td>
+	  <td style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding: 0cm" width="200">
+	    <p>@#TxtPlazo</p>
+	  </td>
+	  <td style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding: 0cm" width="77">
+	    <p></p>
+	  </td>
+	  <td style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0cm" width="149">
+	    <p></p>
+	  </td>
+	</tr>
+	<tr valign="top">
+	  <td style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding: 0cm" width="122">
+	    <p><b><b>Email:</b></b></p>
+	  </td>
+	  <td colspan="5" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0cm" width="705">
+	    <p>@#TxtEmailDeudor</p>
+	  </td>
+	</tr>
+	<tr valign="top">
+	  <td style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding: 0cm" width="122">
+	    <p><b>Respuesta Candidato al Seguro:</b></p>
+	  </td>
+	  <td colspan="5" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0cm" width="705">
+	    <p>@#DdRespuestaCliente_label</p>
+	  </td>
+	</tr>
+	<tr valign="top">
+	  <td style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding: 0cm" width="122">
+	    <p><b>Observaciones:</b></p>
+	  </td>
+	  <td colspan="5" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0cm" width="705">
+	    <p>@#TxtObservacionRespuesta</p>
+	  </td>
+	</tr>
+	<tr valign="top">
+	  <td style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding: 0cm" width="122">
+	    <p><b>Fecha Solicitud Cr&egrave;dito</b></p>
+	  </td>
+	  <td colspan="5" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0cm" width="705">
+	    <p>@#fechaAprobacionFormato</p>
+	  </td>
+	</tr>
+	<tr>
+	  <td colspan="6" style="border: none; padding: 0cm" valign="top" width="835">
+	    <p><br /><br /><br /></p>
+	  </td>
+	</tr>
+	% if object.has_codeudor:
+	<tr>
+	  <td colspan="6" style="border: 1px solid #000000; padding: 0.1cm" valign="top" width="835">
+	    <p align="center"><b>Datos Codeudor</b></p>
+	  </td>
+	</tr>
+	<tr valign="top">
+	  <td style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding: 0cm" width="122">
+	    <p><b>Nombres y Apellidos:</b></p>
+	  </td>
+	  <td style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding: 0cm" width="188">
+	    <p>@#TxtNombreCodeudor @#TxtApellidoCodeudor</p>
+	  </td>
+	  <td style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding: 0cm" width="58">
+	    <p><b>C&eacute;dula:</b></p>
+	  </td>
+	  <td style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding: 0cm" width="200">
+	    <p>@#TxtCedulaCodeudor</p>
+	  </td>
+	  <td style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding: 0cm" width="77">
+	    <p><b>Fecha de Nacimiento:</b></p>
+	  </td>
+	  <td style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0cm" width="149">
+	    <p>@#DatFechaCodeudor</p>
+	  </td>
+	</tr>
+	<tr valign="top">
+	  <td style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding: 0cm" width="122">
+	    <p><b>Direcci&oacute;n:</b></p>
+	  </td>
+	  <td style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding: 0cm" width="188">
+	    <p>@#TxtDireccionDomicilioCodeudor @#TxtNroDomicilioCodeudor, <br />@#TxtInterseccionDomicilioCodeudor</p>
+	  </td>
+	  <td style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding: 0cm" width="58">
+	    <p><b>Tel&eacute;fono:</b></p>
+	  </td>
+	  <td style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding: 0cm" width="200">
+	    <p>@#TxtCelularCodeudor, @#TxtTelefonoDomicilioCodeudor<br />@#TxtTelefonoOficinaCodeudor</p>
+	  </td>
+	  <td style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding: 0cm" width="77">
+	    <p></p>
+	  </td>
+	  <td style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0cm" width="149">
+	    <p></p>
+	  </td>
+	</tr>
+	% endif
+	<tr valign="top">
+	  <td style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding: 0cm" width="122"><b><b>Email:</b></b></td>
+	  <td colspan="5" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0cm" width="705">
+	    <p>@#TxtEmailCodeudor</p>
+	  </td>
+	</tr>
+	<tr valign="top">
+	  <td style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding: 0cm" width="122"><b>Respuesta <b>Candidato al Seguro:</b><br /></b></td>
+	  <td colspan="5" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0cm" width="705">
+	    <p>@#DdRespuestaCliente_label</p>
+	  </td>
+	</tr>
+	<tr valign="top">
+	  <td style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding: 0cm" width="122"><b><b>Observaciones:</b></b></td>
+	  <td colspan="5" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0cm" width="705">
+	    <p>@#TxtObservacionRespuestaCodeudor</p>
+	  </td>
+	</tr>
+      </tbody>
+    </table>
+  </div>
+  <div><br />
+  <div>
+    <p>De acuerdo a la respuesta del (los) candidato(s) al seguro, solicitamos seg&uacute;n sea el caso Incluir o Excluir al (los) candidato(s) de la facturaci&oacute;n mensual del Seguro.<br /><br />De requerir soporte adicional, ponemos a consideraci&oacute;n nuestros n&uacute;meros de contacto: CUE 098-8849769, UIO:098-1563621, GYE: 099-1774795 de Lunes a Viernes de 8H30 a 13H00 y 14H30 a 18H00.</p>
+    <div>
+      <p><span><br />Saludos Cordiales, </span></p>
+      <p><span>&nbsp;</span></p>
+      <p>@#TxtNombreEjecutivo<br />Ejecutivo de Cuenta<br />E&amp;A Broker&acute;s Cia. Ltda.<br />PBX: 593-072818284<br />Cuenca - Ecuador</p>
+    </div>
+  </div>
+  </div>
+  <p></p>
+  <p></p>
+</body>
 
 	]]>
       </field>
