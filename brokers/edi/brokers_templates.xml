@@ -907,13 +907,13 @@
 	    <p><b>C&eacute;dula:</b></p>
 	  </td>
 	  <td style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding: 0cm" width="200">
-	    <p>@#TxtCedulaDeudor</p>
+	    <p>${object.deudor_id.identificador}</p>
 	  </td>
 	  <td style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding: 0cm" width="77">
 	    <p><b>Fecha de Nacimiento:</b></p>
 	  </td>
 	  <td style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0cm" width="149">
-	    <p>@#DatFechaDeudor</p>
+	    <p>${object.deudor_id.birth_date}</p>
 	  </td>
 	</tr>
 	<tr valign="top">
@@ -921,17 +921,17 @@
 	    <p><b>Direcci&oacute;n:</b></p>
 	  </td>
 	  <td style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding: 0cm" width="188">
-	    <p>@#TxtDireccionDomicilioDeudor @#TxtNroDomicilioDeudor, @#TxtInterseccionDomicilioDeudor</p>
+	    <p>${object.deudor_id.street} ${object.deudor_id.street_number}, ${object.deudor_id.street2}</p>
 	  </td>
 	  <td style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding: 0cm" width="58">
 	    <p><b>Tel&eacute;fono:</b></p>
 	  </td>
 	  <td style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding: 0cm" width="200">
-	    <p>@#TxtCelularDeudor, @#TxtTelefonoDomicilioDeudor<br />@#TxtTelefonoOficinaDeudor</p>
+	    <p>${object.deudor_id.mobile}, ${object.deudor_id.phone}<br />${object.deudor_id.phone}</p>
 	  </td>
 	  <td style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding: 0cm" width="77"><b>Monto Asegurado:</b></td>
 	  <td style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0cm" width="149">
-	    <p>@#TxtMontoAprobado</p>
+	    <p>${object.total_credits}</p>
 	  </td>
 	</tr>
 	<tr valign="top">
@@ -939,13 +939,13 @@
 	    <p><b>Operaci&oacute;n:</b></p>
 	  </td>
 	  <td style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding: 0cm" width="188">
-	    <p>@#TxtOperacion</p>
+	    <p>${object.nro_operacion_credito }</p>
 	  </td>
 	  <td style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding: 0cm" width="58">
 	    <p><b>Plazo en Meses:</b></p>
 	  </td>
 	  <td style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding: 0cm" width="200">
-	    <p>@#TxtPlazo</p>
+	    <p>${object.plazo}</p>
 	  </td>
 	  <td style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding: 0cm" width="77">
 	    <p></p>
@@ -959,7 +959,7 @@
 	    <p><b><b>Email:</b></b></p>
 	  </td>
 	  <td colspan="5" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0cm" width="705">
-	    <p>@#TxtEmailDeudor</p>
+	    <p>${object.deudor_id.email}</p>
 	  </td>
 	</tr>
 	<tr valign="top">
@@ -983,7 +983,7 @@
 	    <p><b>Fecha Solicitud Cr&egrave;dito</b></p>
 	  </td>
 	  <td colspan="5" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0cm" width="705">
-	    <p>@#fechaAprobacionFormato</p>
+	    <p>${object.date}</p>
 	  </td>
 	</tr>
 	<tr>
@@ -1002,19 +1002,19 @@
 	    <p><b>Nombres y Apellidos:</b></p>
 	  </td>
 	  <td style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding: 0cm" width="188">
-	    <p>@#TxtNombreCodeudor @#TxtApellidoCodeudor</p>
+	    <p>${object.codeudor_id.name.capitalize()} ${object.codeudor_id.last_name.capitalize()}</p>
 	  </td>
 	  <td style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding: 0cm" width="58">
 	    <p><b>C&eacute;dula:</b></p>
 	  </td>
 	  <td style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding: 0cm" width="200">
-	    <p>@#TxtCedulaCodeudor</p>
+	    <p>${object.codeudor_id.identificador}</p>
 	  </td>
 	  <td style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding: 0cm" width="77">
 	    <p><b>Fecha de Nacimiento:</b></p>
 	  </td>
 	  <td style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0cm" width="149">
-	    <p>@#DatFechaCodeudor</p>
+	    <p>${object.codeudor_id.birth_date}</p>
 	  </td>
 	</tr>
 	<tr valign="top">
@@ -1022,13 +1022,13 @@
 	    <p><b>Direcci&oacute;n:</b></p>
 	  </td>
 	  <td style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding: 0cm" width="188">
-	    <p>@#TxtDireccionDomicilioCodeudor @#TxtNroDomicilioCodeudor, <br />@#TxtInterseccionDomicilioCodeudor</p>
+	    <p>${object.codeudor_id.street} ${object.codeudor_id.street_number}, <br />${object.codeudor_id.street2}</p>
 	  </td>
 	  <td style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding: 0cm" width="58">
 	    <p><b>Tel&eacute;fono:</b></p>
 	  </td>
 	  <td style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding: 0cm" width="200">
-	    <p>@#TxtCelularCodeudor, @#TxtTelefonoDomicilioCodeudor<br />@#TxtTelefonoOficinaCodeudor</p>
+	    <p>${object.codeudor_id.mobile}, ${object.codeudor_id.phone}<br />${object.codeudor_id.phone2}</p>
 	  </td>
 	  <td style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding: 0cm" width="77">
 	    <p></p>
@@ -1037,13 +1037,13 @@
 	    <p></p>
 	  </td>
 	</tr>
-	% endif
 	<tr valign="top">
 	  <td style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding: 0cm" width="122"><b><b>Email:</b></b></td>
 	  <td colspan="5" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0cm" width="705">
-	    <p>@#TxtEmailCodeudor</p>
+	    <p>${object.codeudor_id.email}</p>
 	  </td>
 	</tr>
+	% endif
 	<tr valign="top">
 	  <td style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding: 0cm" width="122"><b>Respuesta <b>Candidato al Seguro:</b><br /></b></td>
 	  <td colspan="5" style="border-top: none; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000; padding: 0cm" width="705">
@@ -1065,7 +1065,7 @@
     <div>
       <p><span><br />Saludos Cordiales, </span></p>
       <p><span>&nbsp;</span></p>
-      <p>@#TxtNombreEjecutivo<br />Ejecutivo de Cuenta<br />E&amp;A Broker&acute;s Cia. Ltda.<br />PBX: 593-072818284<br />Cuenca - Ecuador</p>
+      <p>${user.name}<br />Ejecutivo de Cuenta<br />E&amp;A Broker&acute;s Cia. Ltda.<br />PBX: 593-072818284<br />Cuenca - Ecuador</p>
     </div>
   </div>
   </div>
