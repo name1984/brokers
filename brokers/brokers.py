@@ -780,9 +780,10 @@ class InsuranceInsurance(orm.Model):
             d = datetime(year=int(y), month=int(m), day=int(d)) + relativedelta(months=obj.plazo)
             date_due = d.strftime('%Y-%m-%d')
             data.update({'date_due': date_due, 'date_ok': obj.date})
-
-            name = self.get_number(cr, uid, ids, context)
-            data.update({'name': name})
+            
+            if obj.name != '/':
+                name = self.get_number(cr, uid, ids, context)
+                data.update({'name': name})
             self.write(cr, uid, ids, data)
         return True
 
@@ -834,3 +835,33 @@ class InsuranceInsurance(orm.Model):
             'datas': datas,
             'nodestroy': True,
         }
+
+    def action_send_email(self, cr, uid, ids, context=None):
+        assert len(ids) == 1, 'Esta opcion es solo para un registro'
+        ir_model_data = self.pool.get('ir.model.data')
+        try:
+            template_id = ir_model_data.get_object_reference(cr, uid, 'brokers', 'edi_insurance_dc_canal')[1]
+        except ValueError:
+            template_id = False
+        try:
+            compose_form_id = ir_model_data.get_object_reference(cr, uid, 'mail', 'email_compose_message_wizard_form')[1]
+        except ValueError:
+            compose_form_id = False
+        ctx = dict(context)        
+        ctx.update({
+            'default_model': 'insurance.insurance',
+            'default_res_id': ids[0],
+            'default_use_template': bool(template_id),
+            'default_template_id': template_id,
+            'default_composition_mode': 'comment',
+            })
+        return {
+            'type': 'ir.actions.act_window',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'mail.compose.message',
+            'views': [(compose_form_id, 'form')],
+            'view_id': compose_form_id,
+            'target': 'new',
+            'context': ctx,
+        }        

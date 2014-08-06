@@ -34,13 +34,16 @@
         'data/brokers_data.xml',
         'data/sequence_brokers.xml',
         'data/res.country.state.csv',
-        'data/res.country.state.city.csv'
+        'data/res.country.state.city.csv',
+        'edi/brokers_templates.xml'
     ],
     'depends' : [
         'decimal_precision',
         'base',
         'city',
         'mail',
+        'edi',
+        'web_m2x_options',
         'report_webkit'
     ],
     'js': [
