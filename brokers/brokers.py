@@ -167,6 +167,58 @@ class InsurancePartner(orm.Model):
         'tipo_identificador': 'cedula'
     }
 
+    def _check_cedula(self, identificador):
+        if len(identificador) == 13 and not identificador[10:13] == '001':
+            return False
+        elif len(identificador) < 10:
+            return False
+        coef = [2,1,2,1,2,1,2,1,2]
+        cedula = identificador[:9]
+        suma = 0
+        for c in cedula:
+            val = int(c) * coef.pop()
+            suma += val > 9 and val-9 or val
+        result = 10 - ((suma % 10)!=0 and suma%10 or 10)
+        if result == int(identificador[9:10]):
+            return True
+        else:
+            return False
+
+    def _check_ruc(self, partner):
+        ruc = partner.identificador
+        coef = []
+        verificador = False
+        if not len(ruc) == 13:
+            return False
+        if ruc[2:3] == '9':
+            coef = [4,3,2,7,6,5,4,3,2,0]
+            coef.reverse()
+            verificador = int(ruc[9:10])
+        elif ruc[2:3] == '6':
+            coef = [3,2,7,6,5,4,3,2,0,0]
+            coef.reverse()
+            verificador = int(ruc[8:9])
+        suma = sum([int(i)*c for i,c in zip(ruc[:10], coef)])
+        result = 11 - (suma>0 and suma % 11 or 11)
+        if result == verificador:
+            return True
+        else:
+            return False
+
+    def _check_identificador(self, cr, uid, ids):
+        for partner in self.browse(cr, uid, ids):
+            if partner.tipo_identificador == 'pasaporte':
+                return True
+            elif partner.tipo_identificador == 'ruc':
+                return self._check_ruc(partner)
+            else:
+                return self._check_cedula(partner.identificador)
+        return True
+
+    _constraints = [
+        (_check_identificador, 'Error en su Cedula/RUC/Pasaporte', ['identificador'])
+    ]
+
     _sql_constraints = [
         ('unique_identificador',
          'unique(tipo_identificador,identificador)',
