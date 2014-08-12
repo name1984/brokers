@@ -46,6 +46,16 @@ class InsurancePartnerCivil(orm.Model):
 class InsurancePartner(orm.Model):
     _name = 'insurance.partner'
     _description = 'Deudores'
+    _order = 'last_name ASC, name ASC'
+
+    def create(self, cr, uid, vals, context=None):
+        import pdb
+        pdb.set_trace()
+        obj_id = super(InsurancePartner, self).create(cr, uid, vals, context)
+        if vals.get('parent_id'):
+            upd = "UPDATE insurance_partner SET parent_id=%s WHERE id=%s"% (obj_id, vals.get('parent_id'))
+            cr.execute(upd)
+        return obj_id
 
     def name_get(self, cr, uid, ids, context=None):
         res = []
@@ -140,6 +150,7 @@ class InsurancePartner(orm.Model):
             'insurance.partner.civil',
             string='Estado Civil'
         ),
+        'casado': fields.boolean('Casado'),
         'mobile': fields.char('Celular', size=16, required=True),
         'phone': fields.char('Teléfono Casa', size=16, required=True),
         'phone2': fields.char('Teléfono Oficina', size=16, required=True),
@@ -153,13 +164,8 @@ class InsurancePartner(orm.Model):
         ),
         'parent_id': fields.many2one(
             'insurance.partner',
-            string='Partner'
+            string='Conyugue'
         ),
-        'child_ids': fields.one2many(
-            'insurance.partner',
-            'parent_id',
-            string='Codeudor o Conviviente Legal'
-        )
     }
 
     _defaults = {
@@ -226,13 +232,12 @@ class InsurancePartner(orm.Model):
     ]
 
     def onchange_civil(self, cr, uid, ids, civil_id):
-        res = {'warning': {'title': 'Aviso', 'message': u'Debe ingresar la información del conyugue.'}}
+        res = {'value': {'casado': False}}
         if not civil_id:
             return {}
         data = self.pool.get('insurance.partner.civil').read(cr, uid, [civil_id], ['married'])
-        if data[0]['married']:
-            return res
-        return {}
+        res['value']['casado'] = data[0]['married']        
+        return res
 
     def is_married(self, cr, uid, deudor_id):
         deudor = self.browse(cr, uid, deudor_id)
@@ -240,12 +245,7 @@ class InsurancePartner(orm.Model):
 
     def get_conyugue(self, cr, uid, deudor_id):
         deudor = self.browse(cr, uid, deudor_id)
-        if not deudor.civil_id.married:
-            return False
-        for obj in deudor.child_ids:
-            if obj.parentesco_id.conyugue:
-                return obj
-        return False
+        return deudor.parent_id and deudor_id.parent_id.id or False
 
     def name_search(self, cr, uid, name, args=None, operator='ilike', context=None, limit=100):
         domain = ['|',('name',operator,name),'|',('last_name',operator,name),('identificador',operator,name)]
@@ -488,10 +488,7 @@ class InsuranceInsurance(orm.Model):
     def _compute_total(self, cr, uid, ids, args, fields, context=None):
         res = {}
         for obj in self.browse(cr, uid, ids):
-            res[obj.id] = self.sumar(
-                obj.total_active_credits,
-                obj.monto_credito_solicitado
-            )
+            res[obj.id] = obj.total_active_credits + obj.credits_codeudor + obj.monto_credito_solicitado
         return res
 
     """
@@ -568,7 +565,8 @@ class InsuranceInsurance(orm.Model):
             _compute_total,
             string='Total Créditos',
             digits_compute=DP,
-            store={'insurance.insurance': (lambda self, cr, uid, ids, c={}: ids, ['monto_credito_solicitado','total_active_credits'], 20),}
+            store={'insurance.insurance': (lambda self, cr, uid, ids, c={}: ids,
+                                           ['monto_credito_solicitado','total_active_credits','credits_codeudor'], 20),}
         ),
         'plazo': fields.integer(
             'Plazo (meses)',
@@ -775,15 +773,23 @@ class InsuranceInsurance(orm.Model):
         return exams
 
     def action_draft(self, cr, uid, ids, context=None):
-        self.write(
-            cr, uid,
-            ids,
-            {
+        for obj in self.browse(cr, uid, ids, context):
+            exams = [e.id for e in obj.exams]
+            coexams = [e.id for e in obj.exams_codeudor]
+            data = {
                 'state': 'draft',
                 'print_certificate': False,
-                'print_declaration': False
+                'print_declaration': False,
+                'question1': '',
+                'question2': '',
+                'question3': '',
+                'question4': '',
             }
-        )
+            if exams:
+                data.update({'exams': [(5,)]})
+            if coexams:
+                data.update({'exams_codeudor': [(5,)]})
+        self.write(cr, uid, ids, data)
 
     def get_number(self, cr, uid, ids, context=None):
         seq_obj = self.pool.get('ir.sequence')
@@ -832,8 +838,8 @@ class InsuranceInsurance(orm.Model):
             d = datetime(year=int(y), month=int(m), day=int(d)) + relativedelta(months=obj.plazo)
             date_due = d.strftime('%Y-%m-%d')
             data.update({'date_due': date_due, 'date_ok': obj.date})
-            
-            if obj.name != '/':
+
+            if not obj.name != '/':
                 name = self.get_number(cr, uid, ids, context)
                 data.update({'name': name})
             self.write(cr, uid, ids, data)

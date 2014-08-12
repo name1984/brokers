@@ -124,7 +124,7 @@
 	    <group>
 	      <group string="Datos Solicitud de Crédito">
 		<field name="city_id" options="{'create': false, 'create_edit': false, 'no_open': True}"/>
-		<field name="date" required="1" readonly="1" placeholder="dd/mm/aaaa"/>
+		<field name="date" required="1" readonly="1" placeholder="dd/mm/aaaa" data-inputmask=" 'mask': '99/99/9999' "/>
 		<field name="account_number"/>
 		<field name="nro_operacion_credito"/>
 		<field name="plazo" required="1"/>
@@ -280,9 +280,51 @@
       </field>
     </record>
 
+    <record id="view_partner_conyuge_form" model="ir.ui.view">
+      <field name="name">view.res.partner.conyugue.form</field>
+      <field name="model">insurance.partner</field>
+      <field name="arch" type="xml">
+	<form string="Conyugue" version="7.0">
+	  <sheet string="Información Conyugue">
+	    <label for="name" class="oe_edit_only" string="Nombres Completos"/>
+	    <h1>
+	      <field name="name" class="oe_inline" placeholder="Nombres"/>
+	      <field name="last_name" class="oe_inline" placeholder="Apellidos"/>
+	    </h1>
+	    <label for="tipo_identificador" string="Identificador"/>
+	    <h3>
+	      <field name="tipo_identificador" class="oe_inline"/>
+	      <field name="identificador" class="oe_inline" placeholder="Cédula / RUC"/>
+	    </h3>
+	    <group string="Información">
+	      <group>
+		<field name="birth_date" placeholder="dd/mm/aaaa" data-inputmask=" 'mask': '99/99/9999' "/>
+		<field name="sexo"/>
+		<field name="civil_id" widget="selection" readonly="1"/>
+		<field name="casado" invisible="1"/>
+	      </group>
+	      <group>
+		<field name="mobile" data-inputmask=" 'mask': '0999999999' "/>
+		<field name="phone" data-inputmask=" 'mask': '09-9999999' "/>
+		<field name="phone2" data-inputmask=" 'mask': '09-9999999' "/>
+		<field name="email" data-inputmask=" 'alias': 'email' "/>
+		<label for="street" string="Dirección"/>
+		<div>
+		  <field name="street" placeholder="Calle principal"/>
+		  <field name="street_number" placeholder="Nro. Domicilio"/>
+		  <field name="street2" placeholder="Calle secundaria"/>
+		</div>
+	      </group>
+	    </group>
+	  </sheet>
+	</form>
+      </field>
+    </record>
+
     <record id="view_res_partner_insurance_form" model="ir.ui.view">
       <field name="name">view.res.partner.insurance.form</field>
       <field name="model">insurance.partner</field>
+      <field name="priority">5</field>
       <field name="arch" type="xml">
 	<form string="Información Deudor" version="7.0">
 	  <sheet string="Información Deudor">
@@ -298,86 +340,28 @@
 	    </h3>
 	    <group string="Información">
 	      <group>
-		<field name="birth_date" class="oe_inline"/>
+		<field name="birth_date" class="oe_inline" data-inputmask=" 'mask': '99/99/9999' "/>
 		<field name="age" class="oe_inline"/>
 		<field name="sexo"/>
-		<field name="civil_id" widget="selection" on_change="onchange_civil(civil_id)"/>
+		<field name="civil_id" widget="selection" on_change="onchange_civil(civil_id)" required="1"/>
+		<field name="casado" invisible="1"/>
+		<field name="parent_id" attrs="{'invisible': [('casado','=',False)], 'required': [('casado','=',True)]}"
+		       context="{'form_view_ref': 'brokers.view_partner_conyuge_form', 'default_civil_id': civil_id, 'default_casado': True}"
+		       domain="[('casado','=',False)]"/>
 	      </group>
 	      <group>
-		<field name="mobile"/>
-		<field name="phone"/>
-		<field name="phone2"/>
-		<field name="email"/>
+		<field name="mobile" data-inputmask=" 'mask': '0999999999' "/>
+		<field name="phone" data-inputmask=" 'mask': '09-9999999' "/>
+		<field name="phone2" data-inputmask=" 'mask': '09-9999999' "/>
+		<field name="email" data-inputmask=" 'alias': 'email' "/>
 		<label for="street" string="Dirección"/>
 		<div>
 		  <field name="street" placeholder="Calle principal"/>
-		  <field name="street_number" placeholder="Nro. Domicilio"/>
+		  <field name="street_number" placeholder="Nro. Domicilio" data-inputmask="'mask': '99999'"/>
 		  <field name="street2" placeholder="Calle secundaria"/>
 		</div>
 	      </group>
 	    </group>
-	    <notebook>
-	      <page string="Conyugue / Codeudor">
-		<field name="child_ids" mode="tree,kanban">
-		  <kanban>
-		    <field name="name"/>
-		    <field name="last_name"/>
-		    <field name="sexo"/>
-		    <field name="phone"/>
-		    <field name="parentesco_id"/>
-		    <templates>
-		      <t t-name="kanban-box">
-			<div class="oe_kanban_details">
-			  <h4 class="oe_partner_heading">
-			    <a type="open"><field name="parentesco_id" widget="selection"/>: <field name="name"/> <field name="last_name"/></a>
-			  </h4>
-			  <ul>
-			    <li>Ident: <field name="identificador"/></li>
-			    <li><field name="phone"/></li>
-			    <li><field name="mobile"/></li>
-			    <li><field name="email"/></li>
-			  </ul>
-			</div>
-		      </t>
-		    </templates>
-		  </kanban>
-		  <form string="Familiares" version="7.0">
-		    <sheet string="Información Deudor">
-		      <label for="name" class="oe_edit_only" string="Nombres Completos"/>
-		      <h1>
-			<field name="name" class="oe_inline" placeholder="Nombres"/>
-			<field name="last_name" class="oe_inline" placeholder="Apellidos"/>
-		      </h1>
-		      <label for="tipo_identificador" string="Identificador"/>
-		      <h3>
-			<field name="tipo_identificador" class="oe_inline"/>
-			<field name="identificador" class="oe_inline" placeholder="Cédula / RUC"/>
-		      </h3>
-		      <label for="parentesco_id"/>
-		      <field name="parentesco_id" placeholder="Esposa/o" required="1"/>
-		      <group string="Información">
-			<group>
-			  <field name="birth_date" placeholder="dd/mm/aaaa"/>
-			  <field name="sexo"/>
-			  <field name="civil_id" widget="selection"/>
-			</group>
-			<group>
-			  <field name="mobile"/>
-			  <field name="phone"/>
-			  <field name="email"/>
-			  <label for="street" string="Dirección"/>
-			  <div>
-			    <field name="street" placeholder="Calle principal"/>
-			    <field name="street_number" placeholder="Nro. Domicilio"/>
-			    <field name="street2" placeholder="Calle secundaria"/>
-			  </div>
-			</group>
-		      </group>
-		    </sheet>
-		  </form>
-		</field>
-	      </page>
-	    </notebook>
 	  </sheet>
 	</form>
       </field>
@@ -388,9 +372,11 @@
       <field name="model">insurance.partner</field>
       <field name="arch" type="xml">
 	<tree string="Deudores">
-	  <field name="name"/>
+	  <field name="identificador"/>
 	  <field name="last_name"/>
+	  <field name="name"/>
 	  <field name="sexo"/>
+	  <field name="civil_id"/>
 	  <field name="phone"/>
 	  <field name="email"/>
 	</tree>
@@ -402,6 +388,7 @@
       <field name="model">insurance.partner</field>
       <field name="arch" type="xml">
 	<search>
+	  <field name="identificador"/>
 	  <field name="name"/>
 	  <field name="last_name"/>
 	  <field name="sexo"/>
