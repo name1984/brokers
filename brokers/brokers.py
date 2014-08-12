@@ -245,7 +245,7 @@ class InsurancePartner(orm.Model):
 
     def get_conyugue(self, cr, uid, deudor_id):
         deudor = self.browse(cr, uid, deudor_id)
-        return deudor.parent_id and deudor.parent_id.id or False
+        return deudor.parent_id and deudor.parent_id or False
 
     def name_search(self, cr, uid, name, args=None, operator='ilike', context=None, limit=100):
         domain = ['|',('name',operator,name),'|',('last_name',operator,name),('identificador',operator,name)]
