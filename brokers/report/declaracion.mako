@@ -136,7 +136,7 @@ return this;};"><font size="2" color="#3366FF" face="arial,helvetica,sans-serif"
 <tbody>
 <tr>
 <td><font size="2" face="arial,helvetica,sans-serif"><b><font color="#3366FF">FECHA DE INICIO DE VIGENCIA</font></b></font></td>
-<td><font size="2" face="arial,helvetica,sans-serif">${ formatLang(obj.date, date=True) } con una duraci&oacute;n de ${ obj.plazo } meses</font></td>
+<td style="text-align: right;"><font size="2" face="arial,helvetica,sans-serif">${ formatLang(obj.date, date=True) } con una duraci&oacute;n de ${ obj.plazo } meses</font></td>
 </tr>
 </tbody>
 </table>
@@ -464,6 +464,11 @@ return this;};"><font size="2" face="arial,helvetica,sans-serif">SI(${ obj.quest
 <p></p>
 <p></p>
 <p></p>
+<p></p>
+<p></p>
+<br>
+<br>
+<br>
 <p></p>
 <p align="right"><font size="2" face="arial,helvetica,sans-serif">P&aacute;gina 2 de 2</font></p>
 <p align="center"><font size="2" color="#3366FF" face="arial,helvetica,sans-serif">REQUISITOS DE ASEGURABILIDAD &ndash; DEUDOR<br /></font><span style="font-family: arial, helvetica, sans-serif; font-size: small;">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;</span></p>

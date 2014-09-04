@@ -45,19 +45,6 @@ class res_partner(osv.Model):
         'city_id': fields.many2one('res.country.state.city', 'City'),
     }
 
-    def fields_view_get(self, cr, user, view_id=None, view_type='form',
-                        context=None, toolbar=False, submenu=False):
-        if (not view_id) and (view_type == 'form') and context \
-            and context.get('force_email', False):
-            view_id = self.pool.get('ir.model.data').get_object_reference(
-                cr, user, 'base', 'res_partner_form_city_01')[1]
-        res = super(res_partner, self).fields_view_get(cr, user,
-            view_id, view_type, context, toolbar=toolbar, submenu=submenu)
-        if view_type == 'form':
-            res['arch'] = self.fields_view_get_address(
-                cr, user, res['arch'], context=context)
-        return res
-
     def onchange_city(self, cr, uid, ids, city_id, context=None):
         if city_id:
             city = self.pool.get('res.country.state.city').browse(

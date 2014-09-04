@@ -32,7 +32,7 @@ class InsuranceParentesco(orm.Model):
     }
 
 
-class InsurancePartnerCivil(osv.osv):
+class InsurancePartnerCivil(orm.Model):
 
     _name = 'insurance.partner.civil'
 
@@ -43,9 +43,19 @@ class InsurancePartnerCivil(osv.osv):
         }
 
 
-class InsurancePartner(osv.osv):
+class InsurancePartner(orm.Model):
     _name = 'insurance.partner'
-    _description = 'Deudores'    
+    _description = 'Deudores'
+    _order = 'last_name ASC, name ASC'
+
+    def create(self, cr, uid, vals, context=None):
+        import pdb
+        pdb.set_trace()
+        obj_id = super(InsurancePartner, self).create(cr, uid, vals, context)
+        if vals.get('parent_id'):
+            upd = "UPDATE insurance_partner SET parent_id=%s WHERE id=%s"% (obj_id, vals.get('parent_id'))
+            cr.execute(upd)
+        return obj_id
 
     def name_get(self, cr, uid, ids, context=None):
         res = []
@@ -78,7 +88,7 @@ class InsurancePartner(osv.osv):
         #Years
         years = today.year - born.year
         age = "{0} años {1} meses {2} días".format(years, mes, days)
-        return age    
+        return age
 
     def _compute_age(self, cr, uid, ids, name, args, context=None):
         res = {}
@@ -90,7 +100,7 @@ class InsurancePartner(osv.osv):
             age = self.compute_age(obj.birth_date)
             res[obj.id]['age'] = age
             res[obj.id]['age_int'] = int(age.split(' ')[0])
-        return res    
+        return res
 
     _columns = {
         'name': fields.char(
@@ -140,9 +150,10 @@ class InsurancePartner(osv.osv):
             'insurance.partner.civil',
             string='Estado Civil'
         ),
+        'casado': fields.boolean('Casado'),
         'mobile': fields.char('Celular', size=16, required=True),
         'phone': fields.char('Teléfono Casa', size=16, required=True),
-        'phone2': fields.char('Teléfono Oficina', size=16, required=True),        
+        'phone2': fields.char('Teléfono Oficina', size=16, required=True),
         'email': fields.char('E-mail', size=32, required=True),
         'street': fields.char('Calle Principal', size=64),
         'street2': fields.char('Calle Secundaria', size=64),
@@ -153,19 +164,66 @@ class InsurancePartner(osv.osv):
         ),
         'parent_id': fields.many2one(
             'insurance.partner',
-            string='Partner'
+            string='Conyugue'
         ),
-        'child_ids': fields.one2many(
-            'insurance.partner',
-            'parent_id',
-            string='Codeudor o Conviviente Legal'
-        )
     }
 
     _defaults = {
         'sexo': 'm',
         'tipo_identificador': 'cedula'
     }
+
+    def _check_cedula(self, identificador):
+        if len(identificador) == 13 and not identificador[10:13] == '001':
+            return False
+        elif len(identificador) < 10:
+            return False
+        coef = [2,1,2,1,2,1,2,1,2]
+        cedula = identificador[:9]
+        suma = 0
+        for c in cedula:
+            val = int(c) * coef.pop()
+            suma += val > 9 and val-9 or val
+        result = 10 - ((suma % 10)!=0 and suma%10 or 10)
+        if result == int(identificador[9:10]):
+            return True
+        else:
+            return False
+
+    def _check_ruc(self, partner):
+        ruc = partner.identificador
+        coef = []
+        verificador = False
+        if not len(ruc) == 13:
+            return False
+        if ruc[2:3] == '9':
+            coef = [4,3,2,7,6,5,4,3,2,0]
+            coef.reverse()
+            verificador = int(ruc[9:10])
+        elif ruc[2:3] == '6':
+            coef = [3,2,7,6,5,4,3,2,0,0]
+            coef.reverse()
+            verificador = int(ruc[8:9])
+        suma = sum([int(i)*c for i,c in zip(ruc[:10], coef)])
+        result = 11 - (suma>0 and suma % 11 or 11)
+        if result == verificador:
+            return True
+        else:
+            return False
+
+    def _check_identificador(self, cr, uid, ids):
+        for partner in self.browse(cr, uid, ids):
+            if partner.tipo_identificador == 'pasaporte':
+                return True
+            elif partner.tipo_identificador == 'ruc':
+                return self._check_ruc(partner)
+            else:
+                return self._check_cedula(partner.identificador)
+        return True
+
+    _constraints = [
+        (_check_identificador, 'Error en su Cedula/RUC/Pasaporte', ['identificador'])
+    ]
 
     _sql_constraints = [
         ('unique_identificador',
@@ -174,13 +232,12 @@ class InsurancePartner(osv.osv):
     ]
 
     def onchange_civil(self, cr, uid, ids, civil_id):
-        res = {'warning': {'title': 'Aviso', 'message': u'Debe ingresar la información del conyugue.'}}
+        res = {'value': {'casado': False}}
         if not civil_id:
             return {}
         data = self.pool.get('insurance.partner.civil').read(cr, uid, [civil_id], ['married'])
-        if data[0]['married']:
-            return res
-        return {}
+        res['value']['casado'] = data[0]['married']        
+        return res
 
     def is_married(self, cr, uid, deudor_id):
         deudor = self.browse(cr, uid, deudor_id)
@@ -188,12 +245,7 @@ class InsurancePartner(osv.osv):
 
     def get_conyugue(self, cr, uid, deudor_id):
         deudor = self.browse(cr, uid, deudor_id)
-        if not deudor.civil_id.married:
-            return False
-        for obj in deudor.child_ids:
-            if obj.parentesco_id.conyugue:
-                return obj
-        return False
+        return deudor.parent_id and deudor.parent_id or False
 
     def name_search(self, cr, uid, name, args=None, operator='ilike', context=None, limit=100):
         domain = ['|',('name',operator,name),'|',('last_name',operator,name),('identificador',operator,name)]
@@ -201,7 +253,7 @@ class InsurancePartner(osv.osv):
         return self.name_get(cr, uid, ids, context)
 
 
-class InsurancePolicy(osv.osv):
+class InsurancePolicy(orm.Model):
     _name = 'insurance.policy'
 
     def name_get(self, cr, uid, ids, context=None):
@@ -209,8 +261,8 @@ class InsurancePolicy(osv.osv):
         for r in self.read(cr, uid, ids, ['name','aseguradora_id'], context):
             name = "{0} - {1}".format(r['name'], r['aseguradora_id'][1])
             res.append((r['id'], name))
-        return res    
-    
+        return res
+
     _columns = {
         'name': fields.char('Código', size=32 ,required=True),
         'partner_id': fields.many2one(
@@ -226,7 +278,7 @@ class InsurancePolicy(osv.osv):
     }
 
 
-class InsuranceParameter(osv.osv):
+class InsuranceParameter(orm.Model):
     """
     Parametros de configuracion para decidir que poliza
     utilizar.
@@ -242,7 +294,7 @@ class InsuranceParameter(osv.osv):
                 'partner_id': data['partner_id']
             }
         }
-        
+
     _name = 'insurance.parameter'
     _columns = {
         'policy_id': fields.many2one(
@@ -320,9 +372,9 @@ class InsuranceParameter(osv.osv):
                     return False, msg2 % (obj.age_max2, obj.age_max, obj.amount_max2)
             else:
                 return False, msg1 % obj.age_max
-                    
 
-class InsuranceExam(osv.osv):
+
+class InsuranceExam(orm.Model):
     _name = 'insurance.exams'
     _columns = {
         'name': fields.char('Examen', size=128, required=True),
@@ -330,7 +382,7 @@ class InsuranceExam(osv.osv):
     }
 
 
-class InsuranceParameterValue(osv.osv):
+class InsuranceParameterValue(orm.Model):
     """
     Parametros de configuracion para decidir segun la edad
     el monto limite de seguro a entregar
@@ -352,7 +404,7 @@ class InsuranceParameterValue(osv.osv):
 
     _sql_constraints = [
         ('amount_max_min' ,'CHECK (amount_max > amount_min)' ,u'El monto máx. debe ser mayor !.'),
-        ('age_max_min' ,'CHECK (age_max > age_min)' ,u'La edad máx. debe ser mayor !.'),        
+        ('age_max_min' ,'CHECK (age_max > age_min)' ,u'La edad máx. debe ser mayor !.'),
     ]
 
     def get_exams(self, cr, uid, value_requested, age, policy_id):
@@ -383,7 +435,7 @@ class InsuranceParameterValue(osv.osv):
         return data[0]['exams'], flag
 
 
-class InsuranceInsurance(osv.osv):
+class InsuranceInsurance(orm.Model):
     _name = 'insurance.insurance'
     _inherit = ['mail.thread']
     _description = 'Seguros de Desgravamen'
@@ -402,7 +454,9 @@ class InsuranceInsurance(osv.osv):
                 'total_active_credits': 0,
                 'credits_codeudor': 0,
                 'monto_credito_solicitado': 0,
-                'codeudor_id': conyugue and conyugue.id or False
+                'codeudor_id': conyugue and conyugue.id or False,
+                'show_questions': False,
+                'show_questions2': False
             }
         }
 
@@ -434,10 +488,7 @@ class InsuranceInsurance(osv.osv):
     def _compute_total(self, cr, uid, ids, args, fields, context=None):
         res = {}
         for obj in self.browse(cr, uid, ids):
-            res[obj.id] = self.sumar(
-                obj.total_active_credits,
-                obj.monto_credito_solicitado
-            )
+            res[obj.id] = obj.total_active_credits + obj.credits_codeudor + obj.monto_credito_solicitado
         return res
 
     """
@@ -458,14 +509,14 @@ class InsuranceInsurance(osv.osv):
             string='Deudor',
             required=True,
             readonly=True,
-            states=STATES            
+            states=STATES
         ),
         'codeudor_id': fields.many2one(
             'insurance.partner',
             string='Codeudor',
             readonly=True,
-            states=STATES            
-        ),        
+            states=STATES
+        ),
         'has_active_credit': fields.boolean('El deudor/codeudor tiene créditos vigentes en la institución?'),
         'has_codeudor': fields.boolean('Tiene Codeudor'),
         'city_id': fields.many2one(
@@ -473,7 +524,7 @@ class InsuranceInsurance(osv.osv):
             string='Cuidad de Trámite',
             required=True,
             readonly=True,
-            states=STATES            
+            states=STATES
         ),
         'date': fields.date('Fecha de Solicitud de Crédito', readonly=True),
         'date_ok': fields.date('Fecha Aprobacion', readonly=True),
@@ -483,49 +534,50 @@ class InsuranceInsurance(osv.osv):
             size=32,
             required=True,
             readonly=True,
-            states=STATES            
+            states=STATES
         ),
         'nro_operacion_credito': fields.char(
             'Nro Operación Crédito',
             size=32,
             required=True,
             readonly=True,
-            states=STATES            
+            states=STATES
         ),
         'total_active_credits': fields.float(
             'Créditos Vigentes Deudor',
             digits_compute=DP,
             readonly=True,
-            states=STATES            
+            states=STATES
         ),
         'credits_codeudor': fields.float(
             'Créditos Vigentes Codeudor',
             digits_compute=DP,
             readonly=True,
-            states=STATES            
-        ),        
+            states=STATES
+        ),
         'monto_credito_solicitado': fields.float(
             'Monto Crédito Solicitado',
             digits_compute=DP,
             readonly=True,
-            states=STATES            
+            states=STATES
         ),
         'total_credits': fields.function(
             _compute_total,
             string='Total Créditos',
             digits_compute=DP,
-            store={'insurance.insurance': (lambda self, cr, uid, ids, c={}: ids, ['monto_credito_solicitado','total_active_credits'], 20),}
+            store={'insurance.insurance': (lambda self, cr, uid, ids, c={}: ids,
+                                           ['monto_credito_solicitado','total_active_credits','credits_codeudor'], 20),}
         ),
         'plazo': fields.integer(
             'Plazo (meses)',
             readonly=True,
-            states=STATES            
+            states=STATES
         ),
         'aseguradora_id': fields.many2one(
             'res.partner',
             string='Aseguradora',
             readonly=True,
-            states=STATES            
+            states=STATES
         ),
         'state': fields.selection(
             [('draft', 'Borrador'),
@@ -539,32 +591,32 @@ class InsuranceInsurance(osv.osv):
         'show_questions': fields.boolean(
             'Mostrar Preguntas',
             readonly=True,
-            states=STATES            
+            states=STATES
         ),
         'show_questions2': fields.boolean(
             'Mostrar Preguntas Codeudor',
-        ),        
+        ),
         'question1': fields.selection(
             [('si','SI'),('no','NO')],
             string='Respuesta',
             readonly=True,
-            states=STATES            
+            states=STATES
         ),
         'answer1': fields.text(
             'Respuesta',
             readonly=True,
-            states=STATES            
+            states=STATES
         ),
         'question2': fields.selection(
             [('si','SI'),('no','NO')],
             string='Respuesta 2',
             readonly=True,
-            states=STATES            
+            states=STATES
         ),
         'answer2': fields.text(
             'Respuesta',
             readonly=True,
-            states=STATES            
+            states=STATES
         ),
 
         'question3': fields.selection(
@@ -592,23 +644,23 @@ class InsuranceInsurance(osv.osv):
         'print_certificate': fields.boolean(
             'Imprime Certificado ?',
             readonly=True,
-            states=STATES            
+            states=STATES
         ),
         'print_declaration': fields.boolean(
             'Imprime Declaración ?',
             readonly=True,
-            states=STATES            
+            states=STATES
         ),
         'tiene_apoderado': fields.boolean(
             'Tiene Apoderado',
             readonly=True,
-            states=STATES            
+            states=STATES
         ),
         'apoderado_id': fields.many2one(
             'insurance.partner',
             string='Apoderado',
             readonly=True,
-            states=STATES            
+            states=STATES
         ),
         'user_id': fields.many2one(
             'res.users',
@@ -682,7 +734,7 @@ class InsuranceInsurance(osv.osv):
 
     _constraints = [
         (_check_conyugue, 'Requiere los datos del Codeudor (conyugue)', ['Familiares'])
-    ]        
+    ]
 
     def _check_values(self, cr, uid, ids, context=None):
         param_obj = self.pool.get('insurance.parameter')
@@ -721,15 +773,23 @@ class InsuranceInsurance(osv.osv):
         return exams
 
     def action_draft(self, cr, uid, ids, context=None):
-        self.write(
-            cr, uid,
-            ids,
-            {
+        for obj in self.browse(cr, uid, ids, context):
+            exams = [e.id for e in obj.exams]
+            coexams = [e.id for e in obj.exams_codeudor]
+            data = {
                 'state': 'draft',
                 'print_certificate': False,
-                'print_declaration': False
+                'print_declaration': False,
+                'question1': '',
+                'question2': '',
+                'question3': '',
+                'question4': '',
             }
-        )
+            if exams:
+                data.update({'exams': [(5,)]})
+            if coexams:
+                data.update({'exams_codeudor': [(5,)]})
+        self.write(cr, uid, ids, data)
 
     def get_number(self, cr, uid, ids, context=None):
         seq_obj = self.pool.get('ir.sequence')
@@ -744,7 +804,7 @@ class InsuranceInsurance(osv.osv):
             policy = param.policy_id.name
             name = '/'.join([pre, policy, suf])
             return name
-            
+
 
     def action_validate(self, cr, uid, ids, context=None):
         """
@@ -778,10 +838,11 @@ class InsuranceInsurance(osv.osv):
             d = datetime(year=int(y), month=int(m), day=int(d)) + relativedelta(months=obj.plazo)
             date_due = d.strftime('%Y-%m-%d')
             data.update({'date_due': date_due, 'date_ok': obj.date})
-            
-            name = self.get_number(cr, uid, ids, context)
-            data.update({'name': name})
-            self.write(cr, uid, ids, data)            
+
+            if not obj.name != '/':
+                name = self.get_number(cr, uid, ids, context)
+                data.update({'name': name})
+            self.write(cr, uid, ids, data)
         return True
 
     def action_ok(self, cr, uid, ids, context=None):
@@ -801,7 +862,7 @@ class InsuranceInsurance(osv.osv):
         """
         if not context:
             context = {}
-        report_name = 'declaracion_report'            
+        report_name = 'declaracion_report'
         obj = self.browse(cr, uid, ids, context)[0]
         if obj.has_codeudor:
             report_name = 'declaracion_deudor_codeudor_report'
@@ -812,7 +873,7 @@ class InsuranceInsurance(osv.osv):
             'model': 'insurance.insurance',
             'datas': datas,
             'nodestroy': True,
-        }        
+        }
 
     def action_print_certificate(self, cr, uid, ids, context=None):
         """
@@ -830,6 +891,38 @@ class InsuranceInsurance(osv.osv):
             'report_name': report_name,
             'model': 'insurance.insurance',
             'datas': datas,
-            'nodestroy': True,                        
+            'nodestroy': True,
         }
 
+    def action_send_email(self, cr, uid, ids, context=None):
+        assert len(ids) == 1, 'Esta opcion es solo para un registro'
+        ir_model_data = self.pool.get('ir.model.data')
+        ins_obj = self.browse(cr, uid, ids, context)[0]
+        try:
+            template_id = ir_model_data.get_object_reference(cr, uid, 'brokers', 'edi_insurance_dc_canal')[1]
+        except ValueError:
+            template_id = False
+        try:
+            compose_form_id = ir_model_data.get_object_reference(cr, uid, 'mail', 'email_compose_message_wizard_form')[1]
+        except ValueError:
+            compose_form_id = False
+        ctx = dict(context)        
+        ctx.update({
+            'default_model': 'insurance.insurance',
+            'default_res_id': ids[0],
+            'default_use_template': bool(template_id),
+            'default_template_id': template_id,
+            'default_composition_mode': 'comment',
+            'examenes_deudor': ','.join([ex.name for ex in ins_obj.exams]),
+            'examenes_codeudor': ','.join([ex.name for ex in ins_obj.exams_codeudor]),
+            })
+        return {
+            'type': 'ir.actions.act_window',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'mail.compose.message',
+            'views': [(compose_form_id, 'form')],
+            'view_id': compose_form_id,
+            'target': 'new',
+            'context': ctx,
+        }        

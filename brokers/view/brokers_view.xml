@@ -40,8 +40,8 @@
       <field name="view_mode">tree,form</field>
     </record>
 
-    <menuitem action="action_insurance_parentesco" 
-	      id="menu_insurance_parentezco" 
+    <menuitem action="action_insurance_parentesco"
+	      id="menu_insurance_parentezco"
 	      parent="menu_main_master_data"/>
 
     <record id="view_insurance_partner_civil_form" model="ir.ui.view">
@@ -60,6 +60,7 @@
 
     <record id="view_insurance_partner_civil_tree" model="ir.ui.view">
       <field name="name">view.insurance.partner.civil.tree</field>
+
       <field name="model">insurance.partner.civil</field>
       <field name="arch" type="xml">
 	<tree string="Estado Civil" editable="bottom">
@@ -77,8 +78,8 @@
       <field name="view_mode">tree,form</field>
     </record>
 
-    <menuitem action="action_insurance_partner_civil" 
-	      id="menu_insurance_partner_civil" 
+    <menuitem action="action_insurance_partner_civil"
+	      id="menu_insurance_partner_civil"
 	      parent="menu_main_master_data"/>
 
     <record id="view_insurance_insurance_form" model="ir.ui.view">
@@ -90,10 +91,11 @@
 	    <button name="action_ok" string="Aprobar" states="request" groups="brokers.group_broker_manager" type="object"/>
 	    <button name="action_validate" string="Validar Datos" states="draft" class="oe_highlight" type="object"/>
 	    <!-- button name="action_draft" string="Regresar a Borrador" type="object" states="request"/ -->
+	    <button name="action_send_email" string="Mail" type="object"/>
 	    <button name="action_draft" string="Regresar a Borrador" type="object" states="request,ok" groups="brokers.group_broker_manager"/>
-	    <button name="action_print_declaracion" string="Declaración de Asegurabilidad" 
+	    <button name="action_print_declaracion" string="Declaración de Asegurabilidad"
 		    attrs="{'invisible': ['|',('print_declaration','=',False),('state','=','draft')]}" icon="gtk-print"  class="oe_highlight" type="object"/>
-	    <button name="action_print_certificate" string="Certificado" icon="gtk-print" 
+	    <button name="action_print_certificate" string="Certificado" icon="gtk-print"
 		    attrs="{'invisible': ['|',('print_certificate','=',False),('state','=','draft')]}" class="oe_highlight" type="object"/>
 	    <field name="state" widget="statusbar" statusbar_visible="draft,request,ok"/>
 	    <field name="print_certificate" invisible="1"/>
@@ -105,10 +107,10 @@
 		<label string="Canal: " for="contractor_id"/>
 		<field name="contractor_id" readonly="1" class="oe_inline" options="{'no_open': True}"/>
 		<label string="Póliza: " for="policy_id"/>
-		<field name="policy_id" domain="[('partner_id','=',contractor_id)]" options="{'no_open': True}" class="oe_inline"/>
+		<field name="policy_id" domain="[('partner_id','=',contractor_id)]" 
+		       options="{'no_open': True, 'create': false, 'create_edit': false}" class="oe_inline"/>
 	      </h2>
 	      <h2>
-                <label string="Solicitud de Seguro" attrs="{'invisible': ['|',('state','&lt;&gt;','draft')]}"/>
                 <field name="name" class="oe_inline" attrs="{'invisible': [('state','=','draft')]}" readonly="1"/>
 	      </h2>
 	    </div>
@@ -121,29 +123,27 @@
 	    </group>
 	    <group>
 	      <group string="Datos Solicitud de Crédito">
-		<field name="city_id" widget="selection"/>
-		<field name="date" required="1" readonly="1" placeholder="dd/mm/aaaa"/>
+		<field name="city_id" options="{'create': false, 'create_edit': false, 'no_open': True}"/>
+		<field name="date" required="1" readonly="1" placeholder="dd/mm/aaaa" data-inputmask=" 'mask': '99/99/9999' "/>
 		<field name="account_number"/>
 		<field name="nro_operacion_credito"/>
 		<field name="plazo" required="1"/>
 	      </group>
 	      <group string="Datos Créditos Vigentes">
-		<field name="has_active_credit" on_change="onchange_has_credit(has_active_credit)"/>
 		<group class="oe_subtotal_footer oe_right">
-		  <field name="total_active_credits" 
-			 widget="monetary" 
-			 attrs="{'invisible':[('has_active_credit','=',False)]}" 
+		  <field name="total_active_credits"
+			 widget="monetary"
 			 on_change="onchange_credit(total_active_credits, monto_credito_solicitado, credits_codeudor)"/>
-		  <field name="credits_codeudor" 
-			 widget="monetary" 
-			 attrs="{'invisible': ['|',('has_codeudor','=',False),('has_active_credit','=',False)]}"
+		  <field name="credits_codeudor"
+			 widget="monetary"
+			 attrs="{'invisible': [('has_codeudor','=',False)]}"
 			 on_change="onchange_credit(total_active_credits, monto_credito_solicitado, credits_codeudor)"/>
-		  <field name="monto_credito_solicitado" 
-			 widget="monetary" 
+		  <field name="monto_credito_solicitado"
+			 widget="monetary"
 			 on_change="onchange_credit(total_active_credits, monto_credito_solicitado, credits_codeudor)"/>
-		  <field name="total_credits" 
-			 class="oe_subtotal_footer_separator" 
-			 widget="monetary" 
+		  <field name="total_credits"
+			 class="oe_subtotal_footer_separator"
+			 widget="monetary"
 			 on_change="onchange_total(total_credits, contractor_id,has_codeudor)"/>
 		</group>
 	      </group>
@@ -154,7 +154,7 @@
 	      <group>
 		<group>
 		  <label string="
-                    ¿ Sufre o ha sufrido trastornos cardiovasculares, trastornos renales, tensión arterial alta, derrame cerebral, cáncer, tumor, diabetes, 
+                    ¿ Sufre o ha sufrido trastornos cardiovasculares, trastornos renales, tensión arterial alta, derrame cerebral, cáncer, tumor, diabetes,
 		    epilepsia, asma, trastornos inmunológicos o padecimientos relacionados con el SIDA ?"
 		  />
 		</group>
@@ -183,7 +183,7 @@
 	      <group>
 		<group>
 		  <label string="
-                    ¿ Sufre o ha sufrido trastornos cardiovasculares, trastornos renales, tensión arterial alta, derrame cerebral, cáncer, tumor, diabetes, 
+                    ¿ Sufre o ha sufrido trastornos cardiovasculares, trastornos renales, tensión arterial alta, derrame cerebral, cáncer, tumor, diabetes,
 		    epilepsia, asma, trastornos inmunológicos o padecimientos relacionados con el SIDA ?"
 		  />
 		</group>
@@ -210,7 +210,7 @@
 
 	  </sheet>
           <div class="oe_chatter">
-            <field name="message_follower_ids" widget="mail_followers" 
+            <field name="message_follower_ids" widget="mail_followers"
 		   help="Seguir este trámite para recibir notificaciones de eventos asociados." groups="base.group_user"/>
             <field name="message_ids" widget="mail_thread"/>
           </div>
@@ -260,11 +260,10 @@
       <field name="view_mode">tree,form</field>
     </record>
 
-    <menuitem action="action_insurance_insurance" 
-	      id="menu_seguros_desgravamen" 
-	      name="Seguros Desgravamen" 
-	      parent="menu_main_seguros" 
-	      groups="brokers.group_broker_desgravamen"/>
+    <menuitem action="action_insurance_insurance"
+	      id="menu_seguros_desgravamen"
+	      name="Seguros Desgravamen"
+	      parent="menu_main_seguros"/>
 
 
     <!--
@@ -281,9 +280,51 @@
       </field>
     </record>
 
+    <record id="view_partner_conyuge_form" model="ir.ui.view">
+      <field name="name">view.res.partner.conyugue.form</field>
+      <field name="model">insurance.partner</field>
+      <field name="arch" type="xml">
+	<form string="Conyugue" version="7.0">
+	  <sheet string="Información Conyugue">
+	    <label for="name" class="oe_edit_only" string="Nombres Completos"/>
+	    <h1>
+	      <field name="name" class="oe_inline" placeholder="Nombres"/>
+	      <field name="last_name" class="oe_inline" placeholder="Apellidos"/>
+	    </h1>
+	    <label for="tipo_identificador" string="Identificador"/>
+	    <h3>
+	      <field name="tipo_identificador" class="oe_inline"/>
+	      <field name="identificador" class="oe_inline" placeholder="Cédula / RUC"/>
+	    </h3>
+	    <group string="Información">
+	      <group>
+		<field name="birth_date" placeholder="dd/mm/aaaa" data-inputmask=" 'mask': '99/99/9999' "/>
+		<field name="sexo"/>
+		<field name="civil_id" widget="selection" readonly="1"/>
+		<field name="casado" invisible="1"/>
+	      </group>
+	      <group>
+		<field name="mobile" data-inputmask=" 'mask': '0999999999' "/>
+		<field name="phone" data-inputmask=" 'mask': '09-9999999' "/>
+		<field name="phone2" data-inputmask=" 'mask': '09-9999999' "/>
+		<field name="email" data-inputmask=" 'alias': 'email' "/>
+		<label for="street" string="Dirección"/>
+		<div>
+		  <field name="street" placeholder="Calle principal"/>
+		  <field name="street_number" placeholder="Nro. Domicilio"/>
+		  <field name="street2" placeholder="Calle secundaria"/>
+		</div>
+	      </group>
+	    </group>
+	  </sheet>
+	</form>
+      </field>
+    </record>
+
     <record id="view_res_partner_insurance_form" model="ir.ui.view">
       <field name="name">view.res.partner.insurance.form</field>
       <field name="model">insurance.partner</field>
+      <field name="priority">5</field>
       <field name="arch" type="xml">
 	<form string="Información Deudor" version="7.0">
 	  <sheet string="Información Deudor">
@@ -299,86 +340,28 @@
 	    </h3>
 	    <group string="Información">
 	      <group>
-		<field name="birth_date" class="oe_inline"/>
+		<field name="birth_date" class="oe_inline" data-inputmask=" 'mask': '99/99/9999' "/>
 		<field name="age" class="oe_inline"/>
 		<field name="sexo"/>
-		<field name="civil_id" widget="selection" on_change="onchange_civil(civil_id)"/>
+		<field name="civil_id" widget="selection" on_change="onchange_civil(civil_id)" required="1"/>
+		<field name="casado" invisible="1"/>
+		<field name="parent_id" attrs="{'invisible': [('casado','=',False)], 'required': [('casado','=',True)]}"
+		       context="{'form_view_ref': 'brokers.view_partner_conyuge_form', 'default_civil_id': civil_id, 'default_casado': True}"
+		       domain="[('casado','=',False)]"/>
 	      </group>
 	      <group>
-		<field name="mobile"/>
-		<field name="phone"/>
-		<field name="phone2"/>
-		<field name="email"/>
+		<field name="mobile" data-inputmask=" 'mask': '0999999999' "/>
+		<field name="phone" data-inputmask=" 'mask': '09-9999999' "/>
+		<field name="phone2" data-inputmask=" 'mask': '09-9999999' "/>
+		<field name="email" data-inputmask=" 'alias': 'email' "/>
 		<label for="street" string="Dirección"/>
 		<div>
 		  <field name="street" placeholder="Calle principal"/>
-		  <field name="street_number" placeholder="Nro. Domicilio"/>
+		  <field name="street_number" placeholder="Nro. Domicilio" data-inputmask="'mask': '99999'"/>
 		  <field name="street2" placeholder="Calle secundaria"/>
 		</div>
 	      </group>
 	    </group>
-	    <notebook>
-	      <page string="Conyugue / Codeudor">
-		<field name="child_ids" mode="tree,kanban">
-		  <kanban>
-		    <field name="name"/>
-		    <field name="last_name"/>
-		    <field name="sexo"/>
-		    <field name="phone"/>
-		    <field name="parentesco_id"/>
-		    <templates>
-		      <t t-name="kanban-box">
-			<div class="oe_kanban_details">
-			  <h4 class="oe_partner_heading">
-			    <a type="open"><field name="parentesco_id" widget="selection"/>: <field name="name"/> <field name="last_name"/></a>
-			  </h4>	      
-			  <ul>
-			    <li>Ident: <field name="identificador"/></li>
-			    <li><field name="phone"/></li>
-			    <li><field name="mobile"/></li>
-			    <li><field name="email"/></li>
-			  </ul>
-			</div>
-		      </t>
-		    </templates>
-		  </kanban>
-		  <form string="Familiares" version="7.0">
-		    <sheet string="Información Deudor">
-		      <label for="name" class="oe_edit_only" string="Nombres Completos"/>
-		      <h1>
-			<field name="name" class="oe_inline" placeholder="Nombres"/>
-			<field name="last_name" class="oe_inline" placeholder="Apellidos"/>
-		      </h1>
-		      <label for="tipo_identificador" string="Identificador"/>
-		      <h3>
-			<field name="tipo_identificador" class="oe_inline"/>
-			<field name="identificador" class="oe_inline" placeholder="Cédula / RUC"/>
-		      </h3>
-		      <label for="parentesco_id"/>
-		      <field name="parentesco_id" placeholder="Esposa/o" required="1"/>
-		      <group string="Información">
-			<group>
-			  <field name="birth_date" placeholder="dd/mm/aaaa"/>
-			  <field name="sexo"/>
-			  <field name="civil_id" widget="selection"/>
-			</group>
-			<group>
-			  <field name="mobile"/>
-			  <field name="phone"/>
-			  <field name="email"/>
-			  <label for="street" string="Dirección"/>
-			  <div>
-			    <field name="street" placeholder="Calle principal"/>
-			    <field name="street_number" placeholder="Nro. Domicilio"/>
-			    <field name="street2" placeholder="Calle secundaria"/>
-			  </div>
-			</group>
-		      </group>		    
-		    </sheet>
-		  </form>
-		</field>
-	      </page>
-	    </notebook>
 	  </sheet>
 	</form>
       </field>
@@ -389,9 +372,11 @@
       <field name="model">insurance.partner</field>
       <field name="arch" type="xml">
 	<tree string="Deudores">
-	  <field name="name"/>
+	  <field name="identificador"/>
 	  <field name="last_name"/>
+	  <field name="name"/>
 	  <field name="sexo"/>
+	  <field name="civil_id"/>
 	  <field name="phone"/>
 	  <field name="email"/>
 	</tree>
@@ -403,6 +388,7 @@
       <field name="model">insurance.partner</field>
       <field name="arch" type="xml">
 	<search>
+	  <field name="identificador"/>
 	  <field name="name"/>
 	  <field name="last_name"/>
 	  <field name="sexo"/>
@@ -426,7 +412,7 @@
           <templates>
             <t t-name="kanban-box">
               <div class="oe_kanban_details">
-                <h4 class="oe_partner_heading"><a type="open"><field name="name"/> <field name="last_name"/></a></h4>	      
+                <h4 class="oe_partner_heading"><a type="open"><field name="name"/> <field name="last_name"/></a></h4>
 		<ul>
 		  <li>Ident: <field name="identificador"/></li>
 		  <li><field name="phone"/></li>
@@ -448,10 +434,10 @@
       <field name="view_mode">kanban,tree,form</field>
     </record>
 
-    <menuitem action="action_insurance_partner" 
-	      id="menu_seguros_partners" 
-	      name="Deudores" 
-	      parent="menu_main_entities" 
+    <menuitem action="action_insurance_partner"
+	      id="menu_seguros_partners"
+	      name="Deudores"
+	      parent="menu_main_entities"
 	      groups="brokers.group_broker_manager"/>
 
     <record id="view_insurance_policy_form" model="ir.ui.view">
@@ -461,7 +447,7 @@
 	<form string="Póliza de Seguro" version="7.0">
 	  <sheet string="Póliza de Seguro">
 	    <h2>
-	      <field name="name"/>	      
+	      <field name="name"/>
 	    </h2>
 	    <group string="Información">
 	      <field name="partner_id" domain="[('customer','=',True)]"/>
@@ -483,7 +469,7 @@
 	</tree>
       </field>
     </record>
-    
+
     <record id="view_insurance_policy_search" model="ir.ui.view">
       <field name="name">view.insurance.policy.search</field>
       <field name="model">insurance.policy</field>
@@ -634,6 +620,18 @@
     </record>
 
     <menuitem action="action_insurance_exams" id="menu_amount_conf_exams" parent="menu_main_configuration"/>
+
+
+    <record model="ir.ui.view" id="email_compose_message_wizard_inht_form">
+      <field name="name">mail.compose.message.tmpl.inv.form</field>
+      <field name="model">mail.compose.message</field>
+      <field name="inherit_id" ref="email_template.email_compose_message_wizard_inherit_form"/>
+      <field name="arch" type="xml">
+	<xpath expr="//group[@class='oe_right']" position="attributes">
+	  <attribute name="invisible">0</attribute>
+	</xpath>
+      </field>
+    </record>
 
   </data>
 </openerp>
