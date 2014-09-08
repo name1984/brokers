@@ -49,8 +49,6 @@ class InsurancePartner(orm.Model):
     _order = 'last_name ASC, name ASC'
 
     def create(self, cr, uid, vals, context=None):
-        import pdb
-        pdb.set_trace()
         obj_id = super(InsurancePartner, self).create(cr, uid, vals, context)
         if vals.get('parent_id'):
             upd = "UPDATE insurance_partner SET parent_id=%s WHERE id=%s"% (obj_id, vals.get('parent_id'))
