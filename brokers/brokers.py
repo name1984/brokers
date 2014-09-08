@@ -906,7 +906,7 @@ class InsuranceInsurance(orm.Model):
             '7': 'edi_insurance_extraprima_aseguradora',
         }
         #DECIDIR QUE TMPL USAR
-        tmpl2send = tmpl['1']        
+        tmpl2send = tmpls['1']        
         if ins_obj.qestion1.lower() == 'no' and ins_obj.question2.lower() == 'no' and not ins_obj.has_codeudor:
             tmpl2send = tmpls['1']
             partners = [(6,0,v[ins_obj.contractor_id.id])]
