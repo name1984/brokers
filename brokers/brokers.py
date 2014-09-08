@@ -896,8 +896,22 @@ class InsuranceInsurance(orm.Model):
         assert len(ids) == 1, 'Esta opcion es solo para un registro'
         ir_model_data = self.pool.get('ir.model.data')
         ins_obj = self.browse(cr, uid, ids, context)[0]
+        tmpls = {
+            '1': 'edi_insurance_confirm_da_canal',
+            '2': 'edi_insurance_cuestionarios_extras_canal',
+            '3': 'edi_insurance_dc_canal',
+            '4': 'edi_insurance_confirm_da_canal',
+            '5': 'edi_insurance_error_da_canal',
+            '6': 'edi_insurance_extraprimar_da_canal',
+            '7': 'edi_insurance_extraprima_aseguradora',
+        }
+        #DECIDIR QUE TMPL USAR
+        tmpl2send = tmpl['1']        
+        if ins_obj.qestion1.lower() == 'no' and ins_obj.question2.lower() == 'no' and not ins_obj.has_codeudor:
+            tmpl2send = tmpl['1']
+            partners = [(6,0,[ins_obj.contractor_id.id])]
         try:
-            template_id = ir_model_data.get_object_reference(cr, uid, 'brokers', 'edi_insurance_dc_canal')[1]
+            template_id = ir_model_data.get_object_reference(cr, uid, 'brokers', tmpl2send)[1]
         except ValueError:
             template_id = False
         try:
@@ -911,6 +925,7 @@ class InsuranceInsurance(orm.Model):
             'default_use_template': bool(template_id),
             'default_template_id': template_id,
             'default_composition_mode': 'comment',
+            'default_partner_ids': partners,
             'examenes_deudor': ','.join([ex.name for ex in ins_obj.exams]),
             'examenes_codeudor': ','.join([ex.name for ex in ins_obj.exams_codeudor]),
             })

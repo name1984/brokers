@@ -91,8 +91,8 @@
 	    <button name="action_ok" string="Aprobar" states="request" groups="brokers.group_broker_manager" type="object"/>
 	    <button name="action_validate" string="Validar Datos" states="draft" class="oe_highlight" type="object"/>
 	    <!-- button name="action_draft" string="Regresar a Borrador" type="object" states="request"/ -->
-	    <button name="action_send_email" string="Mail" type="object"/>
 	    <button name="action_draft" string="Regresar a Borrador" type="object" states="request,ok" groups="brokers.group_broker_manager"/>
+	    <button name="action_send_email" string="Enviar Mail" type="object" icon="terp-mail-"/>
 	    <button name="action_print_declaracion" string="Declaración de Asegurabilidad"
 		    attrs="{'invisible': ['|',('print_declaration','=',False),('state','=','draft')]}" icon="gtk-print"  class="oe_highlight" type="object"/>
 	    <button name="action_print_certificate" string="Certificado" icon="gtk-print"
@@ -439,6 +439,9 @@
 	      name="Deudores"
 	      parent="menu_main_entities"
 	      groups="brokers.group_broker_manager"/>
+
+    <menuitem action="base.action_partner_supplier_form" id="menu_supplier_brokers" parent="menu_main_entities" name="Proveedores"/>
+    <menuitem action="base.action_partner_customer_form" id="menu_customer_brokers" parent="menu_main_entities" name="Clientes"/>
 
     <record id="view_insurance_policy_form" model="ir.ui.view">
       <field name="name">view.insurance.policy.form</field>
