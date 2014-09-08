@@ -909,7 +909,7 @@ class InsuranceInsurance(orm.Model):
         tmpl2send = tmpls['1']        
 #        if ins_obj.qestion1.lower() == 'no' and ins_obj.question2.lower() == 'no' and not ins_obj.has_codeudor:
 #            tmpl2send = tmpls['1']
-        partners = [(6,0,v[ins_obj.contractor_id.id])]
+        partners = [(6,0,[ins_obj.contractor_id.id])]
         try:
             template_id = ir_model_data.get_object_reference(cr, uid, 'brokers', tmpl2send)[1]
         except ValueError:
