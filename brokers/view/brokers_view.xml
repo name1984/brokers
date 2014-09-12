@@ -89,8 +89,8 @@
 	<form string="Gestión de Seguros" version="7.0">
 	  <header>
 	    <button name="action_ok" string="Aprobar" states="request" groups="brokers.group_broker_manager" type="object"/>
-	    <button name="action_validate" string="Validar Datos" states="draft" class="oe_highlight" type="object"/>
-	    <!-- button name="action_draft" string="Regresar a Borrador" type="object" states="request"/ -->
+	    <button name="action_ok" string="Negar" states="request" groups="brokers.group_broker_manager" type="object"/>
+	    <button name="action_validate" string="Solicitar" states="draft" class="oe_highlight" type="object"/>
 	    <button name="action_draft" string="Regresar a Borrador" type="object" states="request,ok" groups="brokers.group_broker_manager"/>
 	    <button name="action_send_email" string="Enviar Mail" type="object" icon="terp-mail-"/>
 	    <button name="action_print_declaracion" string="Declaración de Asegurabilidad"
