@@ -30,6 +30,7 @@
         'security/brokers_security.xml',
         'security/ir.model.access.csv',
         'view/brokers_view.xml',
+        'view/brokers_menu.xml',
         'report/brokers_report.xml',
         'data/brokers_data.xml',
         'data/sequence_brokers.xml',

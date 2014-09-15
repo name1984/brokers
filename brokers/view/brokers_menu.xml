@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+  <data>
+
+    <menuitem id="menu_main_brokers" name="Seguros Masivos" groups="brokers.group_broker_user"/>
+    <menuitem id="menu_main_seguros" name="Seguros" parent="menu_main_brokers" sequence="5"/>
+    <menuitem id="menu_main_policies" name="Pólizas" parent="menu_main_brokers" sequence="10"/>
+    <menuitem id="menu_main_entities" name="Entidades" parent="menu_main_brokers" sequence="15"/>
+    <menuitem id="menu_main_configuration" name="Configuración" parent="menu_main_brokers" sequence="20"/>
+    <menuitem id="menu_main_master_data" name="Datos Base" parent="menu_main_configuration"/>
+
+    <menuitem action="city.action_country_state_city" id="menu_res_city" name="Ciudades" parent="menu_main_master_data"/>
+
+    <record id="action_insurance_parentesco" model="ir.actions.act_window">
+      <field name="name">Catálogo de Parentezco</field>
+      <field name="res_model">insurance.parentesco</field>
+      <field name="view_type">form</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem action="action_insurance_parentesco"
+	      id="menu_insurance_parentezco"
+	      parent="menu_main_master_data"/>
+
+    <record id="action_insurance_partner_civil" model="ir.actions.act_window">
+      <field name="name">Estado Civil</field>
+      <field name="res_model">insurance.partner.civil</field>
+      <field name="view_type">form</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem action="action_insurance_partner_civil"
+	      id="menu_insurance_partner_civil"
+	      parent="menu_main_master_data"/>
+
+    <record id="action_insurance_insurance" model="ir.actions.act_window">
+      <field name="name">Seguro de Desgravamen</field>
+      <field name="res_model">insurance.insurance</field>
+      <field name="view_type">form</field>
+      <field name="view_mode">tree,form</field>
+      <field name="domain">[('type','=','desgravamen')]</field>
+      <field name="context">{'seguro_type': 'desgravamen'}</field>
+    </record>
+
+    <record id="action_insurance_desgravamen" model="ir.actions.act_window.view">
+      <field eval="1" name="sequence"/>
+      <field name="view_mode">tree</field>
+      <field name="act_window_id" ref="action_insurance_insurance"/>
+    </record>
+
+    <record id="action_insurance_desgravamen2" model="ir.actions.act_window.view">
+      <field eval="2" name="sequence"/>
+      <field name="view_mode">form</field>
+      <field name="view_id" ref="view_insurance_insurance_form"/>
+      <field name="act_window_id" ref="action_insurance_insurance"/>
+    </record>
+
+    <menuitem action="action_insurance_insurance"
+	      id="menu_seguros_desgravamen"
+	      name="Seguros Desgravamen"
+	      parent="menu_main_seguros"/>
+
+    <record id="action_insurance_insurance_exequial" model="ir.actions.act_window">
+      <field name="name">Seguro Exequial</field>
+      <field name="res_model">insurance.insurance</field>
+      <field name="view_type">form</field>
+      <field name="view_mode">tree,form</field>
+      <field name="domain">[('type','=','exequial')]</field>
+      <field name="context">{'seguro_type': 'exequial'}</field>
+    </record>
+
+    <record id="action_insurance_exequial11" model="ir.actions.act_window.view">
+      <field eval="1" name="sequence"/>
+      <field name="view_mode">tree</field>
+      <field name="view_id" ref="view_insurance_exequial_tree"/>
+      <field name="act_window_id" ref="action_insurance_insurance_exequial"/>
+    </record>
+
+    <record id="action_insurance_exequial2" model="ir.actions.act_window.view">
+      <field eval="2" name="sequence"/>
+      <field name="view_mode">form</field>
+      <field name="view_id" ref="view_insurance_exequial_form"/>
+      <field name="act_window_id" ref="action_insurance_insurance_exequial"/>
+    </record>
+
+    <menuitem action="action_insurance_insurance_exequial" 
+	      id="menu_seguros_insurance_exequial" name="Seguros Exequial" parent="menu_main_seguros"/>
+
+    <record id="action_insurance_partner" model="ir.actions.act_window">
+      <field name="name">Deudores</field>
+      <field name="type">ir.actions.act_window</field>
+      <field name="res_model">insurance.partner</field>
+      <field name="view_type">form</field>
+      <field name="view_mode">kanban,tree,form</field>
+    </record>
+
+    <menuitem action="action_insurance_partner"
+	      id="menu_seguros_partners"
+	      name="Deudores"
+	      parent="menu_main_entities"
+	      groups="brokers.group_broker_manager"/>
+
+    <menuitem action="base.action_partner_supplier_form" id="menu_supplier_brokers" parent="menu_main_entities" name="Proveedores"/>
+    <menuitem action="base.action_partner_customer_form" id="menu_customer_brokers" parent="menu_main_entities" name="Clientes"/>
+
+    <record id="action_insurance_policy" model="ir.actions.act_window">
+      <field name="name">Pólizas</field>
+      <field name="res_model">insurance.policy</field>
+      <field name="view_type">form</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem action="action_insurance_policy" id="menu_seguros_polizas" name="Pólizas" parent="menu_main_policies"/>
+
+    <record id="action_insurance_parameter" model="ir.actions.act_window">
+      <field name="name">Montos por Póliza</field>
+      <field name="res_model">insurance.parameter</field>
+      <field name="view_type">form</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem action="action_insurance_parameter" id="menu_amount_conf" name="Montos por Póliza" parent="menu_main_configuration"/>
+
+    <record id="action_insurance_parameter_value" model="ir.actions.act_window">
+      <field name="name">Exámenes por Edad</field>
+      <field name="res_model">insurance.parameter.value</field>
+      <field name="view_type">form</field>
+      <field name="view_mode">tree</field>
+    </record>
+
+    <menuitem action="action_insurance_parameter_value" id="menu_amount_conf_value" parent="menu_main_configuration"/>
+
+    <record id="action_insurance_exams" model="ir.actions.act_window">
+      <field name="name">Catálogo de Exámenes</field>
+      <field name="res_model">insurance.exams</field>
+      <field name="view_type">form</field>
+      <field name="view_mode">tree</field>
+    </record>
+
+    <menuitem action="action_insurance_exams" id="menu_amount_conf_exams" parent="menu_main_configuration"/>
+
+
+
+  </data>
+</openerp>

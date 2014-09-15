@@ -164,6 +164,7 @@ class InsurancePartner(orm.Model):
             'insurance.partner',
             string='Conyugue'
         ),
+        'bank_ids': fields.one2many('insurance.partner.account', 'partner_id', 'Cuentas de Banco')
     }
 
     _defaults = {
@@ -380,6 +381,39 @@ class InsuranceExam(orm.Model):
     }
 
 
+class InsurancePartnerAccount(orm.Model):
+    _name = 'insurance.partner.account'
+
+    def name_get(self, cr, uid, ids, context=None):
+        TIPO = {
+            'ahorros': 'Cta. Ahorros',
+            'corriente': 'Cta. Corriente'
+        }
+        res = []
+        for rec in self.read(cr, uid, ids, ['name', 'tipo']):
+            texto = '%s - %s' % (rec['name'], TIPO[rec['tipo']])
+            res.append((rec['id'], texto))
+        return res
+        
+    _columns = {
+        'name': fields.char('Número', size=32, required=True),
+        'tipo': fields.selection(
+            [('ahorros', 'Cta. Ahorros'),
+             ('corriente', 'Cta. Corriente')],
+             string='Tipo de Cuenta',
+             required=True
+        ),
+        'partner_id': fields.many2one(
+            'insurance.partner',
+            string='Deudor'
+        )
+    }
+
+    _defaults = {
+        'tipo': 'ahorros'
+    }
+
+
 class InsuranceParameterValue(orm.Model):
     """
     Parametros de configuracion para decidir segun la edad
@@ -496,7 +530,8 @@ class InsuranceInsurance(orm.Model):
     def _compute_total(self, cr, uid, ids, args, fields, context=None):
         res = {}
         for obj in self.browse(cr, uid, ids):
-            res[obj.id] = obj.total_active_credits + obj.credits_codeudor + obj.monto_credito_solicitado
+            res[obj.id] = {'total_credits': 0, 'total_pago': 0}
+            res[obj.id]['total_credits'] = obj.total_active_credits + obj.credits_codeudor + obj.monto_credito_solicitado
         return res
 
     """
@@ -518,6 +553,10 @@ class InsuranceInsurance(orm.Model):
             required=True,
             readonly=True,
             states=STATES
+        ),
+        'account_number_id': fields.many2one(
+            'insurance.partner.account',
+            string='Cuenta Bancaria'
         ),
         'codeudor_id': fields.many2one(
             'insurance.partner',
@@ -580,7 +619,23 @@ class InsuranceInsurance(orm.Model):
                      'total_active_credits',
                      'credits_codeudor'],
                 20),
-            }
+            },
+            multi='tipo'
+        ),
+        'total_pago': fields.function(
+            _compute_total,
+            string='Total Pago',
+            digits_compute=DP,
+            readonly=True,
+            store={
+                'insurance.insurance': (
+                    lambda self, cr, uid, ids, c={}: ids,
+                    ['monto_credito_solicitado',
+                     'total_active_credits',
+                     'credits_codeudor'],
+                20),
+            },
+            multi='tipo'
         ),
         'plazo': fields.integer(
             'Plazo (meses)',
@@ -603,6 +658,12 @@ class InsuranceInsurance(orm.Model):
             string='Estado',
             readonly=True,
             required=True
+        ),
+        'type': fields.selection(
+            [('desgravamen', 'Seguro Desgravamen'),
+             ('exequial', 'Seguro Exequial')],
+             string='Tipo',
+             required=True
         ),
         'show_questions': fields.boolean(
             'Mostrar Preguntas',
@@ -699,7 +760,8 @@ class InsuranceInsurance(orm.Model):
             required=True,
             readonly=True,
             states=STATES
-        )
+        ),
+        # Campos extras para seguro exequial
     }
 
     def _get_contractor(self, cr, uid, context=None):
@@ -722,6 +784,9 @@ class InsuranceInsurance(orm.Model):
     def _get_user(self, cr, uid, context=None):
         return uid
 
+    def _get_type(self, cr, uid, context=None):
+        return context.get('seguro_type', 'desgravamen')
+
     _defaults = {
         'state': 'draft',
         'name': '/',
@@ -731,7 +796,8 @@ class InsuranceInsurance(orm.Model):
         'answer1': '\n\n\n\n\n\n',
         'answer2': '\n\n\n\n\n\n',
         'answer3': '\n\n\n\n\n\n',
-        'answer4': '\n\n\n\n\n\n'
+        'answer4': '\n\n\n\n\n\n',
+        'type': _get_type
     }
 
     def _check_conyugue(self, cr, uid, ids):
@@ -820,6 +886,27 @@ class InsuranceInsurance(orm.Model):
             name = '/'.join([pre, policy, suf])
             return name
 
+    def get_template(self, cr, uid, template_ref):
+        ir_model_data = self.pool.get('ir.model.data')        
+        self.pool.get('email.template')
+        tmpl = self.EMAIL_TEMPLATES[template_ref]
+        try:
+            template_id = ir_model_data.get_object_reference(cr, uid, 'brokers', tmpl)
+        except ValueError:
+            template_id = False
+        return template_id
+
+    def send_mail(self, cr, uid, obj, msg, exams):
+        """
+        obj: instance of this object
+        msg: message response from _check_values
+        exams: list: [exams_dedudor, exams_codeudor]
+        """
+        mail_obj = self.pool.get('email.template')
+        if msg == 'show_declaration' and len(exams[0]) == 1:
+            mail_obj.send_mail(cr, uid, self.get_template(cr, uid, '1'), obj.id)
+        return True
+            
 
     def action_validate(self, cr, uid, ids, context=None):
         """
@@ -831,7 +918,6 @@ class InsuranceInsurance(orm.Model):
         data = {'state': state}
         coexams = False
         param_obj = self.pool.get('insurance.parameter')
-        mail_obj = self.pool.get('email.template')
         for obj in self.browse(cr, uid, ids, context):
             flag, msg = self._check_values(cr, uid, [obj.id], context)
             if msg == 'show_certificate':
@@ -859,6 +945,7 @@ class InsuranceInsurance(orm.Model):
                 name = self.get_number(cr, uid, ids, context)
                 data.update({'name': name})
             self.write(cr, uid, ids, data)
+            self.send_mail(cr, uid, obj, msg, [exams, coexams])
         return True
 
     def action_ok(self, cr, uid, ids, context=None):
